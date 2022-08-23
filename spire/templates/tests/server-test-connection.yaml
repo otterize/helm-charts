@@ -1,4 +1,4 @@
-apiVersion: v1
+\apiVersion: v1
 kind: Pod
 metadata:
   name: "{{ include "spire.fullname" . }}-server-test-connection"

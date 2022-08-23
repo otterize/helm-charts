@@ -16,6 +16,7 @@ spec:
         control-plane: controller-manager
         app: spire-integration
     spec:
+      serviceAccountName: spire-integration-operator
       containers:
       - args:
         - --secure-listen-address=0.0.0.0:8443
@@ -34,8 +35,8 @@ spec:
         - --leader-elect
         command:
         - /manager
-        image: {{ .Values.spireIntegration.image.repository }}
-        imagePullPolicy: {{ .Values.spireIntegration.image.pullPolicy }}
+        image: {{ .Values.operator.image.repository }}
+        imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
         livenessProbe:
           httpGet:
             path: /healthz
@@ -50,12 +51,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         resources:
-          limits:
-            cpu: 100m
-            memory: 30Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           allowPrivilegeEscalation: false
         volumeMounts:
