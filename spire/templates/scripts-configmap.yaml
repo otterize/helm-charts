@@ -18,11 +18,11 @@ data:
     INTEGRATION_SPIFFE_ID="spiffe://{{ .Values.spire.trustDomain }}/{{ .Release.Namespace }}/spire-integration-operator-system"
 
     echo "ensuring agent entry"
-    if ! /opt/spire/bin/spire-server entry show -spiffeID $AGENT_SPIFFE_ID &> /dev/null; then
+    if /opt/spire/bin/spire-server entry show -spiffeID $AGENT_SPIFFE_ID | grep -q "Found 0 entries" &> /dev/null; then
       /opt/spire/bin/spire-server entry create -spiffeID $AGENT_SPIFFE_ID -selector k8s_psat:agent_ns:{{ .Release.Namespace }} -selector k8s_psat:agent_sa:spire-agent -node
     fi
 
     echo "ensuring integration entry"
-    if ! /opt/spire/bin/spire-server entry show -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID &> /dev/null; then
+    if /opt/spire/bin/spire-server entry show -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID | grep -q "Found 0 entries &> /dev/null; then
       /opt/spire/bin/spire-server entry create -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID -selector k8s:ns:{{ .Release.Namespace }} -selector k8s:pod-label:app:spire-integration -admin
     fi
