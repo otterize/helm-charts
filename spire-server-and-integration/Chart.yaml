@@ -1,0 +1,28 @@
+apiVersion: v2
+name: spire
+description: |
+  This chart contains both otterize spire-integration-operator and spire (server+agent)
+type: application
+version: 1.0.0
+keywords: ["spiffe", "spire", "spire-server", "spire-agent"]
+home: https://github.com/otterize/helm-charts
+sources:
+  - https://github.com/otterize/helm-charts/spire-integration-operator
+  # fork of https://github.com/philips-labs/helm-charts/charts/spire
+  - https://github.com/otterize/helm-charts/spire
+kubeVersion: ">=1.19.0-0"
+dependencies:
+  - name: spire-integration-operator
+    version: "1.0.0"
+    condition: deployment.spireIntegrationOperator
+    import-values:
+      - child: spire
+        parent: spireConfiguration
+    repository: https://github.com/otterize/helm-charts/spire-integration-operator
+  - name: spire
+    version: "1.0.0"
+    condition: deployment.spire
+    import-values:
+      - child: spire
+        parent: spireConfiguration
+    repository: https://github.com/otterize/helm-charts/spire-integration-operator
