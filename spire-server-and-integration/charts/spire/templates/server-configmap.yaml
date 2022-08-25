@@ -16,7 +16,7 @@ data:
       ca_key_type = "rsa-2048"
 
       default_svid_ttl = "1h"
-      ca_ttl = {{ .Values.spire.server.root_ca_ttl | quote }}
+      ca_ttl = {{ .Values.spire.server.rootCATTL | quote }}
       ca_subject = {
         country = ["US"],
         organization = ["SPIRE"],

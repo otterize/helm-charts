@@ -93,4 +93,4 @@ spire:
   trustDomain: "example.org"
   server:
     # by default root CA will be valid for 3 years
-    root_ca_ttl: "26280h"
+    rootCATTL: "26280h"
