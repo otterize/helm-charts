@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    control-plane: controller-manager
+    app: spire-integration-operator
   name: spire-integration-operator-controller-manager
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      control-plane: controller-manager
+      app: spire-integration-operator
   template:
     metadata:
       labels:
-        control-plane: controller-manager
-        app: spire-integration
+        # used as a selector for spire attestation
+        app: spire-integration-operator
     spec:
       serviceAccountName: spire-integration-operator
       containers:
