@@ -94,3 +94,9 @@ spire:
   server:
     # by default root CA will be valid for 3 years
     rootCATTL: "26280h"
+    SVIDDefaultTTL: "24h"
+  agent:
+    # Defaults to the secure kubelet port by default.
+    # Minikube does not have a cert in the cluster CA bundle that
+    # can authenticate the kubelet cert, so skip validation.
+    skipKubeletVerification: false

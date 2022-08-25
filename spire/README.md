@@ -36,5 +36,6 @@
 | serviceAccount.name                        | string | `""`                              |                       |
 | spire.clusterName                          | string | `"example-cluster"`               |                       |
 | spire.server.rootCATTL                     | string | `"26280h"`                        | determine root_ca TTL |
+| spire.server.SVIDDefaultTTL                | string | `"24h"`                           | determine root_ca TTL |
 | spire.trustDomain                          | string | `"example.org"`                   |                       |
 | tolerations                                | list   | `[]`                              |                       |

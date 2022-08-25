@@ -15,7 +15,7 @@ data:
       #AWS requires the use of RSA.  EC cryptography is not supported
       ca_key_type = "rsa-2048"
 
-      default_svid_ttl = "1h"
+      default_svid_ttl = {{ .Values.spire.server.SVIDDefaultTTL | quote }}
       ca_ttl = {{ .Values.spire.server.rootCATTL | quote }}
       ca_subject = {
         country = ["US"],
