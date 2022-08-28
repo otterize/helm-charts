@@ -18,11 +18,11 @@ dependencies:
     import-values:
       - child: spire
         parent: spireConfiguration
-    repository: file://../spire-integration-operator
+    repository: https://otterize.github.io/helm-charts
   - name: spire
     version: "1.0.0"
     condition: deployment.spire
     import-values:
       - child: spire
         parent: spireConfiguration
-    repository: file://../spire
+    repository: https://otterize.github.io/helm-charts
