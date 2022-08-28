@@ -3,7 +3,7 @@ entries:
   spire:
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2022-08-28T09:35:41.24418609Z"
+    created: "2022-08-28T15:55:11.065950905Z"
     description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
       Please note this chart requires Projected Service Account Tokens which has to
       be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
@@ -14,7 +14,7 @@ entries:
       command:         - kube-apiserver         - --api-audiences=api,spire-server         -
       --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
       --service-account-signing-key-file=/run/config/pki/sa.key ``` '
-    digest: 8895ab092dc212b6fdac03fd0007324b11521b17767911a1be2f1ab343247034
+    digest: 86aa7004640688f3bd07fd8692b396c40eb982129762f177d5c201b1cfd5bf62
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -32,9 +32,9 @@ entries:
   spire-integration-operator:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-08-28T09:35:41.245768532Z"
+    created: "2022-08-28T15:55:11.066409223Z"
     description: spire-integration-operator
-    digest: 5d4736c0d96e53f0ea04707eb429c5efcd9b90099221adf3042c7559e8dc0978
+    digest: 979d977279813dedc2d3acd9126bdc3b2d9d2f1d705b952035a251540ae598b4
     home: https://github.com/otterize/spire-integration-operator
     name: spire-integration-operator
     sources:
@@ -45,25 +45,25 @@ entries:
     version: 0.0.1
   spire-server-and-integration:
   - apiVersion: v2
-    created: "2022-08-28T09:35:41.248497706Z"
+    created: "2022-08-28T15:55:11.068085487Z"
     dependencies:
     - condition: deployment.spireIntegrationOperator
       import-values:
       - child: spire
         parent: spireConfiguration
       name: spire-integration-operator
-      repository: file://../spire-integration-operator
+      repository: https://otterize.github.io/helm-charts
       version: 0.0.1
     - condition: deployment.spire
       import-values:
       - child: spire
         parent: spireConfiguration
       name: spire
-      repository: file://../spire
+      repository: https://otterize.github.io/helm-charts
       version: 1.0.0
     description: 'This chart contains both otterize spire-integration-operator and
       spire (server+agent) '
-    digest: 7e270c0539f66e2a9061a36f1dcc31be372d755b1ebc3fe0e6be16250e3a86f3
+    digest: 1f0c4539a844f4a058b2d42a3e3d56c3f0ea3d82fc1030d12c125b6846c0e731
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -79,4 +79,4 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/spire-server-and-integration-1.0.0.tgz
     version: 1.0.0
-generated: "2022-08-28T09:35:41.243354367Z"
+generated: "2022-08-28T15:55:11.064618754Z"
