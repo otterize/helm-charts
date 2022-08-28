@@ -1,5 +1,5 @@
 apiVersion: v2
-name: spire
+name: spire-server-and-integration
 description: |
   This chart contains both otterize spire-integration-operator and spire (server+agent)
 type: application
