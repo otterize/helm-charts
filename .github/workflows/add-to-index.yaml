@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@v1.4.1
+        uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           charts_dir: .
