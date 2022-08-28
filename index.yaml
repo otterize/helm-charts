@@ -2,7 +2,50 @@ apiVersion: v1
 entries:
   spire:
   - apiVersion: v2
-    created: "2022-08-28T09:25:59.374375282Z"
+    appVersion: 1.0.2
+    created: "2022-08-28T09:35:41.24418609Z"
+    description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
+      Please note this chart requires Projected Service Account Tokens which has to
+      be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
+      enable Projected Service Account Tokens on Docker for Mac/Windows run the following
+      command to SSH into the Docker Desktop K8s VM.  ```bash docker run -it --privileged
+      --pid=host debian nsenter -t 1 -m -u -n -i sh ```  Then add the following to
+      `/etc/kubernetes/manifests/kube-apiserver.yaml`  ```yaml spec:   containers:     -
+      command:         - kube-apiserver         - --api-audiences=api,spire-server         -
+      --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
+      --service-account-signing-key-file=/run/config/pki/sa.key ``` '
+    digest: 8895ab092dc212b6fdac03fd0007324b11521b17767911a1be2f1ab343247034
+    home: https://github.com/otterize/helm-charts
+    keywords:
+    - spiffe
+    - spire
+    - spire-server
+    - spire-agent
+    kubeVersion: '>=1.19.0-0'
+    name: spire
+    sources:
+    - https://github.com/otterize/helm-charts/spire
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-1.0.0.tgz
+    version: 1.0.0
+  spire-integration-operator:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-08-28T09:35:41.245768532Z"
+    description: spire-integration-operator
+    digest: 5d4736c0d96e53f0ea04707eb429c5efcd9b90099221adf3042c7559e8dc0978
+    home: https://github.com/otterize/spire-integration-operator
+    name: spire-integration-operator
+    sources:
+    - https://github.com/otterize/spire-integration-operator/helm
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-integration-operator-0.0.1.tgz
+    version: 0.0.1
+  spire-server-and-integration:
+  - apiVersion: v2
+    created: "2022-08-28T09:35:41.248497706Z"
     dependencies:
     - condition: deployment.spireIntegrationOperator
       import-values:
@@ -20,7 +63,7 @@ entries:
       version: 1.0.0
     description: 'This chart contains both otterize spire-integration-operator and
       spire (server+agent) '
-    digest: 67925f6bcb72538b6f2035a8143591c15bb6d4f200cfa848866051e0168c665c
+    digest: 7e270c0539f66e2a9061a36f1dcc31be372d755b1ebc3fe0e6be16250e3a86f3
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -28,26 +71,12 @@ entries:
     - spire-server
     - spire-agent
     kubeVersion: '>=1.19.0-0'
-    name: spire
+    name: spire-server-and-integration
     sources:
     - https://github.com/otterize/helm-charts/spire-integration-operator
     - https://github.com/otterize/helm-charts/spire
     type: application
     urls:
-    - https://otterize.github.io/helm-charts/spire-1.0.0.tgz
+    - https://otterize.github.io/helm-charts/spire-server-and-integration-1.0.0.tgz
     version: 1.0.0
-  spire-integration-operator:
-  - apiVersion: v2
-    appVersion: 1.0.0
-    created: "2022-08-28T09:25:59.374709088Z"
-    description: spire-integration-operator
-    digest: 89660b2d2c614c59b3634b007a68e0e0d770fb8567946135d397d1ee5e57ecb3
-    home: https://github.com/otterize/spire-integration-operator
-    name: spire-integration-operator
-    sources:
-    - https://github.com/otterize/spire-integration-operator/helm
-    type: application
-    urls:
-    - https://otterize.github.io/helm-charts/spire-integration-operator-0.0.1.tgz
-    version: 0.0.1
-generated: "2022-08-28T09:25:59.372129545Z"
+generated: "2022-08-28T09:35:41.243354367Z"
