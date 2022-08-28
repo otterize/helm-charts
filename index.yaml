@@ -1,3 +1,53 @@
 apiVersion: v1
-entries: {}
-generated: "2022-08-28T12:24:58.092325+03:00"
+entries:
+  spire:
+  - apiVersion: v2
+    created: "2022-08-28T09:25:59.374375282Z"
+    dependencies:
+    - condition: deployment.spireIntegrationOperator
+      import-values:
+      - child: spire
+        parent: spireConfiguration
+      name: spire-integration-operator
+      repository: file://../spire-integration-operator
+      version: 0.0.1
+    - condition: deployment.spire
+      import-values:
+      - child: spire
+        parent: spireConfiguration
+      name: spire
+      repository: file://../spire
+      version: 1.0.0
+    description: 'This chart contains both otterize spire-integration-operator and
+      spire (server+agent) '
+    digest: 67925f6bcb72538b6f2035a8143591c15bb6d4f200cfa848866051e0168c665c
+    home: https://github.com/otterize/helm-charts
+    keywords:
+    - spiffe
+    - spire
+    - spire-server
+    - spire-agent
+    kubeVersion: '>=1.19.0-0'
+    name: spire
+    sources:
+    - https://github.com/otterize/helm-charts/spire-integration-operator
+    - https://github.com/otterize/helm-charts/spire
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-1.0.0.tgz
+    version: 1.0.0
+  spire-integration-operator:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-08-28T09:25:59.374709088Z"
+    description: spire-integration-operator
+    digest: 89660b2d2c614c59b3634b007a68e0e0d770fb8567946135d397d1ee5e57ecb3
+    home: https://github.com/otterize/spire-integration-operator
+    name: spire-integration-operator
+    sources:
+    - https://github.com/otterize/spire-integration-operator/helm
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-integration-operator-0.0.1.tgz
+    version: 0.0.1
+generated: "2022-08-28T09:25:59.372129545Z"
