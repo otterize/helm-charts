@@ -13,3 +13,6 @@ spireConfiguration:
 
 intentsOperator:
   autoGenerateTLSUsingSpireIntegration: true
+
+spire:
+  fullnameOverride: spire
