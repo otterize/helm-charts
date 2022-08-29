@@ -49,9 +49,11 @@ spec:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
+        {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
         - mountPath: /etc/spifferize
           name: spifferize-tls
           readOnly: true
+        {{- end }}
       - args:
         - --secure-listen-address=0.0.0.0:8443
         - --upstream=http://127.0.0.1:8080/
