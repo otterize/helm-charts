@@ -8,10 +8,12 @@
 | agent.image.repository                     | string | `"gcr.io/spiffe-io/spire-agent"`  |                       |
 | agent.image.tag                            | string | `""`                              |                       |
 | agent.logLevel                             | string | `"INFO"`                          |                       |
+| agent.skipKubeletVerification              | bool   | `false`                           |                       |
 | autoscaling.enabled                        | bool   | `false`                           |                       |
 | autoscaling.maxReplicas                    | int    | `100`                             |                       |
 | autoscaling.minReplicas                    | int    | `1`                               |                       |
 | autoscaling.targetCPUUtilizationPercentage | int    | `80`                              |                       |
+| clusterName                                | string | `"example-cluster"`               |                       |
 | fullnameOverride                           | string | `""`                              |                       |
 | imagePullSecrets                           | list   | `[]`                              |                       |
 | nameOverride                               | string | `""`                              |                       |
@@ -34,8 +36,10 @@
 | serviceAccount.annotations                 | object | `{}`                              |                       |
 | serviceAccount.create                      | bool   | `true`                            |                       |
 | serviceAccount.name                        | string | `""`                              |                       |
-| spire.clusterName                          | string | `"example-cluster"`               |                       |
-| spire.server.rootCATTL                     | string | `"26280h"`                        | determine root_ca TTL |
-| spire.server.SVIDDefaultTTL                | string | `"24h"`                           | determine root_ca TTL |
-| spire.trustDomain                          | string | `"example.org"`                   |                       |
+| server.rootCATTL                           | string | `"26280h"`                        | determine root_ca TTL |
+| server.SVIDDefaultTTL                      | string | `"24h"`                           | determine root_ca TTL |
+| spiffe.CASubject.country                   | string | `"US"`                            |                       |
+| spiffe.CASubject.organization              | string | `"SPIRE"`                         |                       |
+| spiffe.CASubject.commonName                | string | `""`                              |                       |
+| spiffe.trustDomain                         | string | `"example.org"`                   |                       |
 | tolerations                                | list   | `[]`                              |                       |
