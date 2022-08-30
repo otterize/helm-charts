@@ -1,0 +1,19 @@
+deployment:
+  spire: true
+  spireIntegrationOperator: true
+  intentsOperator: true
+
+global:
+#  spiffe:
+#    trustDomain: "example.org"
+#    CASubject:
+#      country: "US"
+#      organization: "SPIRE"
+#      commonName: ""
+
+
+intentsOperator:
+    autoGenerateTLSUsingSpireIntegration: true
+
+spire:
+  fullnameOverride: spire

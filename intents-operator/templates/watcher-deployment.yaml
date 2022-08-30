@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otterize-watcher
+  labels:
+    app: otterize-watcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otterize-watcher
+  template:
+    metadata:
+      labels:
+        app: otterize-watcher
+    spec:
+      serviceAccountName: otterize-watcher
+      containers:
+        - name: otterize-watcher
+          image: {{ .Values.watcher.image.repository }}
+          imagePullPolicy: {{ .Values.watcher.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.operator.resources | nindent 12 }}
