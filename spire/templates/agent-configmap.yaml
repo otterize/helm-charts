@@ -12,13 +12,13 @@ data:
       server_port = "{{ .Values.server.service.port }}"
       socket_path = "/run/spire/sockets/agent.sock"
       trust_bundle_path = "/run/spire/bundle/bundle.crt"
-      trust_domain = {{ .Values.spire.trustDomain | quote }}
+      trust_domain = {{ .Values.global.spiffe.trustDomain| default .Values.spiffe.trustDomain | quote }}
     }
 
     plugins {
       NodeAttestor "k8s_psat" {
         plugin_data {
-          cluster = {{ .Values.spire.clusterName | quote }}
+          cluster = {{ .Values.clusterName | quote }}
         }
       }
 
@@ -29,7 +29,7 @@ data:
 
       WorkloadAttestor "k8s" {
         plugin_data {
-          skip_kubelet_verification = {{ .Values.spire.agent.skipKubeletVerification }}
+          skip_kubelet_verification = {{ .Values.agent.skipKubeletVerification }}
         }
       }
 

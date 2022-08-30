@@ -9,18 +9,18 @@ data:
       bind_address = "0.0.0.0"
       bind_port = "8081"
       socket_path = "/tmp/spire-server/private/api.sock"
-      trust_domain = {{ .Values.spire.trustDomain | quote }}
+      trust_domain = {{ .Values.global.spiffe.trustDomain | default .Values.spiffe.trustDomain | quote }}
       data_dir = "/run/spire/data"
       log_level = "{{ .Values.server.logLevel }}"
       #AWS requires the use of RSA.  EC cryptography is not supported
       ca_key_type = "rsa-2048"
 
-      default_svid_ttl = {{ .Values.spire.server.SVIDDefaultTTL | quote }}
-      ca_ttl = {{ .Values.spire.server.rootCATTL | quote }}
+      default_svid_ttl = {{ .Values.server.SVIDDefaultTTL | quote }}
+      ca_ttl = {{ default .Values.server.rootCATTL | quote }}
       ca_subject = {
-        country = ["US"],
-        organization = ["SPIRE"],
-        common_name = "",
+        country = [{{ .Values.global.spiffe.CASubject.country | default .Values.spiffe.CASubject.country | quote }}],
+        organization = [{{ .Values.global.spiffe.CASubject.organization | default .Values.spiffe.CASubject.organization | quote }}],
+        common_name = {{ .Values.global.spiffe.CASubject.commonName | default .Values.spiffe.CASubject.commonName | quote }},
       }
     }
 
@@ -35,7 +35,7 @@ data:
       NodeAttestor "k8s_psat" {
         plugin_data {
           clusters = {
-            {{ .Values.spire.clusterName | quote }} = {
+            {{ .Values.clusterName | quote }} = {
               service_account_allow_list = ["{{ .Release.Namespace }}:{{ include "spire.serviceAccountName" . }}-agent"]
             }
           }

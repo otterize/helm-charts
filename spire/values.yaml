@@ -5,6 +5,10 @@
 replicaCount: 1
 
 server:
+  # by default root CA will be valid for 3 years
+  rootCATTL: "26280h"
+  SVIDDefaultTTL: "24h"
+
   logLevel: DEBUG
   image:
     repository: gcr.io/spiffe-io/spire-server
@@ -23,6 +27,10 @@ server:
     port: 8081
 
 agent:
+  # Defaults to the secure kubelet port by default.
+  # Minikube does not have a cert in the cluster CA bundle that
+  # can authenticate the kubelet cert, so skip validation.
+  skipKubeletVerification: false
   logLevel: DEBUG
   image:
     repository: gcr.io/spiffe-io/spire-agent
@@ -86,17 +94,11 @@ tolerations: []
 
 affinity: {}
 
-# spireSettings
+clusterName: "example-cluster"
 
-spire:
-  clusterName: "example-cluster"
+spiffe:
   trustDomain: "example.org"
-  server:
-    # by default root CA will be valid for 3 years
-    rootCATTL: "26280h"
-    SVIDDefaultTTL: "24h"
-  agent:
-    # Defaults to the secure kubelet port by default.
-    # Minikube does not have a cert in the cluster CA bundle that
-    # can authenticate the kubelet cert, so skip validation.
-    skipKubeletVerification: false
+  CASubject:
+    country: "US"
+    organization: "SPIRE"
+    commonName: ""

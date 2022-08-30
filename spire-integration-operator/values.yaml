@@ -16,6 +16,4 @@ resources: { }
   #   memory: 128Mi
 
 spire:
-  clusterName: "example-cluster"
-  trustDomain: "example.org"
   socketsPath: "/run/spire/sockets"
