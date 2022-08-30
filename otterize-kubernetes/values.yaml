@@ -4,16 +4,15 @@ deployment:
   intentsOperator: true
 
 global:
-  spiffe:
-    trustDomain: "examplee.org"
-    CASubject:
-      country: "USA"
+#  spiffe:
+#    trustDomain: "example.org"
+#    CASubject:
+#      country: "US"
+#      organization: "SPIRE"
+#      commonName: ""
 
 
 intentsOperator:
-  operator:
-    image:
-      repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:operator-0.0.0
     autoGenerateTLSUsingSpireIntegration: true
 
 spire:
