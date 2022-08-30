@@ -1,7 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
+  {{- if .Values.global.spire.serverServiceName }}
+  name: {{ .Values.global.spire.serverServiceName }}
+  {{- else }}
   name: {{ include "spire.fullname" . }}-server
+  {{ end }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "spire.server.labels" . | nindent 4 }}
@@ -9,7 +13,7 @@ spec:
   type: {{ .Values.server.service.type }}
   ports:
     - name: grpc
-      port: {{ .Values.server.service.port }}
+      port: 8081
       targetPort: grpc
       protocol: TCP
   selector:

@@ -19,7 +19,7 @@ data:
 
     echo "ensuring agent entry"
     if /opt/spire/bin/spire-server entry show -spiffeID $AGENT_SPIFFE_ID | grep -q "Found 0 entries" &> /dev/null; then
-      /opt/spire/bin/spire-server entry create -spiffeID $AGENT_SPIFFE_ID -selector k8s_psat:agent_ns:{{ .Release.Namespace }} -selector k8s_psat:agent_sa:spire-agent -node
+      /opt/spire/bin/spire-server entry create -spiffeID $AGENT_SPIFFE_ID -selector k8s_psat:agent_ns:{{ .Release.Namespace }} -selector k8s_psat:agent_sa:{{ include "spire.fullname" . }}-agent -node
     fi
 
     echo "ensuring integration entry"

@@ -35,7 +35,6 @@
 | server.image.repository                    | string | `"gcr.io/spiffe-io/spire-server"` |                       |
 | server.image.tag                           | string | `""`                              |                       |
 | server.logLevel                            | string | `"INFO"`                          |                       |
-| server.service.port                        | int    | `8081`                            |                       |
 | server.service.type                        | string | `"ClusterIP"`                     |                       |
 | serviceAccount.annotations                 | object | `{}`                              |                       |
 | serviceAccount.create                      | bool   | `true`                            |                       |

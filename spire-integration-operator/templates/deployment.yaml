@@ -30,7 +30,15 @@ spec:
       - args:
         - --health-probe-bind-address=:8081
         - --metrics-bind-address=127.0.0.1:8080
+        {{- if .Values.spire.serverAddress }}
+        - --spire-server-address={{.Values.spire.serverAddress}}
+        # if global.spire.serverServiceName it means that spire-integration is deployed with spire
+        # in that case the address will be serverService.Namespace:8081
+        {{- else if .Values.global.spire.serverServiceName }}
+        - --spire-server-address={{.Values.global.spire.serverServiceName}}.{{.Release.Namespace}}:8081
+        {{- else }}
         - --spire-server-address=spire-server.{{.Release.Namespace}}:8081
+        {{- end}}
         - --leader-elect
         command:
         - /manager
