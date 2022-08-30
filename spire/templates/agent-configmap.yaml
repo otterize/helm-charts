@@ -8,8 +8,12 @@ data:
     agent {
       data_dir = "/run/spire"
       log_level = "{{ .Values.agent.logLevel }}"
+      {{- if .Values.global.spire.serverServiceName}}
+      server_address = {{ .Values.global.spire.serverServiceName | quote }}
+      {{- else }}
       server_address = "{{ include "spire.fullname" . }}-server"
-      server_port = "{{ .Values.server.service.port }}"
+      {{- end }}
+      server_port = "8081"
       socket_path = "/run/spire/sockets/agent.sock"
       trust_bundle_path = "/run/spire/bundle/bundle.crt"
       trust_domain = {{ .Values.global.spiffe.trustDomain | quote }}
