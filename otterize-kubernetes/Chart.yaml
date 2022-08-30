@@ -16,14 +16,14 @@ dependencies:
     alias: spireIntegrationOperator
     version: "0.0.1"
     condition: deployment.spireIntegrationOperator
-    repository: file://..//spire-integration-operator
+    repository: https://otterize.github.io/helm-charts
   - name: spire
     alias: spire
     version: "1.0.0"
     condition: deployment.spire
-    repository: file://../spire
+    repository: https://otterize.github.io/helm-charts
   - name: intents-operator
     alias: intentsOperator
     version: "1.0.0"
     condition: deployment.intentsOperator
-    repository: file://../intents-operator
+    repository: https://otterize.github.io/helm-charts
