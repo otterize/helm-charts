@@ -14,8 +14,8 @@ data:
     echo "server is up!"
 
     # create spire entries for the agent and integration
-    AGENT_SPIFFE_ID="spiffe://{{ .Values.global.spiffe.trustDomain | default .Values.spiffe.trustDomain }}/ns/{{ .Release.Namespace }}/sa/spire-agent"
-    INTEGRATION_SPIFFE_ID="spiffe://{{ .Values.global.spiffe.trustDomain | default .Values.spiffe.trustDomain }}/{{ .Release.Namespace }}/spire-integration-operator-system"
+    AGENT_SPIFFE_ID="spiffe://{{ .Values.global.spiffe.trustDomain }}/ns/{{ .Release.Namespace }}/sa/spire-agent"
+    INTEGRATION_SPIFFE_ID="spiffe://{{ .Values.global.spiffe.trustDomain }}/{{ .Release.Namespace }}/spire-integration-operator-system"
 
     echo "ensuring agent entry"
     if /opt/spire/bin/spire-server entry show -spiffeID $AGENT_SPIFFE_ID | grep -q "Found 0 entries" &> /dev/null; then
