@@ -13,23 +13,17 @@ sources:
 kubeVersion: ">=1.19.0-0"
 dependencies:
   - name: spire-integration-operator
+    alias: spireIntegrationOperator
     version: "0.0.1"
     condition: deployment.spireIntegrationOperator
-    import-values:
-      - child: spire
-        parent: spireConfiguration
     repository: https://otterize.github.io/helm-charts
   - name: spire
+    alias: spire
     version: "1.0.0"
-    condition: deployment.spire
-    import-values:
-      - child: spire
-        parent: spireConfiguration
+    condition: deployment.spiren
     repository: https://otterize.github.io/helm-charts
   - name: intents-operator
+    alias: intentsOperator
     version: "1.0.0"
     condition: deployment.intentsOperator
-    import-values:
-      - child: operator
-        parent: intentsOperator
     repository: file://../intents-operator

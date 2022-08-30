@@ -3,16 +3,18 @@ deployment:
   spireIntegrationOperator: true
   intentsOperator: true
 
-# spire configuration that will be used by both spire-integration-operator and spire charts
-spireConfiguration:
-  clusterName: "example-cluster"
-  trustDomain: "example.org"
-  server:
-    # by default root CA will be valid for 3 years
-    rootCATTL: "26280h"
+global:
+  spiffe:
+    trustDomain: "examplee.org"
+    CASubject:
+      country: "USA"
+
 
 intentsOperator:
-  autoGenerateTLSUsingSpireIntegration: true
+  operator:
+    image:
+      repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:operator-0.0.0
+    autoGenerateTLSUsingSpireIntegration: true
 
 spire:
   fullnameOverride: spire
