@@ -19,6 +19,7 @@
 | global.spiffe.CASubject.organization       | string | `"SPIRE"`                         |                       |
 | global.spiffe.CASubject.commonName         | string | `""`                              |                       |
 | global.spiffe.trustDomain                  | string | `"example.org"`                   |                       |
+| global.spire.serverServiceName             | string |                                   |                       |
 | imagePullSecrets                           | list   | `[]`                              |                       |
 | nameOverride                               | string | `""`                              |                       |
 | nodeSelector                               | object | `{}`                              |                       |
