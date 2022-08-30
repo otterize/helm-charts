@@ -15,6 +15,10 @@
 | autoscaling.targetCPUUtilizationPercentage | int    | `80`                              |                       |
 | clusterName                                | string | `"example-cluster"`               |                       |
 | fullnameOverride                           | string | `""`                              |                       |
+| global.spiffe.CASubject.country            | string | `"US"`                            |                       |
+| global.spiffe.CASubject.organization       | string | `"SPIRE"`                         |                       |
+| global.spiffe.CASubject.commonName         | string | `""`                              |                       |
+| global.spiffe.trustDomain                  | string | `"example.org"`                   |                       |
 | imagePullSecrets                           | list   | `[]`                              |                       |
 | nameOverride                               | string | `""`                              |                       |
 | nodeSelector                               | object | `{}`                              |                       |
@@ -38,8 +42,4 @@
 | serviceAccount.name                        | string | `""`                              |                       |
 | server.rootCATTL                           | string | `"26280h"`                        | determine root_ca TTL |
 | server.SVIDDefaultTTL                      | string | `"24h"`                           | determine root_ca TTL |
-| spiffe.CASubject.country                   | string | `"US"`                            |                       |
-| spiffe.CASubject.organization              | string | `"SPIRE"`                         |                       |
-| spiffe.CASubject.commonName                | string | `""`                              |                       |
-| spiffe.trustDomain                         | string | `"example.org"`                   |                       |
 | tolerations                                | list   | `[]`                              |                       |

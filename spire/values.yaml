@@ -96,9 +96,10 @@ affinity: {}
 
 clusterName: "example-cluster"
 
-spiffe:
-  trustDomain: "example.org"
-  CASubject:
-    country: "US"
-    organization: "SPIRE"
-    commonName: ""
+global:
+  spiffe:
+    trustDomain: "example.org"
+    CASubject:
+      country: "US"
+      organization: "SPIRE"
+      commonName: ""
