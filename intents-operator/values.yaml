@@ -1,6 +1,6 @@
 operator:
   image:
-    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:operator-0.0.1
+    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:operator-0.0.0
     pullPolicy: Always
 
   autoGenerateTLSUsingSpireIntegration: false
