@@ -19,6 +19,7 @@
 | global.spiffe.CASubject.organization       | string | `"SPIRE"`                         |                       |
 | global.spiffe.CASubject.commonName         | string | `""`                              |                       |
 | global.spiffe.trustDomain                  | string | `"example.org"`                   |                       |
+| global.spire.serverServiceName             | string |                                   |                       |
 | imagePullSecrets                           | list   | `[]`                              |                       |
 | nameOverride                               | string | `""`                              |                       |
 | nodeSelector                               | object | `{}`                              |                       |
@@ -35,7 +36,6 @@
 | server.image.repository                    | string | `"gcr.io/spiffe-io/spire-server"` |                       |
 | server.image.tag                           | string | `""`                              |                       |
 | server.logLevel                            | string | `"INFO"`                          |                       |
-| server.service.port                        | int    | `8081`                            |                       |
 | server.service.type                        | string | `"ClusterIP"`                     |                       |
 | serviceAccount.annotations                 | object | `{}`                              |                       |
 | serviceAccount.create                      | bool   | `true`                            |                       |

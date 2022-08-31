@@ -16,4 +16,9 @@ resources: { }
   #   memory: 128Mi
 
 spire:
+  serverAddress:
   socketsPath: "/run/spire/sockets"
+
+global:
+  spire:
+    serverServiceName:

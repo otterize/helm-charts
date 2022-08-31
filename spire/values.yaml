@@ -24,7 +24,6 @@ server:
 
   service:
     type: ClusterIP
-    port: 8081
 
 agent:
   # Defaults to the secure kubelet port by default.
@@ -103,3 +102,6 @@ global:
       country: "US"
       organization: "SPIRE"
       commonName: ""
+  spire:
+    serverServiceName:
+

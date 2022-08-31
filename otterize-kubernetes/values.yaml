@@ -4,6 +4,9 @@ deployment:
   intentsOperator: true
 
 global:
+  spire:
+    serverServiceName: spire-server
+
 #  spiffe:
 #    trustDomain: "example.org"
 #    CASubject:
@@ -15,5 +18,3 @@ global:
 intentsOperator:
     autoGenerateTLSUsingSpireIntegration: true
 
-spire:
-  fullnameOverride: spire

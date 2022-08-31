@@ -26,4 +26,4 @@ dependencies:
     alias: intentsOperator
     version: "1.0.0"
     condition: deployment.intentsOperator
-    repository: file://../intents-operator
+    repository: https://otterize.github.io/helm-charts
