@@ -17,12 +17,15 @@ data:
     AGENT_SPIFFE_ID="spiffe://{{ .Values.global.spiffe.trustDomain }}/ns/{{ .Release.Namespace }}/sa/spire-agent"
     INTEGRATION_SPIFFE_ID="spiffe://{{ .Values.global.spiffe.trustDomain }}/{{ .Release.Namespace }}/spire-integration-operator-system"
 
+    AGENT_SELECTORS="-selector k8s_psat:agent_ns:{{ .Release.Namespace }} -selector k8s_psat:agent_sa:{{ include "spire.serviceAccountName" . }}-agent"
+
     echo "ensuring agent entry"
-    if /opt/spire/bin/spire-server entry show -spiffeID $AGENT_SPIFFE_ID | grep -q "Found 0 entries" &> /dev/null; then
-      /opt/spire/bin/spire-server entry create -spiffeID $AGENT_SPIFFE_ID -selector k8s_psat:agent_ns:{{ .Release.Namespace }} -selector k8s_psat:agent_sa:{{ include "spire.serviceAccountName" . }}-agent -node
+    if /opt/spire/bin/spire-server entry show -spiffeID $AGENT_SPIFFE_ID $AGENT_SELECTORS | grep -q "Found 0 entries" &> /dev/null; then
+      /opt/spire/bin/spire-server entry create -spiffeID $AGENT_SPIFFE_ID $AGENT_SELECTORS -node
     fi
 
+    SPIRE_INTEGRATION_SELECTORS="-selector k8s:ns:{{ .Release.Namespace }} -selector k8s:pod-label:app:spire-integration-operator"
     echo "ensuring integration entry"
-    if /opt/spire/bin/spire-server entry show -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID | grep -q "Found 0 entries" &> /dev/null; then
-      /opt/spire/bin/spire-server entry create -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID -selector k8s:ns:{{ .Release.Namespace }} -selector k8s:pod-label:app:spire-integration-operator -admin
+    if /opt/spire/bin/spire-server entry show -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID $SPIRE_INTEGRATION_SELECTORS | grep -q "Found 0 entries" &> /dev/null; then
+      /opt/spire/bin/spire-server entry create -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID $SPIRE_INTEGRATION_SELECTORS -admin
     fi
