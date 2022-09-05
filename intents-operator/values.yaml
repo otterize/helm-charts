@@ -1,6 +1,6 @@
 operator:
   image:
-    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:operator-0.0.0
+    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:operator-latest
     pullPolicy: Always
 
   autoGenerateTLSUsingSpireIntegration: false
@@ -18,7 +18,7 @@ operator:
 
 watcher:
   image:
-    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:watcher-0.0.6
+    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:watcher-latest
     pullPolicy: Always
 
   resources: { }
