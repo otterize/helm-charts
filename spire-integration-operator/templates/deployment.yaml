@@ -61,6 +61,9 @@ spec:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+             - "ALL"
         volumeMounts:
         - mountPath: {{ .Values.spire.socketsPath }}
           name: spire-agent-socket

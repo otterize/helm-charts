@@ -16,7 +16,7 @@ dependencies:
     alias: spireIntegrationOperator
     version: "0.0.1"
     condition: deployment.spireIntegrationOperator
-    repository: https://otterize.github.io/helm-charts
+    repository: file://./../spire-integration-operator
   - name: spire
     alias: spire
     version: "1.0.0"
