@@ -34,3 +34,11 @@ rules:
       - get
       - list
       - watch
+{{ if .Values.allowGetAllResources }}
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - 'get'
+{{ end }}
