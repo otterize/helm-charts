@@ -1,8 +1,8 @@
 # Otterize Helm Charts
 
-This repository contains the official Helm charts for configuring and installing Otterize open source components on Kubernetes: the Intents Operator, Network Mapper and SPIRE Integration Operator. This chart supports multiple use cases depending on the values provided.
+This repository contains the official Helm charts for configuring and installing Otterize open source components on Kubernetes: the Intents Operator, Network Mapper and SPIRE Integration Operator. These charts support multiple use cases depending on the values provided.
 
-For full documentation on this Helm chart along with all the ways you can use Vault with Kubernetes, please see the
+For full documentation on this Helm chart along with all the ways you can use Otterize with Kubernetes, please see the
 [Otterize documentation](https://docs.otterize.com/).
 
 ## Prerequisites
