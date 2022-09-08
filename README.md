@@ -18,7 +18,7 @@ and run `helm install`:
 $ helm repo add otterize https://helm.otterize.com
 "otterize" has been added to your repositories
 
-$ helm install otterize -n otterize-deploy otterize/kubernetes-otterize
+$ helm install otterize -n otterize-deploy otterize/otterize-kubernetes # or another chart
 ```
 
 Please see the many options supported in the README for each chart. These are also
