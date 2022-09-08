@@ -65,8 +65,6 @@ spec:
                       - topic
                     type: object
                   type: array
-                usernameMapping:
-                  type: string
               required:
                 - tls
               type: object
