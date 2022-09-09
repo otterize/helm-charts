@@ -1,25 +1,30 @@
 # Otterize Helm Charts
 
-This repository contains the official Helm charts for configuring and installing Otterize open source components on Kubernetes: the Intents Operator, Network Mapper and SPIRE Integration Operator. These charts support multiple use cases depending on the values provided.
+This repository contains the official Helm charts for configuring and installing Otterize OSS components on Kubernetes: the intents operator, the network mapper, and the SPIRE integration operator. These charts support multiple use cases depending on the values provided.
 
-For full documentation on this Helm chart along with all the ways you can use Otterize with Kubernetes, please see the
-[Otterize documentation](https://docs.otterize.com/).
+For full documentation on installing and configuring Otterize with these Helm charts, as well as all the ways you can use Otterize with Kubernetes, please see the
+[docs site](https://docs.otterize.com/).
 
 ## Prerequisites
 
-To use the charts here, you need [Helm](https://helm.sh/). Setting up Kubernetes and Helm is outside the scope of this README. Please refer to the Kubernetes and Helm documentation.
+To use the charts here, you'll need [Kubernetes](https://kubernetes.io/docs/home/) and [Helm](https://helm.sh/docs/intro/quickstart/).
 
 ## Usage
 
-To install the latest version of these charts, add the Otterize helm repository
-and run `helm install`:
+To use the latest version of these charts, first add the Otterize helm repository:
 
 ```console
 $ helm repo add otterize https://helm.otterize.com
+```
+You should see:
+```console
 "otterize" has been added to your repositories
+````
 
-$ helm install otterize -n otterize-deploy otterize/otterize-kubernetes # or another chart
+Then you can install any of them into your cluster, e.g. to install the otterize-kubernetes component into a namespace called "otterize-deploy", use:
+```console
+$ helm install otterize otterize/otterize-kubernetes -n otterize-deploy
 ```
 
-Please see the many options supported in the README for each chart. These are also
-fully documented directly on the [Otterize website](https://docs.otterize.com/) along with more detailed installation instructions.
+The README for each chart describes the various configuration options it supports. 
+These are also documented in the [docs site](https://docs.otterize.com/) along with more detailed installation instructions.
