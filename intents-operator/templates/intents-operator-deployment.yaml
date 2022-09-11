@@ -15,7 +15,7 @@ spec:
       annotations:
         kubectl.kubernetes.io/default-container: manager
         {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
-        otterize/service-name: intents-operator
+        intents.otterize.com/service-name: intents-operator
         spire-integration.otterize.com/tls-secret-name: intents-operator-spifferize-tls-controller-manager
         {{- end }}
       labels:
