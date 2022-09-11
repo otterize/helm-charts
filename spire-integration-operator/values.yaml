@@ -1,6 +1,6 @@
 operator:
   image:
-    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize-tools:spire-integration-operator-latest
+    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:spire-integration-operator-latest
     pullPolicy: Always
 
 resources: { }
