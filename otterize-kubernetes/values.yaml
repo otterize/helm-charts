@@ -19,7 +19,7 @@ intentsOperator:
     autoGenerateTLSUsingSpireIntegration: true
 
 # alias for spire values
-spire:
+spire: {}
 
 # alias for spire-integration-operator values
-spireIntegrationOperator:
+spireIntegrationOperator: {}
