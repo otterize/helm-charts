@@ -7,14 +7,19 @@ global:
   spire:
     serverServiceName: spire-server
 
-#  spiffe:
-#    trustDomain: "example.org"
-#    CASubject:
-#      country: "US"
-#      organization: "SPIRE"
-#      commonName: ""
+  spiffe:
+    trustDomain: "example.org"
+    CASubject:
+      country: "US"
+      organization: "SPIRE"
 
-
+# alias for intents-operator values
 intentsOperator:
   operator:
     autoGenerateTLSUsingSpireIntegration: true
+
+# alias for spire values
+spire:
+
+# alias for spire-integration-operator values
+spireIntegrationOperator:
