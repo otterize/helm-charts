@@ -14,8 +14,8 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
-        {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
         intents.otterize.com/service-name: intents-operator
+        {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
         spire-integration.otterize.com/tls-secret-name: intents-operator-spifferize-tls-controller-manager
         {{- end }}
       labels:
@@ -49,6 +49,15 @@ spec:
           {{- toYaml .Values.operator.resources | nindent 10 }}
         securityContext:
           allowPrivilegeEscalation: false
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
