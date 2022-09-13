@@ -9,5 +9,5 @@ roleRef:
   name: spire-integration-operator-leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: spire-integration-operator
+  name: spire-integration-operator-controller-manager
   namespace: {{ .Release.Namespace }}
