@@ -2,9 +2,9 @@ apiVersion: v1
 entries:
   intents-operator:
   - apiVersion: v2
-    created: "2022-09-14T20:03:24.550840289Z"
+    created: "2022-09-14T20:06:29.698675026Z"
     description: Otterize intents operator
-    digest: 9de96f90a5f0fc3a2ae0f4b95ddfab5d5fa46c828bdd1b753477aa9f9d14dce4
+    digest: 70e6e1ff11e608b7aabb6e99503059b0155a02e08fd3a417bc80ebd8a43ad602
     home: https://github.com/otterize/intents-operator
     name: intents-operator
     sources:
@@ -13,9 +13,22 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/intents-operator-0.1.0.tgz
     version: 0.1.0
+  network-mapper:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2022-09-14T20:06:29.699128628Z"
+    digest: b12ad23a8030f9f55f419f8c04f20d49643f07d9cc616be8b11eb66c4c5ee85e
+    home: https://github.com/otterize/network-mapper
+    name: network-mapper
+    sources:
+    - https://github.com/otterize/network-mapper
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/network-mapper-0.1.0.tgz
+    version: 0.1.0
   otterize-kubernetes:
   - apiVersion: v2
-    created: "2022-09-14T20:03:24.553389721Z"
+    created: "2022-09-14T20:06:29.702105944Z"
     dependencies:
     - alias: spireIntegrationOperator
       condition: deployment.spireIntegrationOperator
@@ -34,7 +47,7 @@ entries:
       version: '>= 0.0.1'
     description: 'This chart contains both the Otterize spire-integration-operator,
       SPIRE (server+agent), and the Otterize Intents Operator. '
-    digest: aebc4bdfa303f2b015df7223f916850ea356982c96e9152b3da54a3ee07221fd
+    digest: 1c4e4e1ad98292d1b9829746b66c495dc7fcf34cbb6ea01d012a6d2fd200e82e
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -63,7 +76,7 @@ entries:
   spire:
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2022-09-14T20:03:24.554512635Z"
+    created: "2022-09-14T20:06:29.703522452Z"
     description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
       Please note this chart requires Projected Service Account Tokens which has to
       be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
@@ -74,7 +87,7 @@ entries:
       command:         - kube-apiserver         - --api-audiences=api,spire-server         -
       --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
       --service-account-signing-key-file=/run/config/pki/sa.key ``` '
-    digest: 581b58faafef393f2848ac8c32b9f4b887a2f1b5e54dc4add8943389449e666b
+    digest: 924a3747f9202ca5b182eb2a76a9fdf80740cf4ad9d508b77c6a35859a8a1d95
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -90,9 +103,9 @@ entries:
   spire-integration-operator:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-09-14T20:03:24.554979841Z"
+    created: "2022-09-14T20:06:29.704079855Z"
     description: spire-integration-operator
-    digest: 576024efa1eb25f270c2c4c533540904e11925de1ebe9da35ae4cab280a63f37
+    digest: 3088192a4b0311efefc955a4049c4ba536cc78fb49f2909275dc2f4ffb3d5df6
     home: https://github.com/otterize/spire-integration-operator
     name: spire-integration-operator
     sources:
@@ -101,4 +114,4 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-14T20:03:24.549930777Z"
+generated: "2022-09-14T20:06:29.697042017Z"
