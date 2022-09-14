@@ -1,0 +1,104 @@
+apiVersion: v1
+entries:
+  intents-operator:
+  - apiVersion: v2
+    created: "2022-09-14T20:03:24.550840289Z"
+    description: Otterize intents operator
+    digest: 9de96f90a5f0fc3a2ae0f4b95ddfab5d5fa46c828bdd1b753477aa9f9d14dce4
+    home: https://github.com/otterize/intents-operator
+    name: intents-operator
+    sources:
+    - https://github.com/otterize/intents-operator
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/intents-operator-0.1.0.tgz
+    version: 0.1.0
+  otterize-kubernetes:
+  - apiVersion: v2
+    created: "2022-09-14T20:03:24.553389721Z"
+    dependencies:
+    - alias: spireIntegrationOperator
+      condition: deployment.spireIntegrationOperator
+      name: spire-integration-operator
+      repository: file://./../spire-integration-operator
+      version: '>= 0.0.1'
+    - alias: spire
+      condition: deployment.spire
+      name: spire
+      repository: file://./../spire
+      version: 1.0.0
+    - alias: intentsOperator
+      condition: deployment.intentsOperator
+      name: intents-operator
+      repository: file://./../intents-operator
+      version: '>= 0.0.1'
+    description: 'This chart contains both the Otterize spire-integration-operator,
+      SPIRE (server+agent), and the Otterize Intents Operator. '
+    digest: aebc4bdfa303f2b015df7223f916850ea356982c96e9152b3da54a3ee07221fd
+    home: https://github.com/otterize/helm-charts
+    keywords:
+    - spiffe
+    - spire
+    - spire-server
+    - spire-agent
+    kubeVersion: '>=1.19.0-0'
+    name: otterize-kubernetes
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/otterize-kubernetes-0.1.0.tgz
+    version: 0.1.0
+  otterize-network-mapper:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2022-09-14T20:03:24.553673924Z"
+    digest: 4afc19797fd9b1133e60697a8557aabfefe9d46fb6267669395580a9ffee6d8c
+    home: https://github.com/otterize/network-mapper
+    name: otterize-network-mapper
+    sources:
+    - https://github.com/otterize/network-mapper
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/otterize-network-mapper-0.1.0.tgz
+    version: 0.1.0
+  spire:
+  - apiVersion: v2
+    appVersion: 1.0.2
+    created: "2022-09-14T20:03:24.554512635Z"
+    description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
+      Please note this chart requires Projected Service Account Tokens which has to
+      be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
+      enable Projected Service Account Tokens on Docker for Mac/Windows run the following
+      command to SSH into the Docker Desktop K8s VM.  ```bash docker run -it --privileged
+      --pid=host debian nsenter -t 1 -m -u -n -i sh ```  Then add the following to
+      `/etc/kubernetes/manifests/kube-apiserver.yaml`  ```yaml spec:   containers:     -
+      command:         - kube-apiserver         - --api-audiences=api,spire-server         -
+      --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
+      --service-account-signing-key-file=/run/config/pki/sa.key ``` '
+    digest: 581b58faafef393f2848ac8c32b9f4b887a2f1b5e54dc4add8943389449e666b
+    home: https://github.com/otterize/helm-charts
+    keywords:
+    - spiffe
+    - spire
+    - spire-server
+    - spire-agent
+    kubeVersion: '>=1.19.0-0'
+    name: spire
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-1.0.0.tgz
+    version: 1.0.0
+  spire-integration-operator:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-09-14T20:03:24.554979841Z"
+    description: spire-integration-operator
+    digest: 576024efa1eb25f270c2c4c533540904e11925de1ebe9da35ae4cab280a63f37
+    home: https://github.com/otterize/spire-integration-operator
+    name: spire-integration-operator
+    sources:
+    - https://github.com/otterize/spire-integration-operator
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-09-14T20:03:24.549930777Z"
