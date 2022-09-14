@@ -1,20 +1,12 @@
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.9.0
+  creationTimestamp: null
   name: clientintents.k8s.otterize.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: intents-operator-webhook-service
-          namespace: intents-operator-system
-          path: /convert
-      conversionReviewVersions:
-        - v1
   group: k8s.otterize.com
   names:
     kind: ClientIntents
@@ -50,12 +42,45 @@ spec:
                         type: string
                       namespace:
                         type: string
+                      resources:
+                        items:
+                          properties:
+                            method:
+                              enum:
+                                - GET
+                                - POST
+                                - PUT
+                                - DELETE
+                                - OPTIONS
+                                - TRACE
+                                - PATCH
+                                - CONNECT
+                              type: string
+                            path:
+                              type: string
+                          required:
+                            - method
+                            - path
+                          type: object
+                        type: array
                       topics:
                         items:
                           properties:
                             name:
                               type: string
                             operation:
+                              enum:
+                                - all
+                                - consume
+                                - produce
+                                - create
+                                - alter
+                                - delete
+                                - describe
+                                - ClusterAction
+                                - DescribeConfigs
+                                - AlterConfigs
+                                - IdempotentWrite
                               type: string
                           required:
                             - name
@@ -69,7 +94,6 @@ spec:
                         type: string
                     required:
                       - name
-                      - type
                     type: object
                   type: array
                 service:
