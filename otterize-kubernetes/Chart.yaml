@@ -10,7 +10,7 @@ kubeVersion: ">=1.19.0-0"
 dependencies:
   - name: spire-integration-operator
     alias: spireIntegrationOperator
-    version: "0.0.1"
+    version: ">= 0.0.1"
     condition: deployment.spireIntegrationOperator
     repository: file://./../spire-integration-operator
   - name: spire
@@ -20,6 +20,6 @@ dependencies:
     repository: file://./../spire
   - name: intents-operator
     alias: intentsOperator
-    version: "1.0.0"
+    version: ">= 0.0.1"
     condition: deployment.intentsOperator
     repository: file://./../intents-operator
