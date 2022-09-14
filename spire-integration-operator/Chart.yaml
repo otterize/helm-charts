@@ -2,9 +2,9 @@ apiVersion: v2
 name: spire-integration-operator
 description: spire-integration-operator
 type: application
-version: 0.0.1
+version: 0.1.0
 appVersion: "1.0.0"
 home: https://github.com/otterize/spire-integration-operator
 sources:
-  - https://github.com/otterize/spire-integration-operator/helm
+  - https://github.com/otterize/spire-integration-operator
 

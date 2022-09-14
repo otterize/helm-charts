@@ -2,8 +2,8 @@ apiVersion: v2
 name: intents-operator
 description: Otterize intents operator
 type: application
-version: 1.0.0
+version: 0.1.0
 home: https://github.com/otterize/intents-operator
 sources:
-  - https://github.com/otterize/spire-integration-operator/helm
+  - https://github.com/otterize/intents-operator
 
