@@ -13,6 +13,18 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/intents-operator-1.0.0.tgz
     version: 1.0.0
+  - apiVersion: v2
+    created: "2022-09-14T16:49:26.688193661Z"
+    description: Otterize intents operator
+    digest: 55fc948095646135385b1cb4a06c6e9d794fc0cddd79aa4d6d48c57c33e7f4cc
+    home: https://github.com/otterize/intents-operator
+    name: intents-operator
+    sources:
+    - https://github.com/otterize/intents-operator
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/intents-operator-0.1.0.tgz
+    version: 0.1.0
   otterize-kubernetes:
   - apiVersion: v2
     created: "2022-09-14T08:56:09.966560372Z"
@@ -50,10 +62,43 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/otterize-kubernetes-1.0.0.tgz
     version: 1.0.0
+  - apiVersion: v2
+    created: "2022-09-14T16:49:26.690778251Z"
+    dependencies:
+    - alias: spireIntegrationOperator
+      condition: deployment.spireIntegrationOperator
+      name: spire-integration-operator
+      repository: file://./../spire-integration-operator
+      version: '>= 0.0.1'
+    - alias: spire
+      condition: deployment.spire
+      name: spire
+      repository: file://./../spire
+      version: 1.0.0
+    - alias: intentsOperator
+      condition: deployment.intentsOperator
+      name: intents-operator
+      repository: file://./../intents-operator
+      version: '>= 0.0.1'
+    description: 'This chart contains both the Otterize spire-integration-operator,
+      SPIRE (server+agent), and the Otterize Intents Operator. '
+    digest: ed779f2c79b08be5fc1bfca91168ede730a3ae6eaed8f4bef1b127d3ae9398ca
+    home: https://github.com/otterize/helm-charts
+    keywords:
+    - spiffe
+    - spire
+    - spire-server
+    - spire-agent
+    kubeVersion: '>=1.19.0-0'
+    name: otterize-kubernetes
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/otterize-kubernetes-0.1.0.tgz
+    version: 0.1.0
   spire:
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2022-09-14T08:56:09.967551865Z"
+    created: "2022-09-14T16:49:26.691800048Z"
     description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
       Please note this chart requires Projected Service Account Tokens which has to
       be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
@@ -64,7 +109,7 @@ entries:
       command:         - kube-apiserver         - --api-audiences=api,spire-server         -
       --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
       --service-account-signing-key-file=/run/config/pki/sa.key ``` '
-    digest: dcb21a7294ae04c39e72a3f35636407aba8dd5c1989265f9f073ef8c1be55d56
+    digest: 89090b296b36eb0f527b4c72e41e05aac6e534948609da6749fa85ac6b7652b2
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -73,13 +118,24 @@ entries:
     - spire-agent
     kubeVersion: '>=1.19.0-0'
     name: spire
-    sources:
-    - https://github.com/otterize/helm-charts/spire
     type: application
     urls:
     - https://otterize.github.io/helm-charts/spire-1.0.0.tgz
     version: 1.0.0
   spire-integration-operator:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-09-14T16:49:26.692263346Z"
+    description: spire-integration-operator
+    digest: ae26aaf9d2a37244d9b692a8bd7ea2fad71ebbe145e132e51281928877233ea7
+    home: https://github.com/otterize/spire-integration-operator
+    name: spire-integration-operator
+    sources:
+    - https://github.com/otterize/spire-integration-operator
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
+    version: 0.1.0
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2022-09-14T08:56:09.967956902Z"
@@ -129,4 +185,4 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/spire-server-and-integration-1.0.0.tgz
     version: 1.0.0
-generated: "2022-09-14T08:56:09.962401983Z"
+generated: "2022-09-14T16:49:26.687079664Z"
