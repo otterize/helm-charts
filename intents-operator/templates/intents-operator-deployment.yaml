@@ -23,7 +23,18 @@ spec:
     spec:
       containers:
       - args:
-        - --config=controller_manager_config.yaml
+        {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
+        - --enable-network-policy-creation=false
+        {{- end }}
+        {{- if eq false .Values.operator.enableKafkaACLCreation }}
+        - --enable-kafka-acl-creation=false
+        {{- end }}
+        {{- if eq false .Values.operator.autoCreateNetworkPoliciesForExternalTraffic }}
+        - --auto-create-network-policies-for-external-traffic=false
+        {{- end }}
+        {{- range .Values.watchedNamespaces }}
+        - --watched-namespaces={{ . | quote }}
+        {{- end }}
         command:
         - /manager
         image: {{ .Values.operator.image.repository }}

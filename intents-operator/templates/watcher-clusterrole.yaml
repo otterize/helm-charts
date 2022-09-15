@@ -34,7 +34,7 @@ rules:
       - get
       - list
       - watch
-{{ if .Values.allowGetAllResources }}
+{{ if .Values.global.allowGetAllResources | default .Values.allowGetAllResources }}
   - apiGroups:
       - '*'
     resources:
