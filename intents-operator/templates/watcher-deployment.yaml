@@ -17,6 +17,10 @@ spec:
       serviceAccountName: otterize-watcher
       containers:
         - name: otterize-watcher
+          args:
+            {{- range .Values.watchedNamespaces }}
+            - --watched-namespaces={{ . | quote }}
+            {{- end }}
           image: {{ .Values.watcher.image.repository }}
           imagePullPolicy: {{ .Values.watcher.image.pullPolicy }}
           resources:

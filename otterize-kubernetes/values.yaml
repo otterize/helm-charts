@@ -17,6 +17,10 @@ global:
 intentsOperator:
   operator:
     autoGenerateTLSUsingSpireIntegration: true
+    enableNetworkPolicyCreation: true
+    enableKafkaACLCreation: true
+    autoCreateNetworkPoliciesForExternalTraffic: true
+  watchedNamespaces: null # by default, watch all
 
 # alias for spire values
 spire: {}

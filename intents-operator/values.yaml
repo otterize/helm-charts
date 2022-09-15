@@ -4,6 +4,9 @@ operator:
     pullPolicy: Always
 
   autoGenerateTLSUsingSpireIntegration: false
+  enableNetworkPolicyCreation: true
+  enableKafkaACLCreation: true
+  autoCreateNetworkPoliciesForExternalTraffic: true
   resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -38,3 +41,4 @@ watcher:
 # If that Deployment is owned by a custom resource, the operator will not be able to resolve it.
 # For this resolving to be successful, the operator needs to be able to `get` all resources.
 allowGetAllResources: true
+watchedNamespaces: null # by default, watch all

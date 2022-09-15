@@ -21,3 +21,11 @@ rules:
       - 'statefulsets'
     verbs:
       - 'get'
+{{ if .Values.global.allowGetAllResources | default .Values.allowGetAllResources }}
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - 'get'
+{{ end }}
