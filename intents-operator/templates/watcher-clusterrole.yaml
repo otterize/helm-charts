@@ -4,6 +4,14 @@ kind: ClusterRole
 metadata:
   name: otterize-watcher-role
 rules:
+{{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - 'get'
+{{ else }}
   - apiGroups:
       - ""
     resources:
@@ -34,11 +42,4 @@ rules:
       - get
       - list
       - watch
-{{ if .Values.global.allowGetAllResources | default .Values.allowGetAllResources }}
-  - apiGroups:
-      - '*'
-    resources:
-      - '*'
-    verbs:
-      - 'get'
 {{ end }}

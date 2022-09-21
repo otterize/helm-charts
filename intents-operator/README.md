@@ -1,5 +1,11 @@
 # Parameters
 
+## Global parameters
+| Key                              | Description                                                                                                                                 | Default |
+|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| `global.allowGetAllResources`    | If defined overrides `allowGetAllResources`.                                                                                                |         |
+
+
 ## Operator parameters
 
 | Key                                             | Description                                                                                                        | Default                                                                         |
