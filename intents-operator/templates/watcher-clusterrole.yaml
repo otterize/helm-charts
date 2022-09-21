@@ -4,14 +4,6 @@ kind: ClusterRole
 metadata:
   name: otterize-watcher-role
 rules:
-{{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
-  - apiGroups:
-      - '*'
-    resources:
-      - '*'
-    verbs:
-      - 'get'
-{{ else }}
   - apiGroups:
       - ""
     resources:
@@ -38,6 +30,15 @@ rules:
       - "k8s.otterize.com"
     resources:
       - clientintents
+    verbs:
+      - get
+      - list
+      - watch
+{{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
     verbs:
       - get
       - list
