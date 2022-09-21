@@ -43,4 +43,5 @@ watcher:
 allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
 global:
+  # If defined overrides `allowGetAllResources`
   allowGetAllResources:

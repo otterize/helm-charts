@@ -7,4 +7,5 @@ allowGetAllResources: true
 
 # Fields from All-in-one chart
 global:
+  # If defined overrides `allowGetAllResources`
   allowGetAllResources:

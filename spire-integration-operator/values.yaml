@@ -22,6 +22,7 @@ spire:
 global:
   spire:
     serverServiceName:
+  # If defined overrides `allowGetAllResources`
   allowGetAllResources:
 
 # allowGetAllResources gives get permission to watch on all resources. If disabled, the operator will only

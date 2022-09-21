@@ -6,6 +6,7 @@ deployment:
 global:
   spire:
     serverServiceName: spire-server
+  # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   spiffe:
     trustDomain: "example.org"
