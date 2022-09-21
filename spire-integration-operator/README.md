@@ -4,6 +4,7 @@
 | Key                              | Description                                                                                                                                 | Default |
 |----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `global.spire.serverServiceName` | If deployed with spire, this key specifies spire-server's service name. You should use either this **OR** `spire.serverAddress` (not both). |         |
+| `global.allowGetAllResources`    | If defined overrides `allowGetAllResources`.                                                                                                |         |
 
 ## Spire parameters
 

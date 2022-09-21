@@ -16,6 +16,7 @@
 | `global.spiffe.CASubject.organization` | Spire's CA certificates `Organization` Value.                         | `"SPIRE"`       |
 | `global.spiffe.trustDomain`            | The trust domain that spire will use.	                                | `"example.org"` |
 | `global.spire.serverServiceName`       | Name of the kubernetes service that will be created for spire-server. |                 |
+| `global.allowGetAllResources`          | If defined overrides `allowGetAllResources`.                          |                 |
 
 ## Intents-operator parameters
 All configurable parameters of intents-operator can be configured under the alias IntentsOperator.

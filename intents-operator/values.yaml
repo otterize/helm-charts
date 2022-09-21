@@ -42,3 +42,5 @@ watcher:
 # For this resolving to be successful, the operator needs to be able to `get` all resources.
 allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
+global:
+  allowGetAllResources:
