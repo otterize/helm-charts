@@ -25,9 +25,9 @@ You should see:
 "otterize" has been added to your repositories
 ````
 
-Then you can install any of them into your cluster, e.g. to install the otterize-kubernetes component into a namespace called "otterize-deploy", use:
+Then you can install any of them into your cluster, e.g. to install the otterize-kubernetes chart into a namespace called "otterize-system", use:
 ```console
-$ helm install otterize otterize/otterize-kubernetes -n otterize-deploy
+$ helm install otterize otterize/otterize-kubernetes -n otterize-system
 ```
 
 The README for each chart describes the various configuration options it supports. 
