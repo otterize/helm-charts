@@ -13,8 +13,10 @@ spec:
     spec:
       containers:
       - name: {{ template "otterize.sniffer.fullName" . }}
-        image: {{ .Values.sniffer.image.repository }}
-        imagePullPolicy: {{ .Values.sniffer.image.pullPolicy }}
+        image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ .Values.sniffer.tag }}"
+        {{ if .Values.sniffer.pullPolicy }}
+        imagePullPolicy: {{ .Values.sniffer.pullPolicy }}
+        {{ end }}
         resources:
           limits:
             memory: 200Mi

@@ -16,8 +16,10 @@ spec:
         runAsNonRoot: true
       containers:
         - name: {{ template "otterize.mapper.fullName" . }}
-          image: {{ .Values.mapper.image.repository }}
-          imagePullPolicy: {{ .Values.mapper.image.pullPolicy }}
+          image: "{{ .Values.mapper.repository }}/{{ .Values.mapper.image }}:{{ .Values.mapper.tag }}"
+          {{ if .Values.mapper.pullPolicy }}
+          imagePullPolicy: {{ .Values.mapper.pullPolicy }}
+          {{ end }}
           env:
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}

@@ -3,15 +3,19 @@
 ## Mapper parameters
 | Key                       | Description              | Default                                                               |
 |---------------------------|--------------------------|-----------------------------------------------------------------------|
-| `mapper.image.repository` | Mapper image repository  | `353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:mapper-latest` |
-| `mapper.image.repository` | Mapper image pull policy | `Always`                                                              |
+| `mapper.image.repository` | Mapper image repository. | `otterize`                                                            |
+| `mapper.image.image`      | Mapper image.            | `network-mapper`                                                      |
+| `mapper.image.tag`        | Mapper image tag.        | `latest`                                                              |
+| `mapper.pullPolicy`       | Mapper pull policy.      | `(none)`                                                              |
 
 
 ## Sniffer parameters
-| Key                        | Description               | Default                                                                |
-|----------------------------|---------------------------|------------------------------------------------------------------------|
-| `sniffer.image.repository` | Sniffer image repository  | `353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:sniffer-latest` |
-| `sniffer.image.repository` | Sniffer image pull policy | `Always`                                                               |
+| Key                        | Description               | Default                  |
+|----------------------------|---------------------------|--------------------------|
+| `sniffer.image.repository` | Sniffer image repository. | `otterize`               |
+| `sniffer.image.image`      | Sniffer image.            | `network-mapper-sniffer` |
+| `sniffer.image.tag`        | Sniffer image tag.        | `latest`                 |
+| `sniffer.pullPolicy`       | Sniffer pull policy.      | `(none)`                 |
 
 
 ## Global parameters

@@ -1,7 +1,8 @@
 operator:
-  image:
-    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:intents-operator-latest
-    pullPolicy: Always
+  repository: otterize
+  image: intents-operator
+  tag: latest
+  pullPolicy:
 
   autoGenerateTLSUsingSpireIntegration: false
   enableNetworkPolicyCreation: true
@@ -20,9 +21,10 @@ operator:
   #   memory: 128Mi
 
 watcher:
-  image:
-    repository: 353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:watcher-latest
-    pullPolicy: Always
+  repository: otterize
+  image: intents-operator-pod-watcher
+  tag: latest
+  pullPolicy:
 
   resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
