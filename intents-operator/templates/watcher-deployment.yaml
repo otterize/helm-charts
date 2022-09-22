@@ -21,7 +21,9 @@ spec:
             {{- range .Values.watchedNamespaces }}
             - --watched-namespaces={{ . | quote }}
             {{- end }}
-          image: {{ .Values.watcher.image.repository }}
-          imagePullPolicy: {{ .Values.watcher.image.pullPolicy }}
+          image: "{{ .Values.watcher.repository }}/{{ .Values.watcher.image }}:{{ .Values.watcher.tag }}"
+          {{ if .Values.watcher.pullPolicy }}
+          imagePullPolicy: {{ .Values.watchedNamespaces.pullPolicy }}
+          {{ end }}
           resources:
-            {{- toYaml .Values.operator.resources | nindent 12 }}
+            {{- toYaml .Values.watcher.resources | nindent 12 }}

@@ -37,8 +37,10 @@ spec:
         {{- end }}
         command:
         - /manager
-        image: {{ .Values.operator.image.repository }}
-        imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
+        image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ .Values.operator.tag }}"
+        {{ if .Values.operator.pullPolicy }}
+        imagePullPolicy: {{ .Values.operator.pullPolicy }}
+        {{ end }}
         livenessProbe:
           httpGet:
             path: /healthz
