@@ -18,11 +18,11 @@
 
 ## Watcher parameters
 
-| Key                        | Description                | Default                                                                         |
-|----------------------------|----------------------------|---------------------------------------------------------------------------------|
-| `watcher.image.repository` | Watcher image repository.  | `353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:intents-operator-latest` |
-| `watcher.image.pullPolicy` | Watcher image pull policy. | `Always`                                                                        |
-| `watcher.resources`        | Watcher Resources.         |                                                                                 |
+| Key                        | Description                | Default                                                                |
+|----------------------------|----------------------------|------------------------------------------------------------------------|
+| `watcher.image.repository` | Watcher image repository.  | `353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:watcher-latest` |
+| `watcher.image.pullPolicy` | Watcher image pull policy. | `Always`                                                               |
+| `watcher.resources`        | Watcher Resources.         |                                                                        |
 
 ## Common parameters
 
