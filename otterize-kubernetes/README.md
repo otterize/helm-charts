@@ -17,7 +17,7 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.spiffe.CASubject.organization` | Spire's CA certificates `Organization` Value.                         | `"SPIRE"`       |
 | `global.spiffe.trustDomain`            | The trust domain that spire will use.	                                | `"example.org"` |
 | `global.spire.serverServiceName`       | Name of the kubernetes service that will be created for spire-server. |                 |
-| `global.allowGetAllResources`          | If defined overrides `allowGetAllResources`.                          |                 |
+| `global.allowGetAllResources`          | If defined overrides `allowGetAllResources` in subcharts. Gives get, list and watch permission to watch on all resources. This is used to resolve service names when pods have owners that are custom resources. When disabled, a limited set of permissions is used that only allows access to built-in Kubernetes resources that deploy Pods and Pods themselves - Deployments, StatefulSets, DaemonSets, ReplicaSets and Services. Resolving may not be able to complete if the owning resource is not one of those.                         |                 |
 
 ## Intents operator parameters
 All configurable parameters of intents-operator can be configured under the alias `intentsOperator`.

@@ -24,8 +24,8 @@
 
 ## Common parameters
 
-| Key                    | Description                                   | Default |
-|------------------------|-----------------------------------------------|---------|
-| `allowGetAllResources` | Gives get permission to watch on all resource | `true`  |
-| `resources`            | Resources of the container                    | `{}`    |
+| Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default |
+|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| `allowGetAllResources` | Gives get, list and watch permission to watch on all resources. This is used to resolve service names when pods have owners that are custom resources. When disabled, a limited set of permissions is used that only allows access to built-in Kubernetes resources that deploy Pods and Pods themselves - Deployments, StatefulSets, DaemonSets, ReplicaSets and Services. Resolving may not be able to complete if the owning resource is not one of those. | `true`  |
+| `resources`            | Resources of the container                                                                                                                                                                                                                                                                                                                                                                                                                                    | `{}`    |
 
