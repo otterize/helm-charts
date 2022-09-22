@@ -23,7 +23,7 @@ spec:
             {{- end }}
           image: "{{ .Values.watcher.repository }}/{{ .Values.watcher.image }}:{{ .Values.watcher.tag }}"
           {{ if .Values.watcher.pullPolicy }}
-          imagePullPolicy: {{ .Values.watchedNamespaces.pullPolicy }}
+          imagePullPolicy: {{ .Values.watcher.pullPolicy }}
           {{ end }}
           resources:
             {{- toYaml .Values.watcher.resources | nindent 12 }}
