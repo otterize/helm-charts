@@ -15,10 +15,12 @@
 
 ## Operator parameters
 
-| Key                         | Description       | Default                                                                                   |
-|-----------------------------|-------------------|-------------------------------------------------------------------------------------------|
-| `operator.image.repository` | Image repository  | `353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:spire-integration-operator-latest` |
-| `operator.image.pullPolicy` | Image pull policy | `Always`                                                                                  |
+| Key                         | Description                | Default                      |
+|-----------------------------|----------------------------|------------------------------|
+| `operator.image.repository` | Operator image repository. | `otterize`                   |
+| `operator.image.image`      | Operator image.            | `spire-integration-operator` |
+| `operator.image.tag`        | Operator image tag.        | `latest`                     |
+| `operator.pullPolicy`       | Operator pull policy.      | `(none)`                     |
 
 ## Common parameters
 
