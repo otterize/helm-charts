@@ -1,7 +1,7 @@
 # Otterize Helm Charts
 
 ![build](https://github.com/otterize/helm-charts/actions/workflows/build.yaml/badge.svg)
-[![community](https://img.shields.io/badge/slack-Otterize_Slack-orange.svg?logo=slack)](https://joinslack.otterize.com)
+[![community](https://img.shields.io/badge/slack-Otterize_Slack-purple.svg?logo=slack)](https://joinslack.otterize.com)
 
 This repository contains the official Helm charts for configuring and installing Otterize OSS components on Kubernetes: the intents operator, the network mapper, and the SPIRE integration operator. These charts support multiple use cases depending on the values provided.
 
