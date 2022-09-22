@@ -16,7 +16,7 @@ spec:
         kubectl.kubernetes.io/default-container: manager
         intents.otterize.com/service-name: intents-operator
         {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
-        spire-integration.otterize.com/tls-secret-name: intents-operator-spifferize-tls-controller-manager
+        spire-integration.otterize.com/tls-secret-name: intents-operator-spire-tls-controller-manager
         {{- end }}
       labels:
         app: intents-operator
@@ -78,8 +78,8 @@ spec:
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: cert
         {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
-        - mountPath: /etc/spifferize
-          name: spifferize-tls
+        - mountPath: /etc/otterize-spire
+          name: spire-tls
           readOnly: true
         {{- end }}
       - args:
@@ -114,8 +114,8 @@ spec:
           name: intents-operator-manager-config
         name: manager-config
       {{ if .Values.operator.autoGenerateTLSUsingSpireIntegration}}
-      - name: spifferize-tls
+      - name: spire-tls
         secret:
-          secretName: intents-operator-spifferize-tls-controller-manager
+          secretName: intents-operator-spire-tls-controller-manager
       {{ end }}
       - name: cert
