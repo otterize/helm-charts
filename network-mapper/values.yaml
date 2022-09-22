@@ -1,7 +1,14 @@
 # Local configuration for network mapper chart
-registry: "353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize"
-mapperImage: "mapper-latest"
-snifferImage: "sniffer-latest"
+mapper:
+  image:
+    repository: "353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:mapper-latest"
+    pullPolicy: Always
+
+sniffer:
+  image:
+    repository: "353146681200.dkr.ecr.us-east-1.amazonaws.com/otterize:sniffer-latest"
+    pullPolicy: Always
+
 debug: false
 allowGetAllResources: true
 
