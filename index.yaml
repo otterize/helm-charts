@@ -1,0 +1,104 @@
+apiVersion: v1
+entries:
+  intents-operator:
+  - apiVersion: v2
+    created: "2022-09-23T10:05:38.804111101Z"
+    description: Otterize intents operator
+    digest: d0cbbd3a8957eb6ac6916086a5838d69e1365be91f901f9d552df0a902ce6a9e
+    home: https://github.com/otterize/intents-operator
+    name: intents-operator
+    sources:
+    - https://github.com/otterize/intents-operator
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/intents-operator-0.1.0.tgz
+    version: 0.1.0
+  network-mapper:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2022-09-23T10:05:38.804496413Z"
+    digest: e2b2d167cd7e9cf151a3a0bb3e74a9b9229c1b9a805f06c09acac5b0abc08899
+    home: https://github.com/otterize/network-mapper
+    name: network-mapper
+    sources:
+    - https://github.com/otterize/network-mapper
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/network-mapper-0.1.0.tgz
+    version: 0.1.0
+  otterize-kubernetes:
+  - apiVersion: v2
+    created: "2022-09-23T10:05:38.806431172Z"
+    dependencies:
+    - alias: spireIntegrationOperator
+      condition: deployment.spireIntegrationOperator
+      name: spire-integration-operator
+      repository: file://./../spire-integration-operator
+      version: '>= 0.0.1'
+    - alias: spire
+      condition: deployment.spire
+      name: spire
+      repository: file://./../spire
+      version: 1.0.0
+    - alias: intentsOperator
+      condition: deployment.intentsOperator
+      name: intents-operator
+      repository: file://./../intents-operator
+      version: '>= 0.0.1'
+    description: 'This chart contains both the Otterize spire-integration-operator,
+      SPIRE (server+agent), and the Otterize Intents Operator. '
+    digest: 25e7128a27384220d460b90e3a61b78dfc1bff020a1941ef1ceb563c9b130112
+    home: https://github.com/otterize/helm-charts
+    keywords:
+    - spiffe
+    - spire
+    - spire-server
+    - spire-agent
+    kubeVersion: '>=1.19.0-0'
+    name: otterize-kubernetes
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/otterize-kubernetes-0.1.0.tgz
+    version: 0.1.0
+  spire:
+  - apiVersion: v2
+    appVersion: 1.0.2
+    created: "2022-09-23T10:05:38.807207696Z"
+    description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
+      Please note this chart requires Projected Service Account Tokens which has to
+      be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
+      enable Projected Service Account Tokens on Docker for Mac/Windows run the following
+      command to SSH into the Docker Desktop K8s VM.  ```bash docker run -it --privileged
+      --pid=host debian nsenter -t 1 -m -u -n -i sh ```  Then add the following to
+      `/etc/kubernetes/manifests/kube-apiserver.yaml`  ```yaml spec:   containers:     -
+      command:         - kube-apiserver         - --api-audiences=api,spire-server         -
+      --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
+      --service-account-signing-key-file=/run/config/pki/sa.key ``` '
+    digest: 981536c714c0a391a60e0d24ee4bd868dc3ca62a0e8075893c9784bf59583d3a
+    home: https://github.com/otterize/helm-charts
+    keywords:
+    - spiffe
+    - spire
+    - spire-server
+    - spire-agent
+    kubeVersion: '>=1.19.0-0'
+    name: spire
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-1.0.0.tgz
+    version: 1.0.0
+  spire-integration-operator:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-09-23T10:05:38.807582307Z"
+    description: spire-integration-operator
+    digest: 5126bfd4032a5b6778db0c929c9b7cad4a4e60304a7d0a539cb79aa7f5ef375f
+    home: https://github.com/otterize/spire-integration-operator
+    name: spire-integration-operator
+    sources:
+    - https://github.com/otterize/spire-integration-operator
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-09-23T10:05:38.802963066Z"
