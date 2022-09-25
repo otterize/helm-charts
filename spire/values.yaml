@@ -29,7 +29,7 @@ agent:
   # Defaults to the secure kubelet port by default.
   # Minikube does not have a cert in the cluster CA bundle that
   # can authenticate the kubelet cert, so skip validation.
-  skipKubeletVerification: false
+  skipKubeletVerification: true
   logLevel: DEBUG
   image:
     repository: gcr.io/spiffe-io/spire-agent
