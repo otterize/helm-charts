@@ -20,8 +20,9 @@ spec:
         resources:
           limits:
             memory: 200Mi
+            cpu: 500m
           requests:
-            cpu: 100m
+            cpu: 500m
             memory: 200Mi
         env:
           - name: OTTERIZE_MAPPER_API_URL
