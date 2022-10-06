@@ -2,17 +2,17 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   creationTimestamp: null
-  name: intents-operator-validating-webhook-configuration
+  name: validating-webhook-configuration
 webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
       service:
-        name: intents-operator-webhook-service
-        namespace: intents-operator-system
-        path: /validate-otterize-com-v1alpha1-intents
+        name: webhook-service
+        namespace: system
+        path: /validate-k8s-otterize-com-v1alpha1-clientintents
     failurePolicy: Fail
-    name: vintents.kb.io
+    name: clientintents.kb.io
     rules:
       - apiGroups:
           - k8s.otterize.com
@@ -22,5 +22,5 @@ webhooks:
           - CREATE
           - UPDATE
         resources:
-          - intents
+          - clientintents
     sideEffects: None
