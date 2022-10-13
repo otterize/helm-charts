@@ -31,3 +31,6 @@ $ helm install otterize otterize/otterize-kubernetes -n otterize-system
 
 The README for each chart describes the various configuration options it supports. 
 These are also documented in the [docs site](https://docs.otterize.com/) along with more detailed installation instructions.
+
+## Contributing
+1. See our [Contributor License Agreement](https://github.com/otterize/cla/).
