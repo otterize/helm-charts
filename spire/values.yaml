@@ -47,7 +47,7 @@ agent:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
-  resources:
+  resources: {}
     # limits:
     #   cpu: 100m
     #   memory: 128Mi
