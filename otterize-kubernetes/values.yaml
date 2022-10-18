@@ -22,6 +22,7 @@ intentsOperator:
     enableKafkaACLCreation: true
     autoCreateNetworkPoliciesForExternalTraffic: true
   watchedNamespaces: null # by default, watch all
+  watcher: {}
 
 # alias for spire values
 spire: {}
