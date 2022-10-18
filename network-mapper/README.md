@@ -1,12 +1,13 @@
 # Parameters
 
 ## Mapper parameters
-| Key                       | Description              | Default                                                               |
-|---------------------------|--------------------------|-----------------------------------------------------------------------|
-| `mapper.image.repository` | Mapper image repository. | `otterize`                                                            |
-| `mapper.image.image`      | Mapper image.            | `network-mapper`                                                      |
-| `mapper.image.tag`        | Mapper image tag.        | `latest`                                                              |
-| `mapper.pullPolicy`       | Mapper pull policy.      | `(none)`                                                              |
+| Key                       | Description              | Default          |
+|---------------------------|--------------------------|------------------|
+| `mapper.image.repository` | Mapper image repository. | `otterize`       |
+| `mapper.image.image`      | Mapper image.            | `network-mapper` |
+| `mapper.image.tag`        | Mapper image tag.        | `latest`         |
+| `mapper.pullPolicy`       | Mapper pull policy.      | `(none)`         |
+| `mapper.resources`        | Resources override.      | `(none)`         |   
 
 
 ## Sniffer parameters
@@ -16,6 +17,7 @@
 | `sniffer.image.image`      | Sniffer image.            | `network-mapper-sniffer` |
 | `sniffer.image.tag`        | Sniffer image tag.        | `latest`                 |
 | `sniffer.pullPolicy`       | Sniffer pull policy.      | `(none)`                 |
+| `sniffer.resources`        | Resources override.       | `(none)`                 |   
 
 
 ## Global parameters

@@ -21,7 +21,15 @@ intentsOperator:
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
     autoCreateNetworkPoliciesForExternalTraffic: true
+    resources:
+      limits:
+        cpu: 325m
+        memory: 324Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
   watchedNamespaces: null # by default, watch all
+  watcher: {}
 
 # alias for spire values
 spire: {}

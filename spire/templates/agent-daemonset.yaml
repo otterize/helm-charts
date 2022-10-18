@@ -59,6 +59,8 @@ spec:
               port: 8080
             initialDelaySeconds: 15
             periodSeconds: 60
+          resources:
+            {{- toYaml .Values.agent.resources | nindent 12 }}
       volumes:
         - name: spire-config
           configMap:
