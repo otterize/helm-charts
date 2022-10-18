@@ -35,6 +35,11 @@ spec:
         {{- range .Values.watchedNamespaces }}
         - --watched-namespaces={{ . | quote }}
         {{- end }}
+        {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
+        - --kafka-server-tls-cert={{ template "otterize.operator.cert" }}
+        - --kafka-server-tls-key={{ template "otterize.operator.key" }}
+        - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
+        {{ end }}
         command:
         - /manager
         image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ .Values.operator.tag }}"
@@ -78,7 +83,7 @@ spec:
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: cert
         {{- if .Values.operator.autoGenerateTLSUsingSpireIntegration }}
-        - mountPath: /etc/otterize-spire
+        - mountPath: {{ template "otterize.operator.tlsPath" }}
           name: spire-tls
           readOnly: true
         {{- end }}
