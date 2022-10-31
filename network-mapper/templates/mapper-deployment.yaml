@@ -21,12 +21,7 @@ spec:
           imagePullPolicy: {{ .Values.mapper.pullPolicy }}
           {{ end }}
           resources:
-            requests:
-              cpu: 1000m
-              memory: 1G
-            limits:
-              cpu: 2000m
-              memory: 4G
+            {{- toYaml .Values.mapper.resources | nindent 12 }}
           env:
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
