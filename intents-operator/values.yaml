@@ -47,3 +47,6 @@ watchedNamespaces: null # by default, watch all
 global:
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
+  clientID:
+  clientSecret:
+  otterizeApiAddress: https://app.otterize.com
