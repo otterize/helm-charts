@@ -26,7 +26,8 @@ Further information about intents-operator parameters can be found [in the Inten
 
 | Key                                                  | Description                                                    | Default          |
 |------------------------------------------------------|----------------------------------------------------------------|------------------|
-| intentsOperator.autoGenerateTLSUsingSpireIntegration | Use spire-integration to create TLS cert for intents-operator. | `true`           |
+| `intentsOperator.autoGenerateTLSUsingSpireIntegration` | Use spire-integration to create TLS cert for intents-operator. | `true`           |
+| `intentsOperator.operator.autoCreateNetworkPoliciesForExternalTraffic` | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected. | `true`           |
 
 ## SPIRE parameters
 All configurable parameters of SPIRE can be configured under the alias `spire`.
