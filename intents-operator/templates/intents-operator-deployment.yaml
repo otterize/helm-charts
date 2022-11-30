@@ -42,6 +42,7 @@ spec:
         {{ end }}
         - --client-id={{ .Values.global.clientID | quote }}
         - --client-secret={{ .Values.global.clientSecret | quote }}
+        - --cloud-address={{ .Values.global.otterizeApiAddress }}
         command:
         - /manager
         image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ .Values.operator.tag }}"
@@ -78,8 +79,6 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          - name: OTTERIZE_API_ADDRESS
-            value: {{ .Values.global.otterizeApiAddress }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config

@@ -29,6 +29,3 @@ spec:
           {{ end }}
           resources:
             {{- toYaml .Values.watcher.resources | nindent 12 }}
-          env:
-            - name: OTTERIZE_API_ADDRESS
-              value: {{ .Values.global.otterizeApiAddress }}
