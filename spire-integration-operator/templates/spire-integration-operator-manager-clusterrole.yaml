@@ -42,10 +42,13 @@ rules:
     - replicasets
     - daemonsets
     - statefulsets
+    - deployments
     verbs:
     - get
     - list
     - watch
+    - patch
+    - update
 {{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
   - apiGroups:
       - '*'
