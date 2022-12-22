@@ -25,6 +25,16 @@ spec:
           env:
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
+            - name: OTTERIZE_CLOUD_API_ADDRESS
+              value: {{ .Values.CloudApiAddress | quote }}
+            - name: OTTERIZE_CLIENT_ID
+              value: {{ .Values.ClientId | quote }}
+            - name: OTTERIZE_CLIENT_SECRET
+              value: {{ .Values.ClientSecret | quote }}
+            - name: OTTERIZE_UPLOAD_INTERVAL_SECONDS
+              value: {{ .Values.UploadIntervalSeconds | quote }}
+            - name: OTTERIZE_CLOUD_GRAPHQL_ENDPOINT
+              value: {{ .Values.CloudGraphQLEndpoint | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
