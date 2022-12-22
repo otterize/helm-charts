@@ -26,15 +26,15 @@ spec:
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
             - name: OTTERIZE_CLOUD_API_ADDRESS
-              value: {{ .Values.cloudApiAddress | quote }}
+              value: {{ .Values.mapper.cloudApiAddress | "https://app.otterize.com/api" }}
             - name: OTTERIZE_CLIENT_ID
-              value: {{ .Values.clientId | quote }}
+              value: {{ .Values.mapper.clientId | quote }}
             - name: OTTERIZE_CLIENT_SECRET
-              value: {{ .Values.clientSecret | quote }}
+              value: {{ .Values.mapper.clientSecret | quote }}
             - name: OTTERIZE_UPLOAD_INTERVAL_SECONDS
-              value: {{ .Values.uploadIntervalSeconds | quote }}
+              value: {{ .Values.mapper.uploadIntervalSeconds | "60" }}
             - name: OTTERIZE_CLOUD_GRAPHQL_ENDPOINT
-              value: {{ .Values.cloudGraphQLEndpoint | quote }}
+              value: {{ .Values.mapper.cloudGraphQLEndpoint | "graphql/v1" }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
