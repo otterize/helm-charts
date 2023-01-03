@@ -8,11 +8,10 @@
 | `mapper.image.tag`             | Mapper image tag.                    | `latest`                       |
 | `mapper.pullPolicy`            | Mapper pull policy.                  | `(none)`                       |
 | `mapper.resources`             | Resources override.                  | `(none)`                       |
-| `mapper.cloudApiAddress`       | Api address.                         | `https://app.otterize.com/api` |
+| `mapper.apiAddress`            | Api address.                         | `https://app.otterize.com/api` |
 | `mapper.clientSecret`          | Cloud client secret.                 | `(none)`                       |
 | `mapper.clientid`              | Cloud client id.                     | `(none)`                       |
 | `mapper.uploadIntervalSeconds` | Interval for uploading data to cloud | `60`                           |
-| `mapper.cloudGraphQLEndpoint`  | Graphql federation endpoint.         | `graphql/v1`                   |
 
 
 ## Sniffer parameters
