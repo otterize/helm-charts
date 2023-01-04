@@ -17,6 +17,7 @@ global:
 # alias for intents-operator values
 intentsOperator:
   operator:
+    enableEnforcement: true
     autoGenerateTLSUsingSpireIntegration: true
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
