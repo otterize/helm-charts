@@ -25,6 +25,14 @@ spec:
           env:
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
+            - name: OTTERIZE_API_ADDRESS
+              value: {{ .Values.APIAddress | default "https://app.otterize.com/api" | quote }}
+            - name: OTTERIZE_CLIENT_ID
+              value: {{ .Values.clientId | quote }}
+            - name: OTTERIZE_CLIENT_SECRET
+              value: {{ .Values.clientSecret | quote }}
+            - name: OTTERIZE_UPLOAD_INTERVAL_SECONDS
+              value: {{ .Values.mapper.uploadIntervalSeconds | default "60" | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
