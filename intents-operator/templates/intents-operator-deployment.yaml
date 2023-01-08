@@ -23,6 +23,9 @@ spec:
     spec:
       containers:
       - args:
+        {{- if eq false .Values.operator.enableEnforcement }}
+          - --enable-enforcement=false
+        {{- end }}
         {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
         - --enable-network-policy-creation=false
         {{- end }}
