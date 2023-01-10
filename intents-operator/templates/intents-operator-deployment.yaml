@@ -79,17 +79,17 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          {{ if .Values.operator.cloud.apiAddress }}
+          {{ if .Values.cloud.apiAddress }}
           - name: OTTERIZE_API_ADDRESS
-            value: "{{ .Values.operator.cloud.apiAddress }}"
+            value: "{{ .Values.cloud.apiAddress }}"
           {{ end }}
-          {{ if .Values.operator.cloud.credentials.clientId }}
+          {{ if .Values.cloud.credentials.clientId }}
           - name: OTTERIZE_CLIENT_ID
-            value: "{{ .Values.operator.cloud.credentials.clientId }}"
+            value: "{{ .Values.cloud.credentials.clientId }}"
           {{ end }}
-          {{ if .Values.operator.cloud.credentials.clientSecret }}
+          {{ if .Values.cloud.credentials.clientSecret }}
           - name: OTTERIZE_CLIENT_SECRET
-            value: "{{ .Values.operator.cloud.credentials.clientSecret }}"
+            value: "{{ .Values.cloud.credentials.clientSecret }}"
           {{ end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml

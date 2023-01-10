@@ -24,6 +24,11 @@ intentsOperator:
     autoCreateNetworkPoliciesForExternalTraffic: true
   watchedNamespaces: null # by default, watch all
   watcher: {}
+  cloud:
+    credentials:
+      # fill clientId and clientSecret in order to connect to Otterize Cloud
+      clientId:
+      clientSecret:
 
 # alias for spire values
 spire: {}
