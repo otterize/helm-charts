@@ -10,7 +10,6 @@
 | `mapper.resources`             | Resources override.                  | `(none)`                       |
 | `mapper.uploadIntervalSeconds` | Interval for uploading data to cloud | `60`                           |
 
-
 ## Sniffer parameters
 | Key                        | Description               | Default                  |
 |----------------------------|---------------------------|--------------------------|
@@ -20,6 +19,12 @@
 | `sniffer.pullPolicy`       | Sniffer pull policy.      | `(none)`                 |
 | `sniffer.resources`        | Resources override.       | `(none)`                 |   
 
+## Cloud parameters
+| Key                              | Description                                     | Default  |
+|----------------------------------|-------------------------------------------------|----------|
+| `cloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
+| `cloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
+| `cloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |
 
 ## Global parameters
 | Key                              | Description                                                                                                                                 | Default |
@@ -27,11 +32,7 @@
 | `global.allowGetAllResources`    | If defined overrides `allowGetAllResources`.                                                                                                |         |
 
 ## Common parameters
-
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default                        |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
 | `debug`                | Enable debug logs                                                                                                                                                                                                                                                                                                                                                                                                                                             | `false`                        |
 | `allowGetAllResources` | Gives get, list and watch permission to watch on all resources. This is used to resolve service names when pods have owners that are custom resources. When disabled, a limited set of permissions is used that only allows access to built-in Kubernetes resources that deploy Pods and Pods themselves - Deployments, StatefulSets, DaemonSets, ReplicaSets and Services. Resolving may not be able to complete if the owning resource is not one of those. | `true`                         |
-| `APIAddress`           | Address of Otterize Cloud API.                                                                                                                                                                                                                                                                                                                                                                                                                                | `https://app.otterize.com/api` |
-| `clientSecret`         | Client secret for connecting to Otterize Cloud.                                                                                                                                                                                                                                                                                                                                                                                                               | `(none)`                       |
-| `clientId`             | Client ID for connecting to Otterize Cloud.                                                                                                                                                                                                                                                                                                                                                                                                                   | `(none)`                       |

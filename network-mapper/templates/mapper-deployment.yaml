@@ -25,12 +25,18 @@ spec:
           env:
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
+            {{ if .Values.cloud.apiAddress }}
             - name: OTTERIZE_API_ADDRESS
-              value: {{ .Values.APIAddress | default "https://app.otterize.com/api" | quote }}
+              value: "{{ .Values.cloud.apiAddress }}"
+            {{ end }}
+            {{ if .Values.cloud.credentials.clientId }}
             - name: OTTERIZE_CLIENT_ID
-              value: {{ .Values.clientId | quote }}
+              value: "{{ .Values.cloud.credentials.clientId }}"
+            {{ end }}
+            {{ if .Values.cloud.credentials.clientSecret }}
             - name: OTTERIZE_CLIENT_SECRET
-              value: {{ .Values.clientSecret | quote }}
+              value: "{{ .Values.cloud.credentials.clientSecret }}"
+            {{ end }}
             - name: OTTERIZE_UPLOAD_INTERVAL_SECONDS
               value: {{ .Values.mapper.uploadIntervalSeconds | default "60" | quote }}
           securityContext:
