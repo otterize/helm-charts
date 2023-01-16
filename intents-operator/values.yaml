@@ -43,6 +43,12 @@ watcher:
   #   cpu: 100m
   #   memory: 128Mi
 
+cloud:
+  credentials:
+    # fill clientId and clientSecret in order to connect to Otterize Cloud
+    clientId:
+    clientSecret:
+
 # allowGetAllResources gives get permission to watch on all resources. If disabled, the operator will only
 # be able to resolve pods up to their built-in owners. For example, a Pod is owned by a ReplicaSet that is owned by a Deployment.
 # If that Deployment is owned by a custom resource, the operator will not be able to resolve it.

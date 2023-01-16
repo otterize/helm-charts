@@ -35,6 +35,12 @@ sniffer:
   #   cpu: 100m
   #   memory: 128Mi
 
+cloud:
+  credentials:
+    # fill clientId and clientSecret in order to connect to Otterize Cloud
+    clientId:
+    clientSecret:
+
 debug: false
 allowGetAllResources: true
 

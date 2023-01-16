@@ -24,10 +24,12 @@ These parameters are used by multiple charts, and must be kept the same for the 
 All configurable parameters of intents-operator can be configured under the alias `intentsOperator`.
 Further information about intents-operator parameters can be found [in the Intents Operator's helm chart](https://github.com/otterize/helm-charts/tree/main/intents-operator).
 
-| Key                                                  | Description                                                    | Default          |
-|------------------------------------------------------|----------------------------------------------------------------|------------------|
-| `intentsOperator.autoGenerateTLSUsingSpireIntegration` | Use spire-integration to create TLS cert for intents-operator. | `true`           |
-| `intentsOperator.operator.autoCreateNetworkPoliciesForExternalTraffic` | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected. | `true`           |
+| Key                                                                    | Description                                                                                                                                                                                                  | Default  |
+|------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `intentsOperator.autoGenerateTLSUsingSpireIntegration`                 | Use spire-integration to create TLS cert for intents-operator.                                                                                                                                               | `true`   |
+| `intentsOperator.operator.autoCreateNetworkPoliciesForExternalTraffic` | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected. | `true`   |
+| `intentsOperator.cloud.credentials.clientId`                           | Client ID for connecting to Otterize Cloud.                                                                                                                                                                  | `(none)` |
+| `intentsOperator.cloud.credentials.clientSecret`                       | Client secret for connecting to Otterize Cloud.                                                                                                                                                              | `(none)` |
 
 ## SPIRE parameters
 All configurable parameters of SPIRE can be configured under the alias `spire`.
