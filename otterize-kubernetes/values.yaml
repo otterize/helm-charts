@@ -17,12 +17,18 @@ global:
 # alias for intents-operator values
 intentsOperator:
   operator:
+    enableEnforcement: true
     autoGenerateTLSUsingSpireIntegration: true
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
     autoCreateNetworkPoliciesForExternalTraffic: true
   watchedNamespaces: null # by default, watch all
   watcher: {}
+  cloud:
+    credentials:
+      # fill clientId and clientSecret in order to connect to Otterize Cloud
+      clientId:
+      clientSecret:
 
 # alias for spire values
 spire: {}

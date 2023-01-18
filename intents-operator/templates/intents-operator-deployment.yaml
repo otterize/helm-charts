@@ -23,6 +23,9 @@ spec:
     spec:
       containers:
       - args:
+        {{- if eq false .Values.operator.enableEnforcement }}
+          - --enable-enforcement=false
+        {{- end }}
         {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
         - --enable-network-policy-creation=false
         {{- end }}
@@ -76,6 +79,18 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+          {{ if .Values.cloud.apiAddress }}
+          - name: OTTERIZE_API_ADDRESS
+            value: "{{ .Values.cloud.apiAddress }}"
+          {{ end }}
+          {{ if .Values.cloud.credentials.clientId }}
+          - name: OTTERIZE_CLIENT_ID
+            value: "{{ .Values.cloud.credentials.clientId }}"
+          {{ end }}
+          {{ if .Values.cloud.credentials.clientSecret }}
+          - name: OTTERIZE_CLIENT_SECRET
+            value: "{{ .Values.cloud.credentials.clientSecret }}"
+          {{ end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
