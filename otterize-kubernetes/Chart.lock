@@ -1,0 +1,12 @@
+dependencies:
+- name: spire-integration-operator
+  repository: file://./../spire-integration-operator
+  version: 0.1.0
+- name: spire
+  repository: file://./../spire
+  version: 1.0.0
+- name: intents-operator
+  repository: file://./../intents-operator
+  version: 0.1.0
+digest: sha256:f9c188cb864b4e4082c7e6640bdee63030f62988cd4335a9a4559813c0721e2c
+generated: "2023-01-16T13:01:56.564589228+02:00"

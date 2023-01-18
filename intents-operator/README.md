@@ -8,15 +8,15 @@
 
 ## Operator parameters
 
-| Key                                             | Description                                                                                                        | Default            |
-|-------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|--------------------|
-| `operator.image.repository`                     | Intents Operator image repository.                                                                                 | `otterize`         |
-| `operator.image.image`                          | Intents Operator image.                                                                                            | `intents-operator` |
-| `operator.image.tag`                            | Intents Operator image tag.                                                                                        | `latest`           |
-| `operator.pullPolicy`                           | Intents Operator image pull policy.                                                                                | `(none)`           |
-| `operator.autoGenerateTLSUsingSpireIntegration` | If true, adds the necessary pod annotations in order to integrate with spire-integration, and get tls certificate. | `true`            |
-| `operator.autoCreateNetworkPoliciesForExternalTraffic` | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected. | `true`           |
-| `operator.resources`                            | Resources override.                                                                                                |                    |
+| Key                                                    | Description                                                                                                                                                                                                  | Default            |
+|--------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
+| `operator.image.repository`                            | Intents Operator image repository.                                                                                                                                                                           | `otterize`         |
+| `operator.image.image`                                 | Intents Operator image.                                                                                                                                                                                      | `intents-operator` |
+| `operator.image.tag`                                   | Intents Operator image tag.                                                                                                                                                                                  | `latest`           |
+| `operator.pullPolicy`                                  | Intents Operator image pull policy.                                                                                                                                                                          | `(none)`           |
+| `operator.autoGenerateTLSUsingSpireIntegration`        | If true, adds the necessary pod annotations in order to integrate with spire-integration, and get tls certificate.                                                                                           | `true`             |
+| `operator.autoCreateNetworkPoliciesForExternalTraffic` | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected. | `true`             |
+| `operator.resources`                                   | Resources override.                                                                                                                                                                                          |                    |
 
 
 ## Watcher parameters
