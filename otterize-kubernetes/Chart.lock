@@ -7,6 +7,6 @@ dependencies:
   version: 1.0.0
 - name: intents-operator
   repository: file://./../intents-operator
-  version: 0.1.0
-digest: sha256:f9c188cb864b4e4082c7e6640bdee63030f62988cd4335a9a4559813c0721e2c
-generated: "2023-01-16T13:01:56.564589228+02:00"
+  version: 0.1.1
+digest: sha256:3fe0182d1d66b95b6d40d7e3e47d047e893e2d411be1a163e8338057b1e22bf8
+generated: "2023-01-18T15:02:38.817644906+02:00"
