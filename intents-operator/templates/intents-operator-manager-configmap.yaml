@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   controller_manager_config.yaml: |
-    apiVersion: k8s.otterize.com/v1alpha1
+    apiVersion: k8s.otterize.com/v1alpha2
     kind: ProjectConfig
     health:
       healthProbeBindAddress: :8081
