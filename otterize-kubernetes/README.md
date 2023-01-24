@@ -47,6 +47,10 @@ Further information about `SPIRE` parameters can be found [in SPIRE's helm chart
 All configurable parameters of the SPIRE integration operator can be configured under the alias `spireIntegrationOperator`.
 Further information about SPIRE integration operator parameters can be found [in the SPIRE integration operator's chart](https://github.com/otterize/helm-charts/tree/main/spire-integration-operator).
 
+| Key                                         | Description                                   | Default |
+|---------------------------------------------|-----------------------------------------------|---------|
+| `spireIntegrationOperator.useOtterizeCloud` | Use otterize cloud for certificate management | `false` |
+
 ## Resource configuration
 | Component                  | Key                                  | Default  |
 |----------------------------|--------------------------------------|----------|
