@@ -7,6 +7,7 @@
 | `deployment.spire`                    | Whether or not to deploy spire.             | `true`  |
 | `deployment.spireIntegrationOperator` | Whether or not to deploy spire-integration. | `true`  |
 | `deployment.intentsOperator`          | Whether or not to deploy intents-operator.  | `true`  |
+| `deployment.networkMapper`            | Whether or not to deploy network-mapper.    | `true`  |
 
 ## Global parameters
 These parameters are used by multiple charts, and must be kept the same for the correct functioning of the separate components.
@@ -50,6 +51,10 @@ Further information about SPIRE integration operator parameters can be found [in
 | Key                                         | Description                                                    | Default |
 |---------------------------------------------|----------------------------------------------------------------|---------|
 | `spireIntegrationOperator.useOtterizeCloud` | Use otterize cloud for certificate management instead of spire | `false` |
+
+## Network mapper parameters
+All configurable parameters of the network mapper can be configured under the alias `networkMapper`.
+Further information about network mapper parameters can be found [in the network mapper's chart](https://github.com/otterize/helm-charts/tree/main/network-mapper).
 
 ## Resource configuration
 | Component                  | Key                                  | Default  |

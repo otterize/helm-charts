@@ -2,6 +2,7 @@ deployment:
   spire: true
   spireIntegrationOperator: true
   intentsOperator: true
+  networkMapper: true
 
 global:
   otterizeCloud:
@@ -36,3 +37,6 @@ spire: {}
 # alias for spire-integration-operator values
 spireIntegrationOperator:
   useOtterizeCloud: false
+
+# alias for network-mapper values
+networkMapper: {}
