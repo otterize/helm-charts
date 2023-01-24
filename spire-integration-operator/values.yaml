@@ -20,7 +20,14 @@ spire:
   serverAddress:
   socketsPath: "/run/spire/sockets"
 
+useOtterizeCloud: false
+
 global:
+  otterizeCloud:
+    credentials:
+      # fill clientId and clientSecret in order to connect to Otterize Cloud
+      clientId:
+      clientSecret:
   spire:
     serverServiceName:
   # If defined overrides `allowGetAllResources`

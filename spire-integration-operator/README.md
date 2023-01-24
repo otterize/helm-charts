@@ -22,10 +22,16 @@
 | `operator.image.tag`        | Operator image tag.        | `latest`                     |
 | `operator.pullPolicy`       | Operator pull policy.      | `(none)`                     |
 
-## Common parameters
+## Cloud parameters
+| Key                                             | Description                                     | Default  |
+|-------------------------------------------------|-------------------------------------------------|----------|
+| `global.otterizeCloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
+| `global.otterizeCloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
+| `global.otterizeCloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |
 
+## Common parameters
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `allowGetAllResources` | Gives get, list and watch permission to watch on all resources. This is used to resolve service names when pods have owners that are custom resources. When disabled, a limited set of permissions is used that only allows access to built-in Kubernetes resources that deploy Pods and Pods themselves - Deployments, StatefulSets, DaemonSets, ReplicaSets and Services. Resolving may not be able to complete if the owning resource is not one of those. | `true`  |
 | `resources`            | Resources of the container                                                                                                                                                                                                                                                                                                                                                                                                                                    | `{}`    |
-
+| `useOtterizeCloud`     | Use otterize cloud for certificate management instead of spire                                                                                                                                                                                                                                                                                                                                                                                                | `false` |
