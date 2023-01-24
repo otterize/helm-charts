@@ -48,6 +48,9 @@ spec:
         - --spire-server-address={{.Values.global.spire.serverServiceName}}.{{.Release.Namespace}}:8081
         {{- else }}
         - --spire-server-address=spire-server.{{.Release.Namespace}}:8081
+        {{- end }}
+        {{- if eq true .Values.useOtterizeCloud }}
+        - --use-otterize-cloud=true
         {{- end}}
         - --leader-elect
         command:

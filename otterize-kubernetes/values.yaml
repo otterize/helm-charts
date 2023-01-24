@@ -34,4 +34,5 @@ intentsOperator:
 spire: {}
 
 # alias for spire-integration-operator values
-spireIntegrationOperator: {}
+spireIntegrationOperator:
+  useOtterizeCloud: false

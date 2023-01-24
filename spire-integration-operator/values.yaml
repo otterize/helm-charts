@@ -20,6 +20,8 @@ spire:
   serverAddress:
   socketsPath: "/run/spire/sockets"
 
+useOtterizeCloud: false
+
 global:
   otterizeCloud:
     credentials:
