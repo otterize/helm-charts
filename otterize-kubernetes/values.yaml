@@ -2,6 +2,7 @@ deployment:
   spire: true
   spireIntegrationOperator: true
   intentsOperator: true
+  networkMapper: true
 
 global:
   otterizeCloud:

@@ -23,3 +23,8 @@ dependencies:
     version: ">= 0.1.1"
     condition: deployment.intentsOperator
     repository: file://./../intents-operator
+  - name: network-mapper
+    alias: networkMapper
+    version: ">= 0.1.0"
+    condition: deployment.networkMapper
+    repository: file://./../network-mapper
