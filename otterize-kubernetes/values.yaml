@@ -4,6 +4,11 @@ deployment:
   intentsOperator: true
 
 global:
+  otterizeCloud:
+    credentials:
+      # fill clientId and clientSecret in order to connect to Otterize Cloud
+      clientId:
+      clientSecret:
   spire:
     serverServiceName: spire-server
   # If defined overrides `allowGetAllResources`
@@ -24,11 +29,6 @@ intentsOperator:
     autoCreateNetworkPoliciesForExternalTraffic: true
   watchedNamespaces: null # by default, watch all
   watcher: {}
-  cloud:
-    credentials:
-      # fill clientId and clientSecret in order to connect to Otterize Cloud
-      clientId:
-      clientSecret:
 
 # alias for spire values
 spire: {}

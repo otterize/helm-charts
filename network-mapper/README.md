@@ -20,11 +20,11 @@
 | `sniffer.resources`        | Resources override.       | `(none)`                 |   
 
 ## Cloud parameters
-| Key                              | Description                                     | Default  |
-|----------------------------------|-------------------------------------------------|----------|
-| `cloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
-| `cloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
-| `cloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |
+| Key                                             | Description                                     | Default  |
+|-------------------------------------------------|-------------------------------------------------|----------|
+| `global.otterizeCloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
+| `global.otterizeCloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
+| `global.otterizeCloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |
 
 ## Global parameters
 | Key                              | Description                                                                                                                                 | Default |

@@ -56,6 +56,19 @@ spec:
         {{ if .Values.operator.pullPolicy }}
         imagePullPolicy: {{ .Values.operator.pullPolicy }}
         {{ end }}
+        env:
+          {{ if .Values.global.otterizeCloud.apiAddress }}
+          - name: OTTERIZE_API_ADDRESS
+            value: "{{ .Values.global.otterizeCloud.apiAddress }}"
+          {{ end }}
+          {{ if .Values.global.otterizeCloud.credentials.clientId }}
+          - name: OTTERIZE_CLIENT_ID
+            value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
+          {{ end }}
+          {{ if .Values.global.otterizeCloud.credentials.clientSecret }}
+          - name: OTTERIZE_CLIENT_SECRET
+            value: "{{ .Values.global.otterizeCloud.credentials.clientSecret }}"
+          {{ end }}
         livenessProbe:
           httpGet:
             path: /healthz
