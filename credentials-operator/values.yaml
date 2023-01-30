@@ -1,6 +1,6 @@
 operator:
   repository: otterize
-  image: spire-integration-operator
+  image: credentials-operator
   tag: latest
   pullPolicy:
 

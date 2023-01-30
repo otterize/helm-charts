@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: spire-integration-operator
-  name: spire-integration-operator-controller-manager
+    app: credentials-operator
+  name: credentials-operator-controller-manager
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: spire-integration-operator
+      app: credentials-operator
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        app: spire-integration-operator
+        app: credentials-operator
     spec:
-      serviceAccountName: spire-integration-operator-controller-manager
+      serviceAccountName: credentials-operator-controller-manager
       containers:
       - args:
         - --secure-listen-address=0.0.0.0:8443
@@ -42,7 +42,7 @@ spec:
         - --metrics-bind-address=127.0.0.1:8080
         {{- if .Values.spire.serverAddress }}
         - --spire-server-address={{.Values.spire.serverAddress}}
-        # if global.spire.serverServiceName it means that spire-integration is deployed with spire
+        # if global.spire.serverServiceName it means that credentials-operator is deployed with spire
         # in that case the address will be serverService.Namespace:8081
         {{- else if .Values.global.spire.serverServiceName }}
         - --spire-server-address={{.Values.global.spire.serverServiceName}}.{{.Release.Namespace}}:8081

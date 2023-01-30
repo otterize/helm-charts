@@ -14,5 +14,5 @@ data:
       resourceName: 289bfdf0.otterize.com
 kind: ConfigMap
 metadata:
-  name: spire-integration-operator-manager-config
+  name: credentials-operator-manager-config
   namespace: {{ .Release.Namespace }}
