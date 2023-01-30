@@ -1,18 +1,18 @@
 apiVersion: v2
 name: otterize-kubernetes
 description: |
-  This chart contains both the Otterize spire-integration-operator, SPIRE (server+agent), and the Otterize Intents Operator.
+  This chart contains both the Otterize credentials-operator, SPIRE (server+agent), and the Otterize Intents Operator.
 type: application
 version: 0.1.0
 keywords: ["spiffe", "spire", "spire-server", "spire-agent"]
 home: https://github.com/otterize/helm-charts
 kubeVersion: ">=1.19.0-0"
 dependencies:
-  - name: spire-integration-operator
-    alias: spireIntegrationOperator
+  - name: credentials-operator
+    alias: credentialsOperator
     version: ">= 0.0.1"
-    condition: deployment.spireIntegrationOperator
-    repository: file://./../spire-integration-operator
+    condition: deployment.credentialsOperator
+    repository: file://./../credentials-operator
   - name: spire
     alias: spire
     version: "1.0.0"

@@ -1,6 +1,6 @@
 deployment:
   spire: true
-  spireIntegrationOperator: true
+  credentialsOperator: true
   intentsOperator: true
   networkMapper: true
 
@@ -24,7 +24,7 @@ global:
 intentsOperator:
   operator:
     enableEnforcement: true
-    autoGenerateTLSUsingSpireIntegration: true
+    autoGenerateTLSUsingCredentialsOperator: true
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
     autoCreateNetworkPoliciesForExternalTraffic: true
@@ -34,8 +34,8 @@ intentsOperator:
 # alias for spire values
 spire: {}
 
-# alias for spire-integration-operator values
-spireIntegrationOperator:
+# alias for credentials-operator values
+credentialsOperator:
   useOtterizeCloud: false
 
 # alias for network-mapper values

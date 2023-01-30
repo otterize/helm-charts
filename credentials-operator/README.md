@@ -18,7 +18,7 @@
 | Key                         | Description                | Default                      |
 |-----------------------------|----------------------------|------------------------------|
 | `operator.image.repository` | Operator image repository. | `otterize`                   |
-| `operator.image.image`      | Operator image.            | `spire-integration-operator` |
+| `operator.image.image`      | Operator image.            | `credentials-operator` |
 | `operator.image.tag`        | Operator image tag.        | `latest`                     |
 | `operator.pullPolicy`       | Operator pull policy.      | `(none)`                     |
 

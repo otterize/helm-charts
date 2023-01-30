@@ -4,7 +4,7 @@ operator:
   tag: latest
   pullPolicy:
 
-  autoGenerateTLSUsingSpireIntegration: false
+  autoGenerateTLSUsingCredentialsOperator: false
 
   # `enableEnforcement` controls all the enforcement that the intents-operator performs. When set to false, enforcement
   # is disabled globally (both for network policies and Kafka ACL). When set to true, you may use the other flags for
