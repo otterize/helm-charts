@@ -11,7 +11,7 @@ server:
 
   logLevel: DEBUG
   image:
-    repository: gcr.io/spiffe-io/spire-server
+    repository: otterize/spire-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -43,7 +43,7 @@ agent:
   skipKubeletVerification: true
   logLevel: DEBUG
   image:
-    repository: gcr.io/spiffe-io/spire-agent
+    repository: otterize/spire-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
