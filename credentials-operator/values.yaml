@@ -23,6 +23,7 @@ spire:
 useOtterizeCloud: false
 
 global:
+  useOtterizeCloudCredentials: false
   otterizeCloud:
     credentials:
       # fill clientId and clientSecret in order to connect to Otterize Cloud

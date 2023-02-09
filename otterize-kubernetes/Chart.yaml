@@ -16,7 +16,7 @@ dependencies:
   - name: spire
     alias: spire
     version: "1.0.0"
-    condition: deployment.spire
+    condition: deployment.spire && global.useOtterizeCloudCredentials
     repository: file://./../spire
   - name: intents-operator
     alias: intentsOperator
