@@ -16,6 +16,7 @@ spec:
         kubectl.kubernetes.io/default-container: manager
       labels:
         app: credentials-operator
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     spec:
       serviceAccountName: credentials-operator-controller-manager
       containers:

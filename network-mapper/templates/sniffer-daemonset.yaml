@@ -10,6 +10,7 @@ spec:
     metadata:
       labels:
         app: {{ template "otterize.sniffer.fullName" . }}
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     spec:
       containers:
       - name: {{ template "otterize.sniffer.fullName" . }}

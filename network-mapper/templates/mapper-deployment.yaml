@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: {{ template "otterize.mapper.fullName" . }}
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     spec:
       securityContext:
         runAsNonRoot: true
