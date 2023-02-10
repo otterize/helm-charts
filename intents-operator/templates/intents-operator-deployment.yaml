@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: intents-operator
-      helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
   template:
     metadata:
       annotations:
