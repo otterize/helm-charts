@@ -6,9 +6,15 @@ metadata:
 data:
   init_entries.sh: |-
     set -e
+    echo "waiting for spire process to start"
+    while ! pgrep spire-server > /dev/null; do sleep 1; done
+    SPIRE_SERVER_ROOT_PATH="/proc/$(pgrep spire-server)/root"
+    alias spire_server="${SPIRE_SERVER_ROOT_PATH}/opt/spire/bin/spire-server"
+    SOCKET_FLAG="-socketPath ${SPIRE_SERVER_ROOT_PATH}/tmp/spire-server/private/api.sock"
+
     echo "checking spire-server status"
-    while ! /opt/spire/bin/spire-server entry show &> /dev/null; do
-      echo "server seems to be down"
+    while ! spire_server entry show ${SOCKET_FLAG} &> /dev/null; do
+      echo "waiting for spire-server to start..."
       sleep 2
     done
     echo "server is up!"
@@ -20,12 +26,15 @@ data:
     AGENT_SELECTORS="-selector k8s_psat:agent_ns:{{ .Release.Namespace }} -selector k8s_psat:agent_sa:{{ include "spire.serviceAccountName" . }}-agent"
 
     echo "ensuring agent entry"
-    if /opt/spire/bin/spire-server entry show -spiffeID $AGENT_SPIFFE_ID $AGENT_SELECTORS | grep -q "Found 0 entries" &> /dev/null; then
-      /opt/spire/bin/spire-server entry create -spiffeID $AGENT_SPIFFE_ID $AGENT_SELECTORS -node
+    if spire_server entry show ${SOCKET_FLAG} -spiffeID $AGENT_SPIFFE_ID $AGENT_SELECTORS | grep -q "Found 0 entries" &> /dev/null; then
+      spire_server entry create ${SOCKET_FLAG} -spiffeID $AGENT_SPIFFE_ID $AGENT_SELECTORS -node
     fi
 
     SPIRE_INTEGRATION_SELECTORS="-selector k8s:ns:{{ .Release.Namespace }} -selector k8s:pod-label:app:credentials-operator"
     echo "ensuring integration entry"
-    if /opt/spire/bin/spire-server entry show -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID $SPIRE_INTEGRATION_SELECTORS | grep -q "Found 0 entries" &> /dev/null; then
-      /opt/spire/bin/spire-server entry create -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID $SPIRE_INTEGRATION_SELECTORS -admin
+    if spire_server entry show ${SOCKET_FLAG} -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID $SPIRE_INTEGRATION_SELECTORS | grep -q "Found 0 entries" &> /dev/null; then
+      spire_server entry create ${SOCKET_FLAG} -spiffeID $INTEGRATION_SPIFFE_ID -parentID $AGENT_SPIFFE_ID $SPIRE_INTEGRATION_SELECTORS -admin
     fi
+
+    echo "spire initialized successfully!"
+    while pgrep spire-server > /dev/null; do sleep 1; done

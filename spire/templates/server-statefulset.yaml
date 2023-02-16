@@ -33,6 +33,12 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        - name: initial-entry-registration-sidecar
+          image: busybox
+          command: ["/bin/sh", "/run/scripts/init_entries.sh" ]
+          volumeMounts:
+            - name: spire-scripts
+              mountPath: /run/scripts
         - name: {{ .Chart.Name }}-server
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -41,10 +47,6 @@ spec:
           args:
             - -config
             - /run/spire/config/server.conf
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "/run/scripts/init_entries.sh" ]
           ports:
             - name: grpc
               containerPort: 8081
@@ -56,8 +58,6 @@ spec:
             - name: spire-config
               mountPath: /run/spire/config
               readOnly: true
-            - name: spire-scripts
-              mountPath: /run/scripts
             {{- if eq (.Values.server.dataStorage.enabled | toString) "true" }}
             - name: spire-data
               mountPath: /run/spire/data
