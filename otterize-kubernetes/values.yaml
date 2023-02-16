@@ -5,9 +5,9 @@ deployment:
   networkMapper: true
 
 global:
-  useOtterizeCloudCredentials: false
   otterizeCloud:
     credentials:
+      useCredentials: false
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
       clientSecret:

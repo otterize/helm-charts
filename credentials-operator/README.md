@@ -4,8 +4,7 @@
 | Key                                  | Description                                                                                                                                 | Default |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `global.spire.serverServiceName`     | If deployed with SPIRE, this key specifies SPIRE-server's service name. You should use either this **OR** `spire.serverAddress` (not both). |         |
-| `global.allowGetAllResources`        | If defined overrides `allowGetAllResources`.                                                                                                |         |
-| `global.useOtterizeCloudCredentials` | Use Otterize Cloud for certificate management instead of SPIRE                                                                              | `false` |
+| `global.allowGetAllResources`        | If defined overrides `allowGetAllResources`.                                                                                                |         |                                                                      | `false` |
 
 
 ## SPIRE parameters
@@ -27,6 +26,7 @@
 ## Cloud parameters
 | Key                                             | Description                                     | Default  |
 |-------------------------------------------------|-------------------------------------------------|----------|
+| `global.otterizeCloud.credentials.useCredentials` | Use Otterize Cloud for certificate management instead of SPIRE | `false` |
 | `global.otterizeCloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
 | `global.otterizeCloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
 | `global.otterizeCloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |

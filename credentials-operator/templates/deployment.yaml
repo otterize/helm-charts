@@ -49,9 +49,9 @@ spec:
         {{- else }}
         - --spire-server-address=spire-server.{{.Release.Namespace}}:8081
         {{- end }}
-        {{- if eq true .Values.global.useOtterizeCloudCredentials }}
+        {{- if eq true .Values.global.otterizeCloud.credentials.useCredentials }}
         - --use-otterize-cloud=true
-        {{- end}}
+        {{- end }}
         - --leader-elect
         command:
         - /manager
