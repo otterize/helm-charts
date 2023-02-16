@@ -33,7 +33,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-server-init-sidecar
+        - name: initial-entry-registration-sidecar
           image: busybox
           command: ["/bin/sh", "/run/scripts/init_entries.sh" ]
           volumeMounts:
