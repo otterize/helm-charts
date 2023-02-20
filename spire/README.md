@@ -8,8 +8,8 @@ ___
 | `global.spiffe.CASubject.country`      | `Country` value                                                          | `"US"`          |
 | `global.spiffe.CASubject.organization` | `Organization` Value                                                     | `"SPIRE"`       |
 | `global.spiffe.CASubject.commonName`   | `CommonName` value                                                       | `""`            |
-| `global.spiffe.trustDomain`            | The trust domain that this server belongs to 	                         | `"example.org"` |
-| `global.spire.serverServiceName`       | Name of the kubernetes service that will be created for the spire server |                 |
+| `global.spiffe.trustDomain`            | The trust domain that this server belongs to 	                           | `"example.org"` |
+| `global.spire.serverServiceName`       | Name of the Kubernetes service that will be created for the SPIRE server |                 |
 
 ## Common parameters
 | Key                                          | Description                                                                                                  | Default             |

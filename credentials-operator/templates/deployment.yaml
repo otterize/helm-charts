@@ -49,9 +49,9 @@ spec:
         {{- else }}
         - --spire-server-address=spire-server.{{.Release.Namespace}}:8081
         {{- end }}
-        {{- if eq true .Values.useOtterizeCloud }}
+        {{- if eq true .Values.global.otterizeCloud.credentials.useCredentials }}
         - --use-otterize-cloud=true
-        {{- end}}
+        {{- end }}
         - --leader-elect
         command:
         - /manager
@@ -92,15 +92,19 @@ spec:
           capabilities:
             drop:
              - "ALL"
+{{- if eq "false" (.Values.global.otterizeCloud.credentials.useCredentials | toString) }}
         volumeMounts:
         - mountPath: {{ .Values.spire.socketsPath }}
           name: spire-agent-socket
           readOnly: true
+{{- end }}
       securityContext:
         runAsNonRoot: true
       terminationGracePeriodSeconds: 10
+{{- if eq "false" (.Values.global.otterizeCloud.credentials.useCredentials | toString) }}
       volumes:
       - hostPath:
           path: {{ .Values.spire.socketsPath }}
           type: Directory
         name: spire-agent-socket
+{{- end }}
