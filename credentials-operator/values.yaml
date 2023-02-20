@@ -24,6 +24,7 @@ global:
   otterizeCloud:
     useCloudToGenerateTLSCredentials: false
     credentials:
+      useCredentials: false
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
       clientSecret:

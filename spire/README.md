@@ -37,7 +37,7 @@ ___
 | Key                             | Description                       | Default                          |
 |---------------------------------|-----------------------------------|----------------------------------|
 | `agent.image.pullPolicy`        | Agent image pull policy           | `"IfNotPresent"`                 |
-| `agent.image.repository`        | Agent image repository            | `"gcr.io/spiffe-io/spire-agent"` |
+| `agent.image.repository`        | Agent image repository            | `"otterize/spire-agent"` |
 | `agent.image.tag`               | Agent image tag                   | `""`                             |
 | `agent.logLevel `               | Agent log level                   | `"INFO"`                         |
 | `agent.skipKubeletVerification` | Set to `True` if you use Minikube | `false`                          |
@@ -52,7 +52,7 @@ ___
 | `server.dataStorage.size`         | data storage - size          | `"1Gi"`                            |
 | `server.dataStorage.storageClass` | data storage - storage class | `nil`                              |
 | `server.image.pullPolicy`         | image pull policy            | `"IfNotPresent"`                   |
-| `server.image.repository`         | image repository             | `"gcr.io/spiffe-io/spire-server"`  |
+| `server.image.repository`         | image repository             | `"otterize/spire-server"`  |
 | `server.image.tag`                | image tag                    | `""`                               |
 | `server.logLevel`                 | log level                    | `"INFO"`                           |
 | `server.rootCATTL`                | determine root_ca TTL        | `"26280h"`                         |
