@@ -37,11 +37,27 @@ spec:
             - name: OTTERIZE_CLIENT_SECRET
               value: "{{ .Values.global.otterizeCloud.credentials.clientSecret }}"
             {{ end }}
+            {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+            - name: OTTERIZE_API_EXTRA_CA_PEM
+              value: {{ template "otterize.operator.apiExtraCAPEM" }}
+            {{ end }}
             - name: OTTERIZE_UPLOAD_INTERVAL_SECONDS
               value: {{ .Values.mapper.uploadIntervalSeconds | default "60" | quote }}
+          volumeMounts:
+            {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+            - mountPath: {{ template "otterize.operator.apiExtraCAPath" }}
+              name: api-extra-ca-pem
+              readOnly: true
+            {{- end }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - "ALL"
       serviceAccountName: {{ template "otterize.mapper.fullName" . }}
+      volumes:
+        {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+        - name: api-extra-ca-pem
+          secret:
+            secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+        {{ end }}
