@@ -72,6 +72,10 @@ spec:
           - name: OTTERIZE_CLIENT_SECRET
             value: "{{ .Values.global.otterizeCloud.credentials.clientSecret }}"
           {{ end }}
+          {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+          - name: OTTERIZE_API_EXTRA_CA_PEM
+            value: {{ template "otterize.operator.apiExtraCAPEM" }}
+          {{ end }}
         livenessProbe:
           httpGet:
             path: /healthz
@@ -92,19 +96,29 @@ spec:
           capabilities:
             drop:
              - "ALL"
-{{- if eq "false" (.Values.global.otterizeCloud.useCloudToGenerateTLSCredentials | toString) }}
         volumeMounts:
+{{- if eq "false" (.Values.global.otterizeCloud.useCloudToGenerateTLSCredentials | toString) }}
         - mountPath: {{ .Values.spire.socketsPath }}
           name: spire-agent-socket
           readOnly: true
 {{- end }}
+        {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+        - mountPath: {{ template "otterize.operator.apiExtraCAPath" }}
+          name: api-extra-ca-pem
+          readOnly: true
+        {{- end }}
       securityContext:
         runAsNonRoot: true
       terminationGracePeriodSeconds: 10
-{{- if eq "false" (.Values.global.otterizeCloud.useCloudToGenerateTLSCredentials | toString) }}
       volumes:
+{{- if eq "false" (.Values.global.otterizeCloud.useCloudToGenerateTLSCredentials | toString) }}
       - hostPath:
           path: {{ .Values.spire.socketsPath }}
           type: Directory
         name: spire-agent-socket
 {{- end }}
+      {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+      - name: api-extra-ca-pem
+        secret:
+          secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+      {{ end }}

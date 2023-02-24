@@ -47,3 +47,6 @@ global:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
       clientSecret:
+
+    # (optional) fill with the name of a secret containing extra root CA PEM file used to connect to Otterize Cloud
+    apiExtraCAPEMSecret:
