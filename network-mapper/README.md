@@ -25,6 +25,7 @@
 | `global.otterizeCloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
 | `global.otterizeCloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
 | `global.otterizeCloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |
+| `global.otterizeCloud.apiExtraCAPEMSecret`      | The name of a secret containing extra root CA PEM file used to connect to Otterize Cloud. | `(none)` |
 
 ## Global parameters
 | Key                              | Description                                                                                                                                 | Default |
