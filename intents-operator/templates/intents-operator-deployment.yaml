@@ -91,6 +91,10 @@ spec:
           - name: OTTERIZE_CLIENT_SECRET
             value: "{{ .Values.global.otterizeCloud.credentials.clientSecret }}"
           {{ end }}
+          {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+          - name: OTTERIZE_API_EXTRA_CA_PEM
+            value: {{ template "otterize.operator.apiExtraCAPEM" }}
+          {{ end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
@@ -100,6 +104,11 @@ spec:
         {{- if .Values.operator.autoGenerateTLSUsingCredentialsOperator }}
         - mountPath: {{ template "otterize.operator.tlsPath" }}
           name: spire-tls
+          readOnly: true
+        {{- end }}
+        {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+        - mountPath: {{ template "otterize.operator.apiExtraCAPath" }}
+          name: api-extra-ca-pem
           readOnly: true
         {{- end }}
       - args:
@@ -137,5 +146,10 @@ spec:
       - name: spire-tls
         secret:
           secretName: intents-operator-spire-tls-controller-manager
+      {{ end }}
+      {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+      - name: api-extra-ca-pem
+        secret:
+          secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
       {{ end }}
       - name: cert
