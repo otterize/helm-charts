@@ -89,7 +89,10 @@ spec:
           {{ end }}
           {{ if .Values.global.otterizeCloud.credentials.clientSecret }}
           - name: OTTERIZE_CLIENT_SECRET
-            value: "{{ .Values.global.otterizeCloud.credentials.clientSecret }}"
+            valueFrom:
+              secretKeyRef:
+                name: intents-operator-otterize-cloud-client-secret
+                key: otterize-cloud-client-secret
           {{ end }}
           {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
           - name: OTTERIZE_API_EXTRA_CA_PEM
