@@ -20,7 +20,7 @@ dependencies:
     repository: file://./../spire
   - name: intents-operator
     alias: intentsOperator
-    version: ">= 0.1.1"
+    version: ">= 0.1.2"
     condition: deployment.intentsOperator
     repository: file://./../intents-operator
   - name: network-mapper
