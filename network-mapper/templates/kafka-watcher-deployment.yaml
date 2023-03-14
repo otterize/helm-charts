@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "otterize.kafkawatcher.fullName" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "otterize.kafkawatcher.fullName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "otterize.kafkawatcher.fullName" . }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: {{ template "otterize.kafkawatcher.fullName" . }}
+          image: "{{ .Values.kafkawatcher.repository }}/{{ .Values.kafkawatcher.image }}:{{ .Values.kafkawatcher.tag }}"
+          {{ if .Values.kafkawatcher.pullPolicy }}
+          imagePullPolicy: {{ .Values.kafkawatcher.pullPolicy }}
+          {{ end }}
+          resources:
+            {{- toYaml .Values.kafkawatcher.resources | nindent 12 }}
+          env:
+            - name: OTTERIZE_MAPPER_API_URL
+              value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
+            - name: OTTERIZE_DEBUG
+              value: {{ .Values.debug | quote }}
+      serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
