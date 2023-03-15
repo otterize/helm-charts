@@ -19,6 +19,7 @@ mapper:
 
 
 sniffer:
+  enable: true # enable/disable entire installation of the network sniffer
   repository: otterize
   image: network-mapper-sniffer
   tag: latest
@@ -37,6 +38,7 @@ sniffer:
   #   memory: 128Mi
 
 kafkawatcher:
+  enable: false # enable/disable entire installation of the kafka-watcher
   repository: otterize
   image: network-mapper-kafka-watcher
   tag: latest
