@@ -26,7 +26,7 @@
 ## Kafka watcher parameters
 | Key                             | Description                                                 | Default                        |
 |---------------------------------|-------------------------------------------------------------|--------------------------------|
-| `kafkawatcher.enable`           | Enable Kafka watcher deployment.                            | `false`                        |
+| `kafkawatcher.enable`           | Enable Kafka watcher deployment (experimental).             | `false`                        |
 | `kafkawatcher.image.repository` | Kafka watcher image repository.                             | `otterize`                     |
 | `kafkawatcher.image.image`      | Kafka watcher image.                                        | `network-mapper-kafka-watcher` |
 | `kafkawatcher.image.tag`        | Kafka watcher image tag.                                    | `latest`                       |
