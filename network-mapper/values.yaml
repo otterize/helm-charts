@@ -38,6 +38,7 @@ sniffer:
   #   memory: 128Mi
 
 kafkawatcher:
+  # experimental - watch kafka logs and report through network mapper
   enable: false # enable/disable entire installation of the kafka-watcher
   repository: otterize
   image: network-mapper-kafka-watcher
