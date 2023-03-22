@@ -42,4 +42,7 @@ spire: {}
 credentialsOperator: {}
 
 # alias for network-mapper values
-networkMapper: {}
+networkMapper:
+  mapper: {}
+  sniffer: {}
+  kafkawatcher: {} # experimental
