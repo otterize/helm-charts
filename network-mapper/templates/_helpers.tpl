@@ -1,6 +1,9 @@
 {{- define "otterize.sniffer.fullName" -}}
 otterize-network-sniffer
 {{- end -}}
+{{- define "otterize.kafkawatcher.fullName" -}}
+otterize-kafka-watcher
+{{- end -}}
 {{- define "otterize.mapper.fullName" -}}
 otterize-network-mapper
 {{- end -}}

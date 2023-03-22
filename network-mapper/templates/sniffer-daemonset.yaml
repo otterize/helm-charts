@@ -1,3 +1,4 @@
+{{ if .Values.sniffer.enable }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -11,6 +12,10 @@ spec:
       labels:
         app: {{ template "otterize.sniffer.fullName" . }}
     spec:
+      {{ if .Values.sniffer.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.sniffer.pullSecrets }}
+      {{ end }}
       containers:
       - name: {{ template "otterize.sniffer.fullName" . }}
         image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ .Values.sniffer.tag }}"
@@ -35,3 +40,4 @@ spec:
             path: /proc
             type: ""
           name: proc
+{{ end }}
