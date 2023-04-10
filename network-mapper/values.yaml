@@ -83,6 +83,7 @@ global:
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:
+    apiAddress:
     credentials:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
