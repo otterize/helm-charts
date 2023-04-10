@@ -45,7 +45,7 @@ spec:
         {{ end }}
         command:
         - /manager
-        image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ .Values.operator.tag }}"
+        image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
         {{ if .Values.operator.pullPolicy }}
         imagePullPolicy: {{ .Values.operator.pullPolicy }}
         {{ end }}
