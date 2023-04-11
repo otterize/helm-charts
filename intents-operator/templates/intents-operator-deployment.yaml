@@ -23,6 +23,9 @@ spec:
     spec:
       containers:
       - args:
+        {{- if eq true .Values.operator.experimentalEnableIstioPolicyCreation }}
+        - --experimental-enable-istio-policy-creation=true
+        {{- end }}
         {{- if eq false .Values.operator.enableEnforcement }}
         - --enable-enforcement=false
         {{- end }}

@@ -18,6 +18,9 @@ spec:
       containers:
         - name: otterize-watcher
           args:
+            {{- if eq true .Values.operator.experimentalEnableIstioPolicyCreation }}
+            - --experimental-enable-istio-policy-creation=true
+            {{- end }}
             {{- range .Values.watchedNamespaces }}
             - --watched-namespaces={{ . | quote }}
             {{- end }}
