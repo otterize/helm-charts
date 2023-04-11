@@ -1,7 +1,6 @@
 operator:
   repository: otterize
   image: credentials-operator
-  tag: latest
   pullPolicy:
 
 resources: { }
