@@ -1,7 +1,6 @@
 operator:
   repository: otterize
   image: intents-operator
-  tag: latest
   pullPolicy:
 
   autoGenerateTLSUsingCredentialsOperator: false
@@ -29,7 +28,6 @@ operator:
 watcher:
   repository: otterize
   image: intents-operator-pod-watcher
-  tag: latest
   pullPolicy:
 
   resources: {}

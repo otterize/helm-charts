@@ -18,7 +18,7 @@ spec:
       {{ end }}
       containers:
       - name: {{ template "otterize.sniffer.fullName" . }}
-        image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ .Values.sniffer.tag }}"
+        image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ default $.Chart.AppVersion .Values.sniffer.tag }}"
         {{ if .Values.sniffer.pullPolicy }}
         imagePullPolicy: {{ .Values.sniffer.pullPolicy }}
         {{ end }}
