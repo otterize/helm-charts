@@ -56,6 +56,22 @@ kafkawatcher:
   #   cpu: 100m
   #   memory: 128Mi
 
+istiowatcher:
+  # experimental - query istio connection metrics from Envoy admin API
+  enable: false
+  repository: otterize
+  image: network-mapper-istio-watcher
+  tag: latest
+  pullPolicy:
+  pullSecrets:
+  resources: { }
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
 debug: false
 allowGetAllResources: true
 
@@ -64,6 +80,7 @@ global:
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:
+    apiAddress:
     credentials:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:

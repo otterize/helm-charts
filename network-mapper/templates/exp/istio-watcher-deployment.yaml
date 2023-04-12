@@ -1,0 +1,36 @@
+{{ if .Values.istiowatcher.enable }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "otterize.istiowatcher.fullName" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "otterize.istiowatcher.fullName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "otterize.istiowatcher.fullName" . }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      {{ if .Values.istiowatcher.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.istiowatcher.pullSecrets }}
+      {{ end }}
+      containers:
+        - name: {{ template "otterize.istiowatcher.fullName" . }}
+          image: "{{ .Values.istiowatcher.repository }}/{{ .Values.istiowatcher.image }}:{{ .Values.istiowatcher.tag }}"
+          {{ if .Values.istiowatcher.pullPolicy }}
+          imagePullPolicy: {{ .Values.istiowatcher.pullPolicy }}
+          {{ end }}
+          resources:
+            {{- toYaml .Values.istiowatcher.resources | nindent 12 }}
+          env:
+            - name: OTTERIZE_MAPPER_API_URL
+              value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
+            - name: OTTERIZE_DEBUG
+              value: {{ .Values.debug | quote }}
+      serviceAccountName: {{ template "otterize.istiowatcher.fullName" . }}
+{{ end }}

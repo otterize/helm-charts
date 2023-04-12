@@ -35,6 +35,17 @@
 | `kafkawatcher.resources`        | Resources override.                                         | `(none)`                       |
 | `kafkawatcher.kafkaServers`     | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                       |
 
+## Istio watcher parameters
+| Key                             | Description                                     | Default                        |
+|---------------------------------|-------------------------------------------------|--------------------------------|
+| `istiowatcher.enable`           | Enable Istio watcher deployment (experimental). | `false`                        |
+| `istiowatcher.image.repository` | Istio watcher image repository.                 | `otterize`                     |
+| `istiowatcher.image.image`      | Istio watcher image.                            | `network-mapper-istio-watcher` |
+| `istiowatcher.image.tag`        | Istio watcher image tag.                        | `latest`                       |
+| `istiowatcher.pullPolicy`       | Istio watcher pull policy.                      | `(none)`                       |
+| `istiowatcher.pullSecrets`      | Istio watcher pull secrets.                     | `(none)`                       |
+| `istiowatcher.resources`        | Resources override.                             | `(none)`                       |
+
 ## Cloud parameters
 | Key                                             | Description                                                                                                                                                                                  | Default  |
 |-------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
