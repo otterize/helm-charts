@@ -2,7 +2,6 @@
 mapper:
   repository: otterize
   image: network-mapper
-  tag: latest
   pullPolicy:
   pullSecrets:
   resources: { }
@@ -22,7 +21,6 @@ sniffer:
   enable: true # enable/disable entire installation of the network sniffer
   repository: otterize
   image: network-mapper-sniffer
-  tag: latest
   pullPolicy:
   pullSecrets:
   resources: { }
@@ -42,7 +40,6 @@ kafkawatcher:
   enable: false # enable/disable entire installation of the kafka-watcher
   repository: otterize
   image: network-mapper-kafka-watcher
-  tag: latest
   pullPolicy:
   pullSecrets:
   resources: { }

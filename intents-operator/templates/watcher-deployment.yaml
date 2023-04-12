@@ -18,10 +18,13 @@ spec:
       containers:
         - name: otterize-watcher
           args:
+            {{- if eq true .Values.operator.experimentalEnableIstioPolicyCreation }}
+            - --experimental-enable-istio-policy-creation=true
+            {{- end }}
             {{- range .Values.watchedNamespaces }}
             - --watched-namespaces={{ . | quote }}
             {{- end }}
-          image: "{{ .Values.watcher.repository }}/{{ .Values.watcher.image }}:{{ .Values.watcher.tag }}"
+          image: "{{ .Values.watcher.repository }}/{{ .Values.watcher.image }}:{{ default $.Chart.AppVersion .Values.watcher.tag }}"
           {{ if .Values.watcher.pullPolicy }}
           imagePullPolicy: {{ .Values.watcher.pullPolicy }}
           {{ end }}

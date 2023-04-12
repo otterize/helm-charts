@@ -20,7 +20,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ template "otterize.mapper.fullName" . }}
-          image: "{{ .Values.mapper.repository }}/{{ .Values.mapper.image }}:{{ .Values.mapper.tag }}"
+          image: "{{ .Values.mapper.repository }}/{{ .Values.mapper.image }}:{{ default $.Chart.AppVersion .Values.mapper.tag }}"
           {{ if .Values.mapper.pullPolicy }}
           imagePullPolicy: {{ .Values.mapper.pullPolicy }}
           {{ end }}

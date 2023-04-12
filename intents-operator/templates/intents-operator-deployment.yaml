@@ -23,6 +23,9 @@ spec:
     spec:
       containers:
       - args:
+        {{- if eq true .Values.operator.experimentalEnableIstioPolicyCreation }}
+        - --experimental-enable-istio-policy-creation=true
+        {{- end }}
         {{- if eq false .Values.operator.enableEnforcement }}
         - --enable-enforcement=false
         {{- end }}
@@ -45,7 +48,7 @@ spec:
         {{ end }}
         command:
         - /manager
-        image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ .Values.operator.tag }}"
+        image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
         {{ if .Values.operator.pullPolicy }}
         imagePullPolicy: {{ .Values.operator.pullPolicy }}
         {{ end }}
