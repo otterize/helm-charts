@@ -46,3 +46,4 @@ networkMapper:
   mapper: {}
   sniffer: {}
   kafkawatcher: {} # experimental
+  istiowatcher: {}
