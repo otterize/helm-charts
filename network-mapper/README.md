@@ -1,15 +1,16 @@
 # Parameters
 
 ## Mapper parameters
-| Key                            | Description                          | Default                        |
-|--------------------------------|--------------------------------------|--------------------------------|
-| `mapper.image.repository`      | Mapper image repository.             | `otterize`                     |
-| `mapper.image.image`           | Mapper image.                        | `network-mapper`               |
-| `mapper.image.tag`             | Mapper image tag.                    | `latest`                       |
-| `mapper.pullPolicy`            | Mapper pull policy.                  | `(none)`                       |
-| `mapper.pullSecrets`           | Mapper pull secrets.                 | `(none)`                       |
-| `mapper.resources`             | Resources override.                  | `(none)`                       |
-| `mapper.uploadIntervalSeconds` | Interval for uploading data to cloud | `60`                           |
+| Key                            | Description                          | Default          |
+|--------------------------------|--------------------------------------|------------------|
+| `mapper.image.repository`      | Mapper image repository.             | `otterize`       |
+| `mapper.image.image`           | Mapper image.                        | `network-mapper` |
+| `mapper.image.tag`             | Mapper image tag.                    | `latest`         |
+| `mapper.pullPolicy`            | Mapper pull policy.                  | `(none)`         |
+| `mapper.pullSecrets`           | Mapper pull secrets.                 | `(none)`         |
+| `mapper.resources`             | Resources override.                  | `(none)`         |
+| `mapper.uploadIntervalSeconds` | Interval for uploading data to cloud | `60`             |
+| `mapper.excludeNamespaces`     | Namespaces excluded from reporting   | `[istio-system]` |
 
 ## Sniffer parameters
 | Key                        | Description                | Default                  |
