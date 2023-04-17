@@ -32,7 +32,9 @@ spec:
               value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
+            {{ if .Values.kafkawatcher.kafkaServers }}
             - name: OTTERIZE_KAFKA_SERVERS
-              value: {{ join " " .Values.kafkawatcher.kafkaServers}}
+              value: {{ join " " .Values.kafkawatcher.kafkaServers }}
+            {{ end }}
       serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
 {{ end }}
