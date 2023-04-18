@@ -21,7 +21,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ template "otterize.istiowatcher.fullName" . }}
-          image: "{{ .Values.istiowatcher.repository }}/{{ .Values.istiowatcher.image }}:{{ .Values.istiowatcher.tag }}"
+          image: "{{ .Values.istiowatcher.repository }}/{{ .Values.istiowatcher.image }}:{{ default $.Chart.AppVersion .Values.mapper.tag }}"
           {{ if .Values.istiowatcher.pullPolicy }}
           imagePullPolicy: {{ .Values.istiowatcher.pullPolicy }}
           {{ end }}
