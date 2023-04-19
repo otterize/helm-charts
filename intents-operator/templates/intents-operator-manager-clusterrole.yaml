@@ -142,3 +142,11 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+    - apiextensions
+  resources:
+    - customresourcedefinitions
+  verbs:
+    - get
+    - list
+    - watch
