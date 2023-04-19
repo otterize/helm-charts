@@ -50,6 +50,10 @@ spec:
             {{ end }}
             - name: OTTERIZE_UPLOAD_INTERVAL_SECONDS
               value: {{ .Values.mapper.uploadIntervalSeconds | default "60" | quote }}
+            {{ if .Values.mapper.excludeNamespaces }}
+            - name: OTTERIZE_EXCLUDE_NAMESPACES
+              value: {{ join " " .Values.mapper.excludeNamespaces }}
+            {{ end }}
           volumeMounts:
             {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
             - mountPath: {{ template "otterize.operator.apiExtraCAPath" }}
