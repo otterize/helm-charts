@@ -21,7 +21,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ template "otterize.kafkawatcher.fullName" . }}
-          image: "{{ .Values.kafkawatcher.repository }}/{{ .Values.kafkawatcher.image }}:{{ default $.Chart.AppVersion .Values.mapper.tag }}"
+          image: "{{ .Values.kafkawatcher.repository }}/{{ .Values.kafkawatcher.image }}:{{ default $.Chart.AppVersion .Values.kafkawatcher.tag }}"
           {{ if .Values.kafkawatcher.pullPolicy }}
           imagePullPolicy: {{ .Values.kafkawatcher.pullPolicy }}
           {{ end }}
