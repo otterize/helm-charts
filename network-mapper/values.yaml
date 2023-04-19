@@ -59,8 +59,7 @@ kafkawatcher:
   #   memory: 128Mi
 
 istiowatcher:
-  # experimental - query istio connection metrics from Envoy admin API
-  enable: false
+  enable: true
   repository: otterize
   image: network-mapper-istio-watcher
   tag: latest
