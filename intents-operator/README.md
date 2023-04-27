@@ -29,12 +29,13 @@
 | `watcher.resources`        | Watcher Resources.         |                                |
 
 ## Cloud parameters
-| Key                                             | Description                                     | Default  |
-|-------------------------------------------------|-------------------------------------------------|----------|
-| `global.otterizeCloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
-| `global.otterizeCloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
-| `global.otterizeCloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |
+| Key                                             | Description                                                                                                                                                                                  | Default  |
+|-------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `global.otterizeCloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.                                                                                                                                                  | `(none)` |
+| `global.otterizeCloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud.                                                                                                                                              | `(none)` |
+| `global.otterizeCloud.apiAddress`               | Overrides Otterize Cloud default API address.                                                                                                                                                | `(none)` |
 | `global.otterizeCloud.apiExtraCAPEMSecret`      | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
+| `global.telemetry.disaled`                      | If set to `true`, anonymous telemetries collection will be disabled                                                                                                                          | `(none)` |
 
 ## Common parameters
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default |
