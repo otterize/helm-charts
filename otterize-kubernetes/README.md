@@ -42,6 +42,15 @@ Further information about intents-operator parameters can be found [in the Inten
 | `intentsOperator.operator.enableKafkaACLCreation`                      | Whether the operator should create Kafka ACL rules according to the ClientIntents of type Kafka                                                                                                              | `true`  |
 | `intentsOperator.operator.autoCreateNetworkPoliciesForExternalTraffic` | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected. | `true`  |
 
+## Telemetry
+
+Otterize OSS components report anonymous usage information back to the Otterize team, to help the team understand how the software is used in the community and what aspects users find useful. No personal or organizational identifying information is transmitted in these metrics: they only reflect patterns of usage. You may opt out at any time through a single configuration flag.
+
+| Key                        | Description                                                        | Default |
+|----------------------------|--------------------------------------------------------------------|---------|
+| `global.telemetry.enabled` | If set to `false`, anonymous telemetry collection will be disabled | `true`  |
+
+
 ## SPIRE parameters
 All configurable parameters of SPIRE can be configured under the alias `spire`.
 Further information about `SPIRE` parameters can be found [in SPIRE's helm chart](https://github.com/otterize/helm-charts/tree/main/spire).
