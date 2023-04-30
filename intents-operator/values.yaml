@@ -51,7 +51,7 @@ allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
 global:
   telemetry:
-    disabled:
+    enabled:
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:
