@@ -54,6 +54,10 @@ spec:
             - name: OTTERIZE_EXCLUDE_NAMESPACES
               value: {{ join " " .Values.mapper.excludeNamespaces }}
             {{ end }}
+            { { - if eq false .Values.global.telemetry.enabled } }
+            - names: OTTERIZE_TELEMETRY_ENABLED
+              value: false
+            { { - end } }
           volumeMounts:
             {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
             - mountPath: {{ template "otterize.operator.apiExtraCAPath" }}

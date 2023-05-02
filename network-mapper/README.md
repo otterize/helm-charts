@@ -56,9 +56,10 @@
 | `global.otterizeCloud.apiExtraCAPEMSecret`      | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## Global parameters
-| Key                              | Description                                                                                                                                 | Default |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------|
-| `global.allowGetAllResources`    | If defined overrides `allowGetAllResources`.                                                                                                |         |
+| Key                           | Description                                                          | Default |
+|-------------------------------|----------------------------------------------------------------------|---------|
+| `global.allowGetAllResources` | If defined overrides `allowGetAllResources`.                         |         |
+| `global.telemetry.enabled`    | If set to `false`, anonymous telemetries collection will be disabled | `true`  |
 
 ## Common parameters
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default                        |
