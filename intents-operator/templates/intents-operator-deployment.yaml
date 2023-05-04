@@ -46,6 +46,9 @@ spec:
         - --kafka-server-tls-key={{ template "otterize.operator.key" }}
         - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
         {{ end }}
+        {{- if eq false .Values.global.telemetry.enabled }}
+        - --telemetry-enabled=false
+        {{- end }}
         command:
         - /manager
         image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
