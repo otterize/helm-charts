@@ -24,6 +24,10 @@ global:
       country: "US"
       organization: "SPIRE"
 
+  # Global telemetry configuration
+  telemetry:
+    enabled: true
+
 # alias for intents-operator values
 intentsOperator:
   operator:
