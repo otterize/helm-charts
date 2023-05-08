@@ -36,6 +36,7 @@ intentsOperator:
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
     autoCreateNetworkPoliciesForExternalTraffic: true
+    experimentalEnableIstioPolicyCreation: true
   watchedNamespaces: null # by default, watch all
   watcher: {}
 
