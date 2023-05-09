@@ -62,7 +62,7 @@ istiowatcher:
   enable: true
   repository: otterize
   image: network-mapper-istio-watcher
-  tag: latest
+  tag:
   pullPolicy:
   pullSecrets:
   resources: { }
