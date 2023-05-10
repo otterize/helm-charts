@@ -48,7 +48,10 @@ spec:
         {{ end }}
         {{- if eq false .Values.global.telemetry.enabled }}
         - --telemetry-enabled=false
+        {{- else }}
+        - --telemetry-enabled=true
         {{- end }}
+
         command:
         - /manager
         image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
