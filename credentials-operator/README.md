@@ -1,4 +1,4 @@
-# Parameters
+# Parameters 
 
 ## Global parameters
 | Key                                  | Description                                                                                                                                 | Default |
