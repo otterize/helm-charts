@@ -56,10 +56,10 @@ spec:
             {{ end }}
             {{- if eq false .Values.global.telemetry.enabled }}
             - name: OTTERIZE_TELEMETRY_ENABLED
-              value: false
+              value: "false"
             {{- else }}
             - name: OTTERIZE_TELEMETRY_ENABLED
-              value: true
+              value: "true"
             {{- end }}
           volumeMounts:
             {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
