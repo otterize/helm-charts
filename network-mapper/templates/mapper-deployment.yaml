@@ -55,8 +55,11 @@ spec:
               value: {{ join " " .Values.mapper.excludeNamespaces }}
             {{ end }}
             {{- if eq false .Values.global.telemetry.enabled }}
-            - names: OTTERIZE_TELEMETRY_ENABLED
-              value: false
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "false"
+            {{- else }}
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "true"
             {{- end }}
           volumeMounts:
             {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
