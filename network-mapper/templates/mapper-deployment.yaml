@@ -55,10 +55,10 @@ spec:
               value: {{ join " " .Values.mapper.excludeNamespaces }}
             {{ end }}
             {{- if eq false .Values.global.telemetry.enabled }}
-            - names: OTTERIZE_TELEMETRY_ENABLED
+            - name: OTTERIZE_TELEMETRY_ENABLED
               value: false
             {{- else }}
-            - names: OTTERIZE_TELEMETRY_ENABLED
+            - name: OTTERIZE_TELEMETRY_ENABLED
               value: true
             {{- end }}
           volumeMounts:
