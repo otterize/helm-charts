@@ -31,7 +31,7 @@ jobs:
           kubectl wait pods -n kube-system -l k8s-app=calico-node --for condition=Ready --timeout=90s
           kubectl wait pods -n kube-system -l k8s-app=calico-kube-controllers --for condition=Ready --timeout=90s
 
-      - name: Deploy Network Mapper
+      - name: Deploy Otterize
         run: |-
           helm dep up ./otterize-kubernetes
           helm install otterize ./otterize-kubernetes -n otterize-system --create-namespace
