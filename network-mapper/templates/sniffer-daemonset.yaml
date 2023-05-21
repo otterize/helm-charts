@@ -16,6 +16,12 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.sniffer.pullSecrets }}
       {{ end }}
+      {{- with .Values.sniffer.tolerations }}
+      tolerations:  {{- toYaml . | nindent 8 }}
+     {{- end }}
+     {{- with .Values.sniffer.priorityClassName }}
+      priorityClassName:  {{ . }}
+     {{- end }}      
       containers:
       - name: {{ template "otterize.sniffer.fullName" . }}
         image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ default $.Chart.AppVersion .Values.sniffer.tag }}"
