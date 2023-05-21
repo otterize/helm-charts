@@ -17,13 +17,6 @@ jobs:
           submodules: recursive
           token: ${{ secrets.OTTERIZEBOT_GITHUB_TOKEN }} # required for checking out submodules
 
-      - name: Login to GCR
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: _json_key_base64
-          password: ${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON}}
-
       - name: Set up Helm
         uses: azure/setup-helm@v3
 
@@ -42,7 +35,6 @@ jobs:
         run: |-
           helm dep up ./otterize-kubernetes
           helm install otterize ./otterize-kubernetes -n otterize-system --create-namespace
-
 
       - name: Wait for Otterize
         run: |-
