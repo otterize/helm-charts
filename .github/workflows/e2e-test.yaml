@@ -41,7 +41,7 @@ jobs:
       - name: Deploy Network Mapper
         run: |-
           helm dep up ./otterize-kubernetes
-          helm install otterize ./otterize-kubernetes -n otterize-system --create-namespace $MAPPER_FLAGS $SNIFFER_FLAGS
+          helm install otterize ./otterize-kubernetes -n otterize-system --create-namespace
 
 
       - name: Wait for Otterize
