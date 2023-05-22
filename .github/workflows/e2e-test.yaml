@@ -38,7 +38,8 @@ jobs:
 
       - name: Wait for Otterize
         run: |-
-          kubectl wait pods -n otterize-system -l --for condition=Ready --timeout=90s
+          kubectl wait pods -n otterize-system --for condition=Ready --timeout=90s
+
 
           
       
