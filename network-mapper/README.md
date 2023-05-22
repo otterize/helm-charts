@@ -22,7 +22,9 @@
 | `sniffer.pullPolicy`       | Sniffer pull policy.       | `(none)`                 |
 | `sniffer.pullSecrets`      | Sniffer pull secrets.      | `(none)`                 |
 | `sniffer.resources`        | Resources override.        | `(none)`                 |   
-
+| `sniffer.resources`        | Resources override.        | `(none)`                 |
+| `sniffer.tolerations`      | Tolerations override.      | `(none)`                 |   
+| `sniffer.priorityClassName`| Set priorityClassName.     | `(none)`                 |
 
 ## Kafka watcher parameters
 | Key                             | Description                                                 | Default                        |
