@@ -37,13 +37,19 @@ spec:
             - name: OTTERIZE_CLIENT_ID
               value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
             {{ end }}
-            {{ if .Values.global.otterizeCloud.credentials.clientSecret }}
+          {{ if .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}
             - name: OTTERIZE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: mapper-otterize-cloud-client-secret
+                  name: {{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}
+                  key: {{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}
+          {{ else if .Values.global.otterizeCloud.credentials.clientSecret }}
+            - name: OTTERIZE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: intents-operator-otterize-cloud-client-secret
                   key: otterize-cloud-client-secret
-            {{ end }}
+          {{ end }}
             {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
             - name: OTTERIZE_API_EXTRA_CA_PEM
               value: {{ template "otterize.operator.apiExtraCAPEM" }}
@@ -55,11 +61,11 @@ spec:
               value: {{ join " " .Values.mapper.excludeNamespaces }}
             {{ end }}
             {{- if eq false .Values.global.telemetry.enabled }}
-            - names: OTTERIZE_TELEMETRY_ENABLED
-              value: false
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "false"
             {{- else }}
-            - names: OTTERIZE_TELEMETRY_ENABLED
-              value: true
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "true"
             {{- end }}
           volumeMounts:
             {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}

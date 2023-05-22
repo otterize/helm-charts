@@ -68,11 +68,17 @@ spec:
           - name: OTTERIZE_CLIENT_ID
             value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
           {{ end }}
-          {{ if .Values.global.otterizeCloud.credentials.clientSecret }}
+          {{ if .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}
           - name: OTTERIZE_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                name: credentials-operator-otterize-cloud-client-secret
+                name: {{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}
+                key: {{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}
+          {{ else if .Values.global.otterizeCloud.credentials.clientSecret }}
+          - name: OTTERIZE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: intents-operator-otterize-cloud-client-secret
                 key: otterize-cloud-client-secret
           {{ end }}
           {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
