@@ -12,6 +12,7 @@ operator:
   enableNetworkPolicyCreation: true
   enableKafkaACLCreation: true
   autoCreateNetworkPoliciesForExternalTraffic: true
+  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: false
   experimentalEnableIstioPolicyCreation: true
 
   resources: { }
