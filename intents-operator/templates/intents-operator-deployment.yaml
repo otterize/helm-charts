@@ -38,6 +38,9 @@ spec:
         {{- if eq false .Values.operator.autoCreateNetworkPoliciesForExternalTraffic }}
         - --auto-create-network-policies-for-external-traffic=false
         {{- end }}
+        {{ if eq true .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement }}
+        - --exp-auto-create-network-policies-for-external-traffic-disable-intents-requirement=true
+        {{- end }}
         {{- range .Values.watchedNamespaces }}
         - --watched-namespaces={{ . | quote }}
         {{- end }}
