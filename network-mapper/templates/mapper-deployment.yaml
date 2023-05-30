@@ -47,7 +47,7 @@ spec:
             - name: OTTERIZE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: intents-operator-otterize-cloud-client-secret
+                  name: mapper-otterize-cloud-client-secret
                   key: otterize-cloud-client-secret
           {{ end }}
             {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
