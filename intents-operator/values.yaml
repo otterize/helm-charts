@@ -51,9 +51,9 @@ watcher:
 allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
 global:
-    kubebuilder_rbac_proxy:
-      image: otterize/kubebuilder-kube-rbac-proxy
-      tag: v0.11.0
+  kubebuilder_rbac_proxy:
+    image: otterize/kubebuilder-kube-rbac-proxy
+    tag: v0.11.0
   telemetry:
     enabled:
   # If defined overrides `allowGetAllResources`
