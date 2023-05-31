@@ -34,7 +34,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: initial-entry-registration-sidecar
-          image: busybox
+          image: {{ .Values.busybox.image }}:{{ .Values.busybox.tag }}
           command: ["/bin/sh", "/run/scripts/init_entries.sh" ]
           volumeMounts:
             - name: spire-scripts

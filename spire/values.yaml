@@ -101,6 +101,14 @@ affinity: {}
 
 clusterName: "example-cluster"
 
+wait_for_it:
+  image: otterize/wait-for-it
+  tag: latest
+
+busybox:
+  image: busybox
+  tag: latest
+
 global:
   spiffe:
     trustDomain: "example.org"
