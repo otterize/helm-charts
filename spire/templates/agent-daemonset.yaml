@@ -25,7 +25,7 @@ spec:
           # This is a small image with wait-for-it, choose whatever image
           # you prefer that waits for a service to be up. This image is built
           # from https://github.com/lqhl/wait-for-it
-          image: otterize/wait-for-it:latest
+          image: {{ .Values.wait_for_it.image }}:{{ .Values.wait_for_it.tag }}
           {{- if .Values.global.spire.serverServiceName}}
           args: ["-t", "30", "{{ .Values.global.spire.serverServiceName }}:8081"]
           {{- else}}
