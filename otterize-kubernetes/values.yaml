@@ -39,7 +39,7 @@ intentsOperator:
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
     autoCreateNetworkPoliciesForExternalTraffic: true
-    experimentalEnableIstioPolicyCreation: true
+    enableIstioPolicyCreation: true
   watchedNamespaces: null # by default, watch all
   watcher: {}
 
@@ -53,5 +53,5 @@ credentialsOperator: {}
 networkMapper:
   mapper: {}
   sniffer: {}
-  kafkawatcher: {} # experimental
-  istiowatcher: {} # experimental
+  kafkawatcher: {}
+  istiowatcher: {}
