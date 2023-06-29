@@ -3,9 +3,9 @@ entries:
   credentials-operator:
   - apiVersion: v2
     appVersion: v0.1.5
-    created: "2023-06-29T06:30:15.140581551Z"
+    created: "2023-06-29T06:30:44.873664104Z"
     description: credentials-operator
-    digest: abbd3d527fcc15d00d30aa3ea7a9c828737f159bee3bb9499a29dd365fd42643
+    digest: bb44845db1660d8247537b0c5d5189401c6b5503463ed14ecd2501dffbaac639
     home: https://github.com/otterize/credentials-operator
     name: credentials-operator
     sources:
@@ -16,10 +16,10 @@ entries:
     version: 0.1.0
   intents-operator:
   - apiVersion: v2
-    appVersion: v1.0.29
-    created: "2023-06-29T06:30:15.141616758Z"
+    appVersion: v1.0.30
+    created: "2023-06-29T06:30:44.87442401Z"
     description: Otterize intents operator
-    digest: 3b1dee9bf55580566e8afb2f36033f34f627e5723be9661948755030ebeb7a91
+    digest: 23673a6dcb633c704c6aaabf81dfa65e16fcbd580acee863786d0eacdc73e8e7
     home: https://github.com/otterize/intents-operator
     name: intents-operator
     sources:
@@ -68,8 +68,8 @@ entries:
   network-mapper:
   - apiVersion: v2
     appVersion: v0.1.24
-    created: "2023-06-29T06:30:15.142374163Z"
-    digest: 235ac68b14089769d45a2f3faab919bd4a0f4d71c325560333c53ac86f048ee4
+    created: "2023-06-29T06:30:44.875012215Z"
+    digest: 1c26c8aef281851c01848babbe2bbaabb40f981211e9a9722ad7cfbc195a4733
     home: https://github.com/otterize/network-mapper
     name: network-mapper
     sources:
@@ -128,7 +128,7 @@ entries:
     version: 0.1.0
   otterize-kubernetes:
   - apiVersion: v2
-    created: "2023-06-29T06:30:15.146285589Z"
+    created: "2023-06-29T06:30:44.877890239Z"
     dependencies:
     - alias: credentialsOperator
       condition: deployment.credentialsOperator
@@ -152,7 +152,7 @@ entries:
       version: '>= 0.1.0'
     description: 'This chart contains both the Otterize credentials-operator, SPIRE
       (server+agent), and the Otterize Intents Operator. '
-    digest: 1e54b5eeb1bdfb202c51a3384603f5a4d493ed68330456e2e1d540e9cc75393f
+    digest: b1d329da8435b65eb2e20c3d6130d66ee7ee321763039d1878eee30c09810b04
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -206,7 +206,7 @@ entries:
   spire:
   - apiVersion: v2
     appVersion: 1.5.4
-    created: "2023-06-29T06:30:15.147134995Z"
+    created: "2023-06-29T06:30:44.878695945Z"
     description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
       Please note this chart requires Projected Service Account Tokens which has to
       be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
@@ -217,7 +217,7 @@ entries:
       command:         - kube-apiserver         - --api-audiences=api,spire-server         -
       --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
       --service-account-signing-key-file=/run/config/pki/sa.key ``` '
-    digest: 749489c6cb77ef802788787ad527a1f5a62413163de01136ef8a481111a7f2af
+    digest: 1ba01e63c57f4b8c3566858061161450a2132417a3340f1aa61a1e1df046d3d1
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -244,4 +244,4 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-06-29T06:30:15.139905146Z"
+generated: "2023-06-29T06:30:44.872886598Z"
