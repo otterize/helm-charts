@@ -35,6 +35,10 @@ spec:
             value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
           - name: OTTERIZE_DEBUG
             value: {{ .Values.debug | quote }}
+        securityContext:
+          capabilities:
+            add:
+              - SYS_PTRACE
         volumeMounts:
           - mountPath: /hostproc
             name: proc
