@@ -20,6 +20,7 @@
 | `operator.autoCreateNetworkPoliciesForExternalTraffic`                          | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected.       | `true`             |
 | `operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement` | **experimental** - If `autoCreateNetworkPoliciesForExternalTraffic` is enabled, do not require ClientIntents resources - simply create network policies based off of the existence of an Ingress/Service resource. | `false`            |
 | `operator.resources`                                                            | Resources override.                                                                                                                                                                                                |                    |
+| `operator.enableDatabaseReconciler` | **experimental** - Enables experimental support for database intents (coming soon!) | `false`            |
 
 ## Watcher parameters
 | Key                        | Description                | Default                        |
