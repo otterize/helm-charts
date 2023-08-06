@@ -54,6 +54,9 @@ spec:
         {{- else }}
         - --telemetry-enabled=true
         {{- end }}
+        {{- if eq true .Values.operator.enableProtectedServices }}
+        - --enable-protected-services=true
+        {{- end }}
         {{- if eq true .Values.operator.enableDatabaseReconciler }}
         - --enable-database-reconciler=true
         {{- end }}
