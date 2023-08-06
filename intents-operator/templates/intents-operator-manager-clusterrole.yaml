@@ -119,6 +119,32 @@ rules:
   - patch
   - update
 - apiGroups:
+  - k8s.otterize.com
+  resources:
+  - protectedservices
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - k8s.otterize.com
+  resources:
+  - protectedservices/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - k8s.otterize.com
+  resources:
+  - protectedservices/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - networking.k8s.io
   resources:
   - ingresses
@@ -151,24 +177,3 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-    - apps
-  resources:
-    - deployments
-    - replicasets
-    - statefulsets
-    - daemonsets
-  verbs:
-    - get
-    - list
-    - watch
-{{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
-- apiGroups:
-    - '*'
-  resources:
-    - '*'
-  verbs:
-    - get
-    - list
-    - watch
-{{ end }}
