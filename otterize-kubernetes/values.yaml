@@ -34,7 +34,7 @@ global:
 # alias for intents-operator values
 intentsOperator:
   operator:
-    enableEnforcement: true
+    mode: defaultActive
     autoGenerateTLSUsingCredentialsOperator: true
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true

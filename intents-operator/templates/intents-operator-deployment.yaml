@@ -26,9 +26,7 @@ spec:
         {{- if eq true .Values.operator.enableIstioPolicyCreation }}
         - --enable-istio-policy-creation=true
         {{- end }}
-        {{- if eq false .Values.operator.enableEnforcement }}
-        - --enable-enforcement=false
-        {{- end }}
+        - --enforcement-default-state={{ template "otterize.operator.mode" . }}
         {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
         - --enable-network-policy-creation=false
         {{- end }}
