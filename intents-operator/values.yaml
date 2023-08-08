@@ -15,7 +15,6 @@ operator:
   autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: false
   enableIstioPolicyCreation: true
   enableDatabaseReconciler: false
-  enableProtectedServices: false
 
   resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
