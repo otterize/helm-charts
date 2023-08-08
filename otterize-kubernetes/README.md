@@ -42,6 +42,7 @@ Further information about intents-operator parameters can be found [in the Inten
 | `intentsOperator.operator.enableEnforcement`                           | If set to false, enforcement is disabled globally (both for network policies and Kafka ACL). If true, you may use the other flags for more granular enforcement settings                                     | `true`  |
 | `intentsOperator.operator.enableNetworkPolicyCreation`                 | Whether the operator should create network policies according to the ClientIntents                                                                                                                           | `true`  |
 | `intentsOperator.operator.enableKafkaACLCreation`                      | Whether the operator should create Kafka ACL rules according to the ClientIntents of type Kafka                                                                                                              | `true`  |
+| `intentsOperator.operator.enableIstioPolicyCreation`                   | Whether the operator should create Istio authorization policies according to ClientIntents                                                                                                                   | `true`  |
 | `intentsOperator.operator.autoCreateNetworkPoliciesForExternalTraffic` | Automatically allow external traffic, if a new ClientIntents resource would result in blocking external (internet) traffic and there is an Ingress/Service resource indicating external traffic is expected. | `true`  |
 
 ## Telemetry
