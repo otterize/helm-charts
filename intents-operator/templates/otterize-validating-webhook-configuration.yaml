@@ -2,7 +2,11 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   creationTimestamp: null
+  {{- if eq (semver .Chart.AppVersion | (semver "1.0.30").Compare) -1 }}
   name: otterize-validating-webhook-configuration
+  {{- else }}
+  name: validating-webhook-configuration
+  {{- end }}
 webhooks:
 - admissionReviewVersions:
   - v1
