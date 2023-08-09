@@ -26,9 +26,7 @@ spec:
         {{- if eq true .Values.operator.enableIstioPolicyCreation }}
         - --enable-istio-policy-creation=true
         {{- end }}
-        {{- if eq false .Values.operator.enableEnforcement }}
-        - --enable-enforcement=false
-        {{- end }}
+        - --enforcement-default-state={{ template "otterize.operator.mode" . }}
         {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
         - --enable-network-policy-creation=false
         {{- end }}
@@ -38,7 +36,7 @@ spec:
         {{- if eq false .Values.operator.autoCreateNetworkPoliciesForExternalTraffic }}
         - --auto-create-network-policies-for-external-traffic=false
         {{- end }}
-        {{ if eq true .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement }}
+        {{- if eq true .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement }}
         - --exp-auto-create-network-policies-for-external-traffic-disable-intents-requirement=true
         {{- end }}
         {{- range .Values.watchedNamespaces }}
@@ -48,7 +46,7 @@ spec:
         - --kafka-server-tls-cert={{ template "otterize.operator.cert" }}
         - --kafka-server-tls-key={{ template "otterize.operator.key" }}
         - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
-        {{ end }}
+        {{- end }}
         {{- if eq false .Values.global.telemetry.enabled }}
         - --telemetry-enabled=false
         {{- else }}
