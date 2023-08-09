@@ -40,7 +40,7 @@ spec:
         {{- if eq false .Values.operator.autoCreateNetworkPoliciesForExternalTraffic }}
         - --auto-create-network-policies-for-external-traffic=false
         {{- end }}
-        {{ if eq true .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement }}
+        {{- if eq true .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement }}
         - --exp-auto-create-network-policies-for-external-traffic-disable-intents-requirement=true
         {{- end }}
         {{- range .Values.watchedNamespaces }}
@@ -50,7 +50,7 @@ spec:
         - --kafka-server-tls-cert={{ template "otterize.operator.cert" }}
         - --kafka-server-tls-key={{ template "otterize.operator.key" }}
         - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
-        {{ end }}
+        {{- end }}
         {{- if eq false .Values.global.telemetry.enabled }}
         - --telemetry-enabled=false
         {{- else }}
