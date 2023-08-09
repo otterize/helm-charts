@@ -26,7 +26,11 @@ spec:
         {{- if eq true .Values.operator.enableIstioPolicyCreation }}
         - --enable-istio-policy-creation=true
         {{- end }}
+        {{- if eq (semver .Chart.AppVersion | (semver "1.0.30").Compare) -1 }}
         - --enforcement-default-state={{ template "otterize.operator.mode" . }}
+        {{- else }}
+        - --enable-enforcement={{ template "otterize.operator.mode" . }}
+        {{- end -}}
         {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
         - --enable-network-policy-creation=false
         {{- end }}
