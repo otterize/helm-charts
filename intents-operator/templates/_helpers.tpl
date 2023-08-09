@@ -23,7 +23,7 @@
 {{- end -}}
 
 {{- define "otterize.operator.mode" -}}
-    {{- if not (empty .Values.operator.enableEnforcement) -}}
+    {{- if not (kindIs "invalid" .Values.operator.enableEnforcement) -}}
         {{- fail "`enableEnforcement` is deprecated, please use `mode` instead. Valid values for `mode`: `defaultActive` (equivalent to `enableEnforcement`=true) and `defaultShadow` (equivalent to `enableEnforcement`=false)" -}}
     {{- end -}}
     {{- if (eq "defaultActive" .Values.operator.mode) -}}
