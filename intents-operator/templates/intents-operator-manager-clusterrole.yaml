@@ -66,6 +66,7 @@ rules:
   - list
   - update
   - watch
+  - create
 - apiGroups:
   - k8s.otterize.com
   resources:
