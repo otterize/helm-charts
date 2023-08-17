@@ -30,6 +30,10 @@ rules:
   - namespaces
   verbs:
   - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - ""
   resources:
@@ -62,11 +66,11 @@ rules:
   resources:
   - customresourcedefinitions
   verbs:
+  - create
   - get
   - list
   - update
   - watch
-  - create
 - apiGroups:
   - k8s.otterize.com
   resources:
@@ -178,24 +182,3 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-    - apps
-  resources:
-    - deployments
-    - replicasets
-    - statefulsets
-    - daemonsets
-  verbs:
-    - get
-    - list
-    - watch
-{{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
-- apiGroups:
-    - '*'
-  resources:
-    - '*'
-  verbs:
-    - get
-    - list
-    - watch
-{{ end }}
