@@ -26,12 +26,15 @@ spec:
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- with .Values.global.podAnnotations }}
+        {{- with .Values.global.commonAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
         {{- include "spire.server.selectorLabels" . | nindent 8 }}
         {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
