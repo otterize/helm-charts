@@ -20,6 +20,8 @@ spire:
   socketsPath: "/run/spire/sockets"
 
 global:
+  podAnnotations: {}
+  podLabels: {}
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0

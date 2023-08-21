@@ -18,7 +18,13 @@ spec:
         {{- if .Values.operator.autoGenerateTLSUsingCredentialsOperator }}
         credentials-operator.otterize.com/tls-secret-name: intents-operator-spire-tls-controller-manager
         {{- end }}
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: intents-operator
     spec:
       containers:

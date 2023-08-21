@@ -13,8 +13,14 @@ spec:
   template:
     metadata:
       annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         kubectl.kubernetes.io/default-container: manager
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: credentials-operator
     spec:
       serviceAccountName: credentials-operator-controller-manager

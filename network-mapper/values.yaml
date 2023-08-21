@@ -82,6 +82,8 @@ allowGetAllResources: true
 
 # Fields from All-in-one chart
 global:
+  podAnnotations: {}
+  podLabels: {}
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:

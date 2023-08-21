@@ -15,6 +15,13 @@ spec:
     metadata:
       labels:
         {{- include "spire.agent.selectorLabels" . | nindent 8 }}
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       hostPID: true
       hostNetwork: true

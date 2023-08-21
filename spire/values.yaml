@@ -110,6 +110,10 @@ busybox:
   tag: latest
 
 global:
+  podAnnotations: {}
+  podLabels: {}
+  commonLabels: {}
+  commonAnnotations: {}
   spiffe:
     trustDomain: "example.org"
     CASubject:
