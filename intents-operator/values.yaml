@@ -56,9 +56,13 @@ watcher:
 allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
 global:
+  # Extra annotations for deployed pods
   podAnnotations: {}
+  # Extra labels for deployed pods
   podLabels: {}
+  # Labels to add to all deployed objects
   commonLabels: {}
+  # Annotations to add to all deployed objects
   commonAnnotations: {}
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
