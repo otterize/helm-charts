@@ -10,6 +10,7 @@ metadata:
     {{- with .Values.global.commonAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
   name: credentials-operator-controller-manager
   namespace: {{ .Release.Namespace }}
 spec:
@@ -26,6 +27,7 @@ spec:
         {{- with .Values.global.commonAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
         kubectl.kubernetes.io/default-container: manager
       labels:
         {{- with .Values.global.podLabels }}
@@ -34,6 +36,7 @@ spec:
         {{- with .Values.global.commonLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
         app: credentials-operator
     spec:
       serviceAccountName: credentials-operator-controller-manager

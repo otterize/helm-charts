@@ -6,10 +6,12 @@ metadata:
     {{- with .Values.global.commonLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
   annotations:
     {{- with .Values.global.commonAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   replicas: 1
   selector:
@@ -25,6 +27,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         app: {{ template "otterize.mapper.fullName" . }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
       annotations:
         {{- with .Values.global.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -32,6 +35,7 @@ spec:
         {{- with .Values.global.commonAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       securityContext:
         runAsNonRoot: true

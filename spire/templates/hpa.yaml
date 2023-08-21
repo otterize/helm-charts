@@ -13,6 +13,7 @@ metadata:
     {{- with .Values.global.commonAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

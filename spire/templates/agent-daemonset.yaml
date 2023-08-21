@@ -8,10 +8,12 @@ metadata:
     {{- with .Values.global.commonLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
   annotations:
     {{- with .Values.global.commonAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   selector:
     matchLabels:
@@ -28,6 +30,7 @@ spec:
         {{- with .Values.global.commonLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
       annotations:
         {{- with .Values.global.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -35,6 +38,7 @@ spec:
         {{- with .Values.global.commonAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       hostPID: true
       hostNetwork: true
