@@ -3,6 +3,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "otterize.istiowatcher.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   selector:

@@ -3,6 +3,14 @@ kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ include "spire.fullname" . }}-agent-cluster-role
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 rules:
   - apiGroups: [""]
     resources: ["pods", "nodes", "nodes/proxy"]

@@ -3,6 +3,14 @@ kind: ValidatingWebhookConfiguration
 metadata:
   creationTimestamp: null
   name: otterize-validating-webhook-configuration
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 webhooks:
 - admissionReviewVersions:
   - v1

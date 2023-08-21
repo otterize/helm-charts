@@ -3,6 +3,14 @@ kind: ConfigMap
 metadata:
   name: spire-scripts
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 data:
   init_entries.sh: |-
     set -e

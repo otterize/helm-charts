@@ -9,6 +9,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "spire.server.labels" . | nindent 4 }}
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: {{ .Values.server.service.type }}
   ports:

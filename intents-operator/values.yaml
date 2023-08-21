@@ -58,6 +58,8 @@ watchedNamespaces: null # by default, watch all
 global:
   podAnnotations: {}
   podLabels: {}
+  commonLabels: {}
+  commonAnnotations: {}
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0

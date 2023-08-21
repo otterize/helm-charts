@@ -3,6 +3,14 @@ kind: RoleBinding
 metadata:
   name: otterize-intents-operator-leader-election-rolebinding
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

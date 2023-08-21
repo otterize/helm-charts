@@ -4,6 +4,14 @@ kind: ClusterRole
 metadata:
   creationTimestamp: null
   name: otterize-intents-operator-manager-role
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 rules:
 - apiGroups:
   - ""

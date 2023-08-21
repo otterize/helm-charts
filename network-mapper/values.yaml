@@ -84,6 +84,8 @@ allowGetAllResources: true
 global:
   podAnnotations: {}
   podLabels: {}
+  commonLabels: {}
+  commonAnnotations: {}
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:
