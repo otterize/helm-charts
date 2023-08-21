@@ -82,6 +82,14 @@ allowGetAllResources: true
 
 # Fields from All-in-one chart
 global:
+  # Extra annotations for deployed pods
+  podAnnotations: {}
+  # Extra labels for deployed pods
+  podLabels: {}
+  # Labels to add to all deployed objects
+  commonLabels: {}
+  # Annotations to add to all deployed objects
+  commonAnnotations: {}
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:

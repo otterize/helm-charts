@@ -64,6 +64,11 @@
 |-------------------------------|----------------------------------------------------------------------|---------|
 | `global.allowGetAllResources` | If defined overrides `allowGetAllResources`.                         |         |
 | `global.telemetry.enabled`    | If set to `false`, anonymous telemetries collection will be disabled | `true`  |
+| `global.commonAnnotations`    | Annotations to add to all deployed objects                           | {}      |
+| `global.commonLabels`         | Labels to add to all deployed objects                                | {}      |
+| `global.podAnnotations`       | Annotations to add to all deployed pods                              | {}      |
+| `global.podLabels`            | Labels to add to all deployed pods                                   | {}      |
+
 
 ## Common parameters
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default                        |

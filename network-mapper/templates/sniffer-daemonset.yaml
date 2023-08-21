@@ -3,6 +3,16 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ template "otterize.sniffer.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   selector:
     matchLabels:
@@ -10,7 +20,22 @@ spec:
   template:
     metadata:
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: {{ template "otterize.sniffer.fullName" . }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       {{ if .Values.sniffer.pullSecrets }}
       imagePullSecrets:

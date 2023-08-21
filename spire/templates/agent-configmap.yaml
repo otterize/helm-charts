@@ -3,6 +3,16 @@ kind: ConfigMap
 metadata:
   name: {{ include "spire.fullname" . }}-agent
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 data:
   agent.conf: |
     agent {
