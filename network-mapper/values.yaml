@@ -90,6 +90,10 @@ global:
   commonLabels: {}
   # Annotations to add to all deployed objects
   commonAnnotations: {}
+
+  # Specify an annotation name that by setting it, one can override otterize's service name resolution.
+  serviceNameOverrideAnnotationName: intents.otterize.com/service-name
+
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:

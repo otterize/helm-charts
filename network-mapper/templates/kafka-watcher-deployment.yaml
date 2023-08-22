@@ -61,5 +61,9 @@ spec:
             - name: OTTERIZE_KAFKA_SERVERS
               value: {{ join " " .Values.kafkawatcher.kafkaServers }}
             {{ end }}
+            {{ if .Values.global.serviceNameOverrideAnnotationName }}
+            - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+              value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+            {{ end }}
       serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
 {{ end }}
