@@ -60,14 +60,15 @@
 | `global.otterizeCloud.apiExtraCAPEMSecret`                 | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## Global parameters
-| Key                           | Description                                                          | Default |
-|-------------------------------|----------------------------------------------------------------------|---------|
-| `global.allowGetAllResources` | If defined overrides `allowGetAllResources`.                         |         |
-| `global.telemetry.enabled`    | If set to `false`, anonymous telemetries collection will be disabled | `true`  |
-| `global.commonAnnotations`    | Annotations to add to all deployed objects                           | {}      |
-| `global.commonLabels`         | Labels to add to all deployed objects                                | {}      |
-| `global.podAnnotations`       | Annotations to add to all deployed pods                              | {}      |
-| `global.podLabels`            | Labels to add to all deployed pods                                   | {}      |
+| Key                                        | Description                                                                                         | Default                             |
+|--------------------------------------------|-----------------------------------------------------------------------------------------------------|-------------------------------------|
+| `global.allowGetAllResources`              | If defined overrides `allowGetAllResources`.                                                        |                                     |
+| `global.telemetry.enabled`                 | If set to `false`, anonymous telemetries collection will be disabled                                | `true`                              |
+| `global.commonAnnotations`                 | Annotations to add to all deployed objects                                                          | {}                                  |
+| `global.commonLabels`                      | Labels to add to all deployed objects                                                               | {}                                  |
+| `global.podAnnotations`                    | Annotations to add to all deployed pods                                                             | {}                                  |
+| `global.podLabels`                         | Labels to add to all deployed pods                                                                  | {}                                  |
+| `global.serviceNameOverrideAnnotationName` | Specify an annotation name that by setting it, one can override otterize's service name resolution. | `intents.otterize.com/service-name` |
 
 
 ## Common parameters

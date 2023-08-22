@@ -1,14 +1,15 @@
 # Parameters 
 
 ## Global parameters
-| Key                              | Description                                                                                                                                 | Default |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------|
-| `global.spire.serverServiceName` | If deployed with SPIRE, this key specifies SPIRE-server's service name. You should use either this **OR** `spire.serverAddress` (not both). |         |
-| `global.allowGetAllResources`    | If defined overrides `allowGetAllResources`.                                                                                                |         |                                                                      | `false` |
-| `global.commonAnnotations`       | Annotations to add to all deployed objects                                                                                                  | {}      |
-| `global.commonLabels`            | Labels to add to all deployed objects                                                                                                       | {}      |
-| `global.podAnnotations`          | Annotations to add to all deployed pods                                                                                                     | {}      |
-| `global.podLabels`               | Labels to add to all deployed pods                                                                                                          | {}      |
+| Key                                        | Description                                                                                                                                 | Default                             |
+|--------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
+| `global.spire.serverServiceName`           | If deployed with SPIRE, this key specifies SPIRE-server's service name. You should use either this **OR** `spire.serverAddress` (not both). |                                     |
+| `global.allowGetAllResources`              | If defined overrides `allowGetAllResources`.                                                                                                |                                     |                                                                      | `false` |
+| `global.commonAnnotations`                 | Annotations to add to all deployed objects                                                                                                  | {}                                  |
+| `global.commonLabels`                      | Labels to add to all deployed objects                                                                                                       | {}                                  |
+| `global.podAnnotations`                    | Annotations to add to all deployed pods                                                                                                     | {}                                  |
+| `global.podLabels`                         | Labels to add to all deployed pods                                                                                                          | {}                                  |
+| `global.serviceNameOverrideAnnotationName` | Specify an annotation name that by setting it, one can override otterize's service name resolution.                                         | `intents.otterize.com/service-name` |
 
 
 ## SPIRE parameters
