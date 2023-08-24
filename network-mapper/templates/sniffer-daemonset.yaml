@@ -60,6 +60,10 @@ spec:
             value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
           - name: OTTERIZE_DEBUG
             value: {{ .Values.debug | quote }}
+          {{ if .Values.global.serviceNameOverrideAnnotationName }}
+          - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+            value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+          {{ end }}
         securityContext:
           capabilities:
             add:
