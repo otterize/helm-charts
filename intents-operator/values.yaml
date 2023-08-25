@@ -1,18 +1,24 @@
 operator:
   repository: otterize
   image: intents-operator
-  tag: latest
   pullPolicy:
 
   autoGenerateTLSUsingCredentialsOperator: false
 
-  # `enableEnforcement` controls all the enforcement that the intents-operator performs. When set to false, enforcement
+  mode: defaultActive # or defaultShadow
+  # **Deprecated, use mode instead** `enableEnforcement` controls all the enforcement that the intents-operator performs. When set to false, enforcement
   # is disabled globally (both for network policies and Kafka ACL). When set to true, you may use the other flags for
   # more granular enforcement settings (e.g. disable only kafka ACL)
-  enableEnforcement: true
+  enableEnforcement: # true or false - by default empty, deprecated use mode instead.
+  # `mode` controls the mode of operation for the intents-operator. When set to `defaultActive`, enforcement will be enabled by default.
+  # When set to `defaultShadow`, enforcement will be disabled by default, and can be enabled per-service using `ProtectedService` resources.
+  # In either case, you can also use the other flags that control network policy creation, etc, to disable enforcement for a specific
   enableNetworkPolicyCreation: true
   enableKafkaACLCreation: true
   autoCreateNetworkPoliciesForExternalTraffic: true
+  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: false
+  enableIstioPolicyCreation: true
+  enableDatabaseReconciler: false
 
   resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -29,7 +35,6 @@ operator:
 watcher:
   repository: otterize
   image: intents-operator-pod-watcher
-  tag: latest
   pullPolicy:
 
   resources: {}
@@ -51,6 +56,23 @@ watcher:
 allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
 global:
+  # Extra annotations for deployed pods
+  podAnnotations: {}
+  # Extra labels for deployed pods
+  podLabels: {}
+  # Labels to add to all deployed objects
+  commonLabels: {}
+  # Annotations to add to all deployed objects
+  commonAnnotations: {}
+
+  # Specify an annotation name that by setting it, one can override otterize's service name resolution.
+  serviceNameOverrideAnnotationName: intents.otterize.com/service-name
+
+  kubebuilder_rbac_proxy:
+    image: otterize/kubebuilder-kube-rbac-proxy
+    tag: v0.11.0
+  telemetry:
+    enabled:
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:
@@ -58,6 +80,10 @@ global:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
       clientSecret:
+      # if specified, uses this Kubernetes SecretKeyRef instead of creating a secret with the value of clientSecret.
+      clientSecretKeyRef:
+        secretName:
+        secretKey:
     # (optional) The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud.
     # The secret should be placed in the same namespace as the Otterize deployment
     apiExtraCAPEMSecret:

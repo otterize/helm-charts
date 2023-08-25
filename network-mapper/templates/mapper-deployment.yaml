@@ -2,6 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "otterize.mapper.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   replicas: 1
   selector:
@@ -10,7 +20,22 @@ spec:
   template:
     metadata:
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: {{ template "otterize.mapper.fullName" . }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       securityContext:
         runAsNonRoot: true
@@ -20,7 +45,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ template "otterize.mapper.fullName" . }}
-          image: "{{ .Values.mapper.repository }}/{{ .Values.mapper.image }}:{{ .Values.mapper.tag }}"
+          image: "{{ .Values.mapper.repository }}/{{ .Values.mapper.image }}:{{ default $.Chart.AppVersion .Values.mapper.tag }}"
           {{ if .Values.mapper.pullPolicy }}
           imagePullPolicy: {{ .Values.mapper.pullPolicy }}
           {{ end }}
@@ -33,23 +58,44 @@ spec:
             - name: OTTERIZE_API_ADDRESS
               value: "{{ .Values.global.otterizeCloud.apiAddress }}"
             {{ end }}
+            {{ if .Values.global.serviceNameOverrideAnnotationName }}
+            - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+              value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+            {{ end }}
             {{ if .Values.global.otterizeCloud.credentials.clientId }}
             - name: OTTERIZE_CLIENT_ID
               value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
             {{ end }}
-            {{ if .Values.global.otterizeCloud.credentials.clientSecret }}
+          {{ if (and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey) }}
+            - name: OTTERIZE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}"
+                  key: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}"
+          {{ else if .Values.global.otterizeCloud.credentials.clientSecret }}
             - name: OTTERIZE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: mapper-otterize-cloud-client-secret
                   key: otterize-cloud-client-secret
-            {{ end }}
+          {{ end }}
             {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
             - name: OTTERIZE_API_EXTRA_CA_PEM
               value: {{ template "otterize.operator.apiExtraCAPEM" }}
             {{ end }}
             - name: OTTERIZE_UPLOAD_INTERVAL_SECONDS
               value: {{ .Values.mapper.uploadIntervalSeconds | default "60" | quote }}
+            {{ if .Values.mapper.excludeNamespaces }}
+            - name: OTTERIZE_EXCLUDE_NAMESPACES
+              value: {{ join " " .Values.mapper.excludeNamespaces }}
+            {{ end }}
+            {{- if eq false .Values.global.telemetry.enabled }}
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "false"
+            {{- else }}
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "true"
+            {{- end }}
           volumeMounts:
             {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
             - mountPath: {{ template "otterize.operator.apiExtraCAPath" }}

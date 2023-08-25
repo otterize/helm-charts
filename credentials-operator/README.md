@@ -1,10 +1,15 @@
-# Parameters
+# Parameters 
 
 ## Global parameters
-| Key                                  | Description                                                                                                                                 | Default |
-|--------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|---------|
-| `global.spire.serverServiceName`     | If deployed with SPIRE, this key specifies SPIRE-server's service name. You should use either this **OR** `spire.serverAddress` (not both). |         |
-| `global.allowGetAllResources`        | If defined overrides `allowGetAllResources`.                                                                                                |         |                                                                      | `false` |
+| Key                                        | Description                                                                                                                                                                                                                                                                                                            | Default                             |
+|--------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
+| `global.spire.serverServiceName`           | If deployed with SPIRE, this key specifies SPIRE-server's service name. You should use either this **OR** `spire.serverAddress` (not both).                                                                                                                                                                            |                                     |
+| `global.allowGetAllResources`              | If defined overrides `allowGetAllResources`.                                                                                                                                                                                                                                                                           |                                     |                                                                      | `false` |
+| `global.commonAnnotations`                 | Annotations to add to all deployed objects                                                                                                                                                                                                                                                                             | {}                                  |
+| `global.commonLabels`                      | Labels to add to all deployed objects                                                                                                                                                                                                                                                                                  | {}                                  |
+| `global.podAnnotations`                    | Annotations to add to all deployed pods                                                                                                                                                                                                                                                                                | {}                                  |
+| `global.podLabels`                         | Labels to add to all deployed pods                                                                                                                                                                                                                                                                                     | {}                                  |
+| `global.serviceNameOverrideAnnotationName` | Which annotation to use (in the [service name resolution algorithm](https://docs.otterize.com/reference/service-identities#kubernetes-service-identity-resolution)) for setting a pod's service name, if not the default. Use this if you already have annotations on your pods that provide the correct service name. | `intents.otterize.com/service-name` |
 
 
 ## SPIRE parameters
@@ -24,13 +29,15 @@
 | `operator.pullPolicy`       | Operator pull policy.      | `(none)`                     |
 
 ## Cloud parameters
-| Key                                             | Description                                     | Default  |
-|-------------------------------------------------|-------------------------------------------------|----------|
-| `global.otterizeCloud.useCloudToGenerateTLSCredentials` | Use Otterize Cloud for certificate management instead of SPIRE | `false` |
-| `global.otterizeCloud.credentials.clientId`     | Client ID for connecting to Otterize Cloud.     | `(none)` |
-| `global.otterizeCloud.credentials.clientSecret` | Client secret for connecting to Otterize Cloud. | `(none)` |
-| `global.otterizeCloud.apiAddress`               | Overrides Otterize Cloud default API address.   | `(none)` |
-| `global.otterizeCloud.apiExtraCAPEMSecret`      | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
+| Key                                                        | Description                                                                                                                                                                                  | Default  |
+|------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `global.otterizeCloud.useCloudToGenerateTLSCredentials`    | Use Otterize Cloud for certificate management instead of SPIRE                                                                                                                               | `false`  |
+| `global.otterizeCloud.credentials.clientId`                | Client ID for connecting to Otterize Cloud.                                                                                                                                                  | `(none)` |
+| `global.otterizeCloud.credentials.clientSecret`            | Client secret for connecting to Otterize Cloud.                                                                                                                                              | `(none)` |
+| `global.otterizeCloud.credentials.secretKeyRef.secretName` | If specified, the name of a pre-created Kubernetes Secret to be used instead of creating a secret with the value of clientSecret.                                                            | `(none)` |
+| `global.otterizeCloud.credentials.secretKeyRef.secretKey`  | If specified, the key for the clientSecret in a pre-created Kubernetes Secret to be used instead of creating a secret with the value of clientSecret.                                        | `(none)` |
+| `global.otterizeCloud.apiAddress`                          | Overrides Otterize Cloud default API address.                                                                                                                                                | `(none)` |
+| `global.otterizeCloud.apiExtraCAPEMSecret`                 | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## Common parameters
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default |

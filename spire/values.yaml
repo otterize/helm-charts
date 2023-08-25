@@ -101,7 +101,23 @@ affinity: {}
 
 clusterName: "example-cluster"
 
+wait_for_it:
+  image: otterize/wait-for-it
+  tag: latest
+
+busybox:
+  image: busybox
+  tag: latest
+
 global:
+  # Extra annotations for spire pods
+  podAnnotations: {}
+  # Extra labels for spire pods
+  podLabels: {}
+  # Labels to add to all deployed objects
+  commonLabels: {}
+  # Annotations to add to all deployed objects
+  commonAnnotations: {}
   spiffe:
     trustDomain: "example.org"
     CASubject:

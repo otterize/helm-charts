@@ -2,10 +2,11 @@
 mapper:
   repository: otterize
   image: network-mapper
-  tag: latest
   pullPolicy:
   pullSecrets:
   resources: { }
+  excludeNamespaces:
+    - 'istio-system'
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -22,9 +23,13 @@ sniffer:
   enable: true # enable/disable entire installation of the network sniffer
   repository: otterize
   image: network-mapper-sniffer
-  tag: latest
   pullPolicy:
   pullSecrets:
+  tolerations: []
+  #The options to add tolerations
+  # tolerations:
+  # - operator: Exists
+  priorityClassName: ""
   resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -41,7 +46,6 @@ kafkawatcher:
   enableK8sWatchMode: false # enable/disable entire installation of the kafka-watcher
   repository: otterize
   image: network-mapper-kafka-watcher
-  tag: latest
   pullPolicy:
   pullSecrets:
   resources: { }
@@ -58,19 +62,53 @@ kafkawatcher:
   #   cpu: 100m
   #   memory: 128Mi
 
+istiowatcher:
+  enable: true
+  repository: otterize
+  image: network-mapper-istio-watcher
+  tag:
+  pullPolicy:
+  pullSecrets:
+  resources: { }
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
 debug: false
 allowGetAllResources: true
 
 # Fields from All-in-one chart
 global:
+  # Extra annotations for deployed pods
+  podAnnotations: {}
+  # Extra labels for deployed pods
+  podLabels: {}
+  # Labels to add to all deployed objects
+  commonLabels: {}
+  # Annotations to add to all deployed objects
+  commonAnnotations: {}
+
+  # Specify an annotation name that by setting it, one can override otterize's service name resolution.
+  serviceNameOverrideAnnotationName: intents.otterize.com/service-name
+
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:
+    apiAddress:
     credentials:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
       clientSecret:
+      # if specified, uses this Kubernetes SecretKeyRef instead of creating a secret with the value of clientSecret.
+      clientSecretKeyRef:
+        secretName:
+        secretKey:
 
     # (optional) The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud.
     # The secret should be placed in the same namespace as the Otterize deployment
     apiExtraCAPEMSecret:
+  telemetry:
+    enabled:

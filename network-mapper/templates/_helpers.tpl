@@ -4,6 +4,9 @@ otterize-network-sniffer
 {{- define "otterize.kafkawatcher.fullName" -}}
 otterize-kafka-watcher
 {{- end -}}
+{{- define "otterize.istiowatcher.fullName" -}}
+otterize-istio-watcher
+{{- end -}}
 {{- define "otterize.mapper.fullName" -}}
 otterize-network-mapper
 {{- end -}}

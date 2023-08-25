@@ -3,6 +3,16 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ template "otterize.sniffer.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   selector:
     matchLabels:
@@ -10,15 +20,36 @@ spec:
   template:
     metadata:
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: {{ template "otterize.sniffer.fullName" . }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       {{ if .Values.sniffer.pullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.sniffer.pullSecrets }}
       {{ end }}
+      {{- with .Values.sniffer.tolerations }}
+      tolerations:  {{- toYaml . | nindent 8 }}
+     {{- end }}
+     {{- with .Values.sniffer.priorityClassName }}
+      priorityClassName:  {{ . }}
+     {{- end }}      
       containers:
       - name: {{ template "otterize.sniffer.fullName" . }}
-        image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ .Values.sniffer.tag }}"
+        image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ default $.Chart.AppVersion .Values.sniffer.tag }}"
         {{ if .Values.sniffer.pullPolicy }}
         imagePullPolicy: {{ .Values.sniffer.pullPolicy }}
         {{ end }}
@@ -29,6 +60,14 @@ spec:
             value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
           - name: OTTERIZE_DEBUG
             value: {{ .Values.debug | quote }}
+          {{ if .Values.global.serviceNameOverrideAnnotationName }}
+          - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+            value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+          {{ end }}
+        securityContext:
+          capabilities:
+            add:
+              - SYS_PTRACE
         volumeMounts:
           - mountPath: /hostproc
             name: proc

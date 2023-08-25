@@ -1,8 +1,8 @@
+{{ if .Values.istiowatcher.enable }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRole
 metadata:
-  name: otterize-intents-operator-leader-election-rolebinding
-  namespace: {{ .Release.Namespace }}
+  name: {{ template "otterize.istiowatcher.fullName" . }}
   labels:
     {{- with .Values.global.commonLabels }}
     {{- toYaml . | nindent 4 }}
@@ -13,11 +13,15 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     app.kubernetes.io/version: {{ .Chart.Version }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: intents-operator-leader-election-role
-subjects:
-- kind: ServiceAccount
-  name: intents-operator-controller-manager
-  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - 'pods'
+      - 'pods/exec'
+    verbs:
+      - 'get'
+      - 'list'
+      - 'watch'
+      - 'create'
+{{ end }}

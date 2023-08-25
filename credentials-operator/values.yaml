@@ -1,7 +1,6 @@
 operator:
   repository: otterize
   image: credentials-operator
-  tag: latest
   pullPolicy:
 
 resources: { }
@@ -21,12 +20,31 @@ spire:
   socketsPath: "/run/spire/sockets"
 
 global:
+  # Extra annotations for deployed pods
+  podAnnotations: {}
+  # Extra labels for deployed pods
+  podLabels: {}
+  # Labels to add to all deployed objects
+  commonLabels: {}
+  # Annotations to add to all deployed objects
+  commonAnnotations: {}
+
+  # Specify an annotation name that by setting it, one can override otterize's service name resolution.
+  serviceNameOverrideAnnotationName: intents.otterize.com/service-name
+
+  kubebuilder_rbac_proxy:
+    image: otterize/kubebuilder-kube-rbac-proxy
+    tag: v0.11.0
   otterizeCloud:
     useCloudToGenerateTLSCredentials: false
     credentials:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
       clientSecret:
+      # if specified, uses this Kubernetes SecretKeyRef instead of creating a secret with the value of clientSecret.
+      clientSecretKeyRef:
+        secretName:
+        secretKey:
     # (optional) The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud.
     # The secret should be placed in the same namespace as the Otterize deployment
     apiExtraCAPEMSecret:

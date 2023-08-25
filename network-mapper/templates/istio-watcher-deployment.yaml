@@ -1,8 +1,8 @@
-{{ if (default (.Values.kafkawatcher.enable .Values.kafkawatcher.enableK8sWatchMode)) }}
+{{ if .Values.istiowatcher.enable }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "otterize.kafkawatcher.fullName" . }}
+  name: {{ template "otterize.istiowatcher.fullName" . }}
   labels:
     {{- with .Values.global.commonLabels }}
     {{- toYaml . | nindent 4 }}
@@ -17,7 +17,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "otterize.kafkawatcher.fullName" . }}
+      app: {{ template "otterize.istiowatcher.fullName" . }}
   template:
     metadata:
       labels:
@@ -27,7 +27,7 @@ spec:
         {{- with .Values.global.commonLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        app: {{ template "otterize.kafkawatcher.fullName" . }}
+        app: {{ template "otterize.istiowatcher.fullName" . }}
         app.kubernetes.io/version: {{ .Chart.Version }}
       annotations:
         {{- with .Values.global.podAnnotations }}
@@ -40,32 +40,26 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-      {{ if .Values.kafkawatcher.pullSecrets }}
+      {{ if .Values.istiowatcher.pullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.kafkawatcher.pullSecrets }}
+        - name: {{ .Values.istiowatcher.pullSecrets }}
       {{ end }}
       containers:
-        - name: {{ template "otterize.kafkawatcher.fullName" . }}
-          image: "{{ .Values.kafkawatcher.repository }}/{{ .Values.kafkawatcher.image }}:{{ default $.Chart.AppVersion .Values.kafkawatcher.tag }}"
-          {{ if .Values.kafkawatcher.pullPolicy }}
-          imagePullPolicy: {{ .Values.kafkawatcher.pullPolicy }}
+        - name: {{ template "otterize.istiowatcher.fullName" . }}
+          image: "{{ .Values.istiowatcher.repository }}/{{ .Values.istiowatcher.image }}:{{ default $.Chart.AppVersion .Values.istiowatcher.tag }}"
+          {{ if .Values.istiowatcher.pullPolicy }}
+          imagePullPolicy: {{ .Values.istiowatcher.pullPolicy }}
           {{ end }}
           resources:
-            {{- toYaml .Values.kafkawatcher.resources | nindent 12 }}
+            {{- toYaml .Values.istiowatcher.resources | nindent 12 }}
           env:
             - name: OTTERIZE_MAPPER_API_URL
               value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
-            {{ if .Values.kafkawatcher.kafkaServers }}
-            - name: OTTERIZE_KAFKA_SERVERS
-              value: {{ join " " .Values.kafkawatcher.kafkaServers }}
-            {{ end }}
-            - name: OTTERIZE_KAFKA_LOG_READ_MODE
-              value: k8s-logs
             {{ if .Values.global.serviceNameOverrideAnnotationName }}
             - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
               value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
             {{ end }}
-      serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
+      serviceAccountName: {{ template "otterize.istiowatcher.fullName" . }}
 {{ end }}

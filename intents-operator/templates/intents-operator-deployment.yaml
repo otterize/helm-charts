@@ -2,7 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
     app: intents-operator
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
   name: intents-operator-controller-manager
   namespace: {{ .Release.Namespace }}
 spec:
@@ -18,14 +27,29 @@ spec:
         {{- if .Values.operator.autoGenerateTLSUsingCredentialsOperator }}
         credentials-operator.otterize.com/tls-secret-name: intents-operator-spire-tls-controller-manager
         {{- end }}
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: intents-operator
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       containers:
       - args:
-        {{- if eq false .Values.operator.enableEnforcement }}
-        - --enable-enforcement=false
+        {{- if eq true .Values.operator.enableIstioPolicyCreation }}
+        - --enable-istio-policy-creation=true
         {{- end }}
+        - --enforcement-default-state={{ template "otterize.operator.mode" . }}
         {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
         - --enable-network-policy-creation=false
         {{- end }}
@@ -35,6 +59,9 @@ spec:
         {{- if eq false .Values.operator.autoCreateNetworkPoliciesForExternalTraffic }}
         - --auto-create-network-policies-for-external-traffic=false
         {{- end }}
+        {{- if eq true .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement }}
+        - --exp-auto-create-network-policies-for-external-traffic-disable-intents-requirement=true
+        {{- end }}
         {{- range .Values.watchedNamespaces }}
         - --watched-namespaces={{ . | quote }}
         {{- end }}
@@ -42,17 +69,26 @@ spec:
         - --kafka-server-tls-cert={{ template "otterize.operator.cert" }}
         - --kafka-server-tls-key={{ template "otterize.operator.key" }}
         - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
-        {{ end }}
+        {{- end }}
+        {{- if eq false .Values.global.telemetry.enabled }}
+        - --telemetry-enabled=false
+        {{- else }}
+        - --telemetry-enabled=true
+        {{- end }}
+        {{- if eq true .Values.operator.enableDatabaseReconciler }}
+        - --enable-database-reconciler=true
+        {{- end }}
+
         command:
         - /manager
-        image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ .Values.operator.tag }}"
+        image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
         {{ if .Values.operator.pullPolicy }}
         imagePullPolicy: {{ .Values.operator.pullPolicy }}
         {{ end }}
         livenessProbe:
           httpGet:
             path: /healthz
-            port: 8081
+            port: 8181
           initialDelaySeconds: 15
           periodSeconds: 20
         name: manager
@@ -63,7 +99,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /readyz
-            port: 8081
+            port: 8181
           initialDelaySeconds: 5
           periodSeconds: 10
         resources:
@@ -87,7 +123,13 @@ spec:
           - name: OTTERIZE_CLIENT_ID
             value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
           {{ end }}
-          {{ if .Values.global.otterizeCloud.credentials.clientSecret }}
+          {{ if (and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey) }}
+          - name: OTTERIZE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}"
+                key: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}"
+          {{ else if .Values.global.otterizeCloud.credentials.clientSecret }}
           - name: OTTERIZE_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
@@ -97,6 +139,10 @@ spec:
           {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
           - name: OTTERIZE_API_EXTRA_CA_PEM
             value: {{ template "otterize.operator.apiExtraCAPEM" }}
+          {{ end }}
+          {{ if .Values.global.serviceNameOverrideAnnotationName }}
+          - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+            value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
           {{ end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
@@ -119,7 +165,7 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=0
-        image: otterize/kubebuilder-kube-rbac-proxy:v0.11.0
+        image: {{ .Values.global.kubebuilder_rbac_proxy.image }}:{{ .Values.global.kubebuilder_rbac_proxy.tag }}
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443

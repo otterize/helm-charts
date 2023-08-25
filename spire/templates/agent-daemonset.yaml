@@ -5,6 +5,15 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "spire.agent.labels" . | nindent 4 }}
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   selector:
     matchLabels:
@@ -15,6 +24,21 @@ spec:
     metadata:
       labels:
         {{- include "spire.agent.selectorLabels" . | nindent 8 }}
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       hostPID: true
       hostNetwork: true
@@ -25,7 +49,7 @@ spec:
           # This is a small image with wait-for-it, choose whatever image
           # you prefer that waits for a service to be up. This image is built
           # from https://github.com/lqhl/wait-for-it
-          image: otterize/wait-for-it:latest
+          image: {{ .Values.wait_for_it.image }}:{{ .Values.wait_for_it.tag }}
           {{- if .Values.global.spire.serverServiceName}}
           args: ["-t", "30", "{{ .Values.global.spire.serverServiceName }}:8081"]
           {{- else}}

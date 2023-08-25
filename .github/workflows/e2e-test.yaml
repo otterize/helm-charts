@@ -1,0 +1,55 @@
+name: E2E Test # this test is based on this tutorial: https://docs.otterize.com/quick-tutorials/k8s-network-mapper
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - main
+
+
+jobs:
+  e2e-test:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.OTTERIZEBOT_GITHUB_TOKEN }} # required for checking out submodules
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          start-args: "--network-plugin=cni --cni=calico"
+
+      - name: Wait for Calico startup
+        run: |-
+          kubectl wait pods -n kube-system -l k8s-app=calico-kube-controllers --for condition=Ready --timeout=90s
+          kubectl wait pods -n kube-system -l k8s-app=calico-node --for condition=Ready --timeout=90s
+          kubectl wait pods -n kube-system -l k8s-app=calico-kube-controllers --for condition=Ready --timeout=90s
+
+      - name: Deploy Otterize
+        run: |-
+          helm dep up ./otterize-kubernetes
+          helm install otterize ./otterize-kubernetes -n otterize-system --create-namespace
+
+      - name: Wait for Otterize
+        run: |-
+          kubectl wait pods -n otterize-system -l app=otterize-network-sniffer --for condition=Ready --timeout=360s
+          kubectl wait pods -n otterize-system -l app=otterize-network-mapper --for condition=Ready --timeout=360s
+          kubectl wait pods -n otterize-system -l app=otterize-istio-watcher --for condition=Ready --timeout=360s
+          kubectl wait pods -n otterize-system -l app=credentials-operator --for condition=Ready --timeout=360s
+          kubectl wait pods -n otterize-system -l app=intents-operator --for condition=Ready --timeout=360s
+
+
+          
+      
+      
+
+      
