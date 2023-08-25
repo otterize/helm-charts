@@ -1,4 +1,4 @@
-{{ if (default (.Values.kafkawatcher.enable .Values.kafkawatcher.enableK8sWatchMode)) }}
+{{ if (default .Values.kafkawatcher.enable .Values.kafkawatcher.enableK8sWatchMode) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
