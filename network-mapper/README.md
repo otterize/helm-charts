@@ -24,16 +24,16 @@
 
 
 ## Kafka watcher parameters
-| Key                             | Description                                                 | Default                        |
-|---------------------------------|-------------------------------------------------------------|--------------------------------|
-| `kafkawatcher.enable`           | Enable Kafka watcher deployment (experimental).             | `false`                        |
-| `kafkawatcher.image.repository` | Kafka watcher image repository.                             | `otterize`                     |
-| `kafkawatcher.image.image`      | Kafka watcher image.                                        | `network-mapper-kafka-watcher` |
-| `kafkawatcher.image.tag`        | Kafka watcher image tag.                                    | `latest`                       |
-| `kafkawatcher.pullPolicy`       | Kafka watcher pull policy.                                  | `(none)`                       |
-| `kafkawatcher.pullSecrets`      | Kafka watcher pull secrets.                                 | `(none)`                       |
-| `kafkawatcher.resources`        | Resources override.                                         | `(none)`                       |
-| `kafkawatcher.kafkaServers`     | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                       |
+| Key                               | Description                                                                                                  | Default                        |
+|-----------------------------------|--------------------------------------------------------------------------------------------------------------|--------------------------------|
+| `kafkawatcher.enableK8sWatchMode` | Enable Kafka watcher deployment, which reads Kafka logs using the Kubernetes API, for pods in `kafkaServers` | `false`                        |
+| `kafkawatcher.kafkaServers`       | Kafka servers to watch, formatted as a list of `pod.namespace`. For example, `["kafka-0.kafka"]`             | `(none)`                       |
+| `kafkawatcher.image.repository`   | Kafka watcher image repository.                                                                              | `otterize`                     |
+| `kafkawatcher.image.image`        | Kafka watcher image.                                                                                         | `network-mapper-kafka-watcher` |
+| `kafkawatcher.image.tag`          | Kafka watcher image tag.                                                                                     | `latest`                       |
+| `kafkawatcher.pullPolicy`         | Kafka watcher pull policy.                                                                                   | `(none)`                       |
+| `kafkawatcher.pullSecrets`        | Kafka watcher pull secrets.                                                                                  | `(none)`                       |
+| `kafkawatcher.resources`          | Resources override.                                                                                          | `(none)`                       |
 
 ## Cloud parameters
 | Key                                             | Description                                                                                                                                                                                  | Default  |
