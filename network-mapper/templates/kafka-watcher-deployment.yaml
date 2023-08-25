@@ -33,6 +33,8 @@ spec:
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
             - name: OTTERIZE_KAFKA_SERVERS
-              value: {{ join " " .Values.kafkawatcher.kafkaServers}}
+              value: {{ join " " .Values.kafkawatcher.kafkaServers }}
+            - name: OTTERIZE_KAFKA_LOG_READ_MODE
+              value: k8s-logs
       serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
 {{ end }}
