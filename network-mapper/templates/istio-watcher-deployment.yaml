@@ -3,6 +3,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "otterize.istiowatcher.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   replicas: 1
   selector:
@@ -11,7 +21,22 @@ spec:
   template:
     metadata:
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: {{ template "otterize.istiowatcher.fullName" . }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       securityContext:
         runAsNonRoot: true
@@ -32,5 +57,9 @@ spec:
               value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
+            {{ if .Values.global.serviceNameOverrideAnnotationName }}
+            - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+              value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+            {{ end }}
       serviceAccountName: {{ template "otterize.istiowatcher.fullName" . }}
 {{ end }}

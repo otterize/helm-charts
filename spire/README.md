@@ -10,6 +10,10 @@ ___
 | `global.spiffe.CASubject.commonName`   | `CommonName` value                                                       | `""`            |
 | `global.spiffe.trustDomain`            | The trust domain that this server belongs to 	                           | `"example.org"` |
 | `global.spire.serverServiceName`       | Name of the Kubernetes service that will be created for the SPIRE server |                 |
+| `global.commonAnnotations`             | Annotations to add to all deployed objects                               | {}              |
+| `global.commonLabels`                  | Labels to add to all deployed objects                                    | {}              |
+| `global.podAnnotations`                | Annotations to add to all deployed pods                                  | {}              |
+| `global.podLabels`                     | Labels to add to all deployed pods                                       | {}              |
 
 ## Common parameters
 | Key                                          | Description                                                                                                  | Default             |

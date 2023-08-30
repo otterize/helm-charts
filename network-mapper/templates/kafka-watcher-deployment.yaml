@@ -3,6 +3,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "otterize.kafkawatcher.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   replicas: 1
   selector:
@@ -11,7 +21,22 @@ spec:
   template:
     metadata:
       labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         app: {{ template "otterize.kafkawatcher.fullName" . }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       securityContext:
         runAsNonRoot: true
@@ -35,6 +60,10 @@ spec:
             {{ if .Values.kafkawatcher.kafkaServers }}
             - name: OTTERIZE_KAFKA_SERVERS
               value: {{ join " " .Values.kafkawatcher.kafkaServers }}
+            {{ end }}
+            {{ if .Values.global.serviceNameOverrideAnnotationName }}
+            - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+              value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
             {{ end }}
       serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
 {{ end }}
