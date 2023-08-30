@@ -1,30 +1,33 @@
 apiVersion: v2
 name: otterize-kubernetes
 description: |
-  This chart contains both the Otterize credentials-operator, SPIRE (server+agent), and the Otterize Intents Operator.
+  This chart contains the Otterize credentials-operator, SPIRE (server+agent), the Otterize intents operator, and the Otterize network mapper.
 type: application
 version: 1.0.0
-keywords: ["spiffe", "spire", "spire-server", "spire-agent"]
 home: https://github.com/otterize/helm-charts
 kubeVersion: ">=1.19.0-0"
 dependencies:
   - name: credentials-operator
     alias: credentialsOperator
     version: ">= 0.0.1"
-    condition: deployment.credentialsOperator, global.deployment.credentialsOperator
+    # condition must have NO spaces or the values are considered invalid and will make this always be true! DO NOT add spaces around the comma!
+    condition: deployment.credentialsOperator,global.deployment.credentialsOperator
     repository: file://./../credentials-operator
   - name: spire
     alias: spire
     version: "1.0.0"
-    condition: deployment.spire, global.deployment.spire
+    # condition must have NO spaces or the values are considered invalid and will make this always be true! DO NOT add spaces around the comma!
+    condition: deployment.spire,global.deployment.spire
     repository: file://./../spire
   - name: intents-operator
     alias: intentsOperator
     version: ">= 0.1.2"
-    condition: deployment.intentsOperator, global.deployment.intentsOperator
+    # condition must have NO spaces or the values are considered invalid and will make this always be true! DO NOT add spaces around the comma!
+    condition: deployment.intentsOperator,global.deployment.intentsOperator
     repository: file://./../intents-operator
   - name: network-mapper
     alias: networkMapper
     version: ">= 0.1.0"
-    condition: deployment.networkMapper, global.deployment.networkMapper
+    # condition must have NO spaces or the values are considered invalid and will make this always be true! DO NOT add spaces around the comma!
+    condition: deployment.networkMapper,global.deployment.networkMapper
     repository: file://./../network-mapper
