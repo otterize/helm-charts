@@ -3,7 +3,7 @@ name: otterize-kubernetes
 description: |
   This chart contains both the Otterize credentials-operator, SPIRE (server+agent), and the Otterize Intents Operator.
 type: application
-version: 0.1.1
+version: 1.0.0
 keywords: ["spiffe", "spire", "spire-server", "spire-agent"]
 home: https://github.com/otterize/helm-charts
 kubeVersion: ">=1.19.0-0"
