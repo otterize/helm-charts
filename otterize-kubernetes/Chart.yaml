@@ -11,20 +11,20 @@ dependencies:
   - name: credentials-operator
     alias: credentialsOperator
     version: ">= 0.0.1"
-    condition: deployment.credentialsOperator
+    condition: deployment.credentialsOperator, global.deployment.credentialsOperator
     repository: file://./../credentials-operator
   - name: spire
     alias: spire
     version: "1.0.0"
-    condition: deployment.spire
+    condition: deployment.spire, global.deployment.spire
     repository: file://./../spire
   - name: intents-operator
     alias: intentsOperator
     version: ">= 0.1.2"
-    condition: deployment.intentsOperator
+    condition: deployment.intentsOperator, global.deployment.intentsOperator
     repository: file://./../intents-operator
   - name: network-mapper
     alias: networkMapper
     version: ">= 0.1.0"
-    condition: deployment.networkMapper
+    condition: deployment.networkMapper, global.deployment.networkMapper
     repository: file://./../network-mapper
