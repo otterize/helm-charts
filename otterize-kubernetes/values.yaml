@@ -1,10 +1,9 @@
-deployment:
-  spire: true
-  credentialsOperator: true
-  intentsOperator: true
-  networkMapper: true
-
 global:
+  deployment:
+    spire: false
+    credentialsOperator: false
+    intentsOperator: true
+    networkMapper: true
   # Extra annotations for deployed pods
   podAnnotations: {}
   # Extra labels for deployed pods
