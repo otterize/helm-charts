@@ -53,7 +53,7 @@ global:
     serverServiceName:
   certManager:
     issuerName:
-    useClusterIssuer:
+    useClusterIssuer: true
 
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:

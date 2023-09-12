@@ -43,7 +43,7 @@
 | Key                            | Description                                                                                                   | Default |
 |--------------------------------|---------------------------------------------------------------------------------------------------------------|---------|
 | `certManager.issuerName`       | The cert-manager Issuer (or ClusterIssuer if `useClusterIssuer` is set) to be used for certificate generation | `""`    |
-| `certManager.useClusterIssuer` | Use ClusterIssuer instead of the namespace scoped Issuer.                                                     | `false` |
+| `certManager.useClusterIssuer` | Use ClusterIssuer instead of the namespace scoped Issuer.                                                     | `true`  |
 
 ## Common parameters
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default |
