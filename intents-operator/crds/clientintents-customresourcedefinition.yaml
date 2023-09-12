@@ -39,6 +39,20 @@ spec:
               calls:
                 items:
                   properties:
+                    awsResources:
+                      items:
+                        properties:
+                          actions:
+                            items:
+                              type: string
+                            type: array
+                          arn:
+                            type: string
+                        required:
+                        - actions
+                        - arn
+                        type: object
+                      type: array
                     databaseResources:
                       items:
                         properties:
@@ -84,6 +98,28 @@ spec:
                         - path
                         type: object
                       type: array
+                    s3Resource:
+                      items:
+                        properties:
+                          actions:
+                            items:
+                              enum:
+                              - list-buckets
+                              - create-bucket
+                              - delete-bucket
+                              - put-object
+                              - delete-object
+                              - get-object
+                              - list-objects
+                              type: string
+                            type: array
+                          arn:
+                            type: string
+                        required:
+                        - actions
+                        - arn
+                        type: object
+                      type: array
                     topics:
                       items:
                         properties:
@@ -115,6 +151,8 @@ spec:
                       - http
                       - kafka
                       - database
+                      - aws
+                      - s3
                       type: string
                   required:
                   - name
