@@ -191,7 +191,7 @@ spec:
       - configMap:
           name: intents-operator-manager-config
         name: manager-config
-      {{ if and (or .Values.operator.autoGenerateTLSUsingCredentialsOperator .Values.global.credentialsProvider) (.Values.global.deployment.credentialsOperator) }}
+      {{ if and (or .Values.operator.autoGenerateTLSUsingCredentialsOperator .Values.global.certificateProvider) (.Values.global.deployment.credentialsOperator) }}
       - name: spire-tls
         secret:
           secretName: intents-operator-spire-tls-controller-manager
