@@ -35,9 +35,9 @@ global:
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0
-  credentialsProvider:
+  certificateProvider:
   otterizeCloud:
-    useCloudToGenerateTLSCredentials: # Deprecated, use `credentialsProvider=otterize-cloud` instead
+    useCloudToGenerateTLSCredentials: # Deprecated, use `certificateProvider=otterize-cloud` instead
     credentials:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:

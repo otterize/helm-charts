@@ -76,10 +76,10 @@ spec:
         {{- if eq true .Values.global.otterizeCloud.useCloudToGenerateTLSCredentials }}
         {{- /*  Backward compatibility if still using this deprecated boolean */}}
         - --credentials-provider=otterize-cloud
-        {{- else if .Values.global.credentialsProvider }}
-        - --credentials-provider={{.Values.global.credentialsProvider}}
+        {{- else if .Values.global.certificateProvider }}
+        - --credentials-provider={{.Values.global.certificateProvider}}
         {{- end }}
-        {{- if eq "cert-manager" .Values.global.credentialsProvider }}
+        {{- if eq "cert-manager" .Values.global.certificateProvider }}
           {{- if .Values.global.certManager.issuerName }}
         - --cert-manager-issuer={{.Values.global.certManager.issuerName}}
           {{- end }}
