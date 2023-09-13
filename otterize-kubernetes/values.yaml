@@ -16,11 +16,14 @@ global:
   # Specify an annotation name that by setting it, one can override otterize's service name resolution.
   serviceNameOverrideAnnotationName: intents.otterize.com/service-name
 
+  # Provider for credentials-operator to use (spire/otterize-cloud/cert-manager), if empty - spire is used by default
+  certificateProvider:
+
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0
   otterizeCloud:
-    useCloudToGenerateTLSCredentials: false
+    useCloudToGenerateTLSCredentials: # Deprecated, use `certificateProvider=otterize-cloud` instead
     credentials:
       # fill clientId and clientSecret in order to connect to Otterize Cloud
       clientId:
