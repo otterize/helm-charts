@@ -195,6 +195,15 @@ spec:
       - name: spire-tls
         secret:
           secretName: intents-operator-spire-tls-controller-manager
+          {{ if eq "cert-manager" .Values.global.certificateProvider }}
+          items:
+            - key: tls.crt
+              path: cert.pem
+            - key: tls.key
+              path: key.pem
+            - key: ca.crt
+              path: ca.pem
+          {{ end }}
       {{ end }}
       {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
       - name: api-extra-ca-pem
