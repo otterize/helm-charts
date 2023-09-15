@@ -11,7 +11,7 @@
 {{- end -}}
 
 {{- define "otterize.operator.ca" -}}
-{{ template "otterize.operator.tlsPath" }}/bundle.pem
+{{ template "otterize.operator.tlsPath" }}/ca.pem
 {{- end -}}
 
 {{- define "otterize.operator.apiExtraCAPath" -}}
