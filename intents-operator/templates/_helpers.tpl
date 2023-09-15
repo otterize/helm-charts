@@ -3,7 +3,7 @@
 {{- end -}}
 
 {{- define "otterize.operator.cert" -}}
-{{ template "otterize.operator.tlsPath" }}/svid.pem
+{{ template "otterize.operator.tlsPath" }}/cert.pem
 {{- end -}}
 
 {{- define "otterize.operator.key" -}}
