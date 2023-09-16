@@ -42,9 +42,9 @@
 ## cert-manager parameters
 | Key                                   | Description                                                                                                                       | Default |
 |---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|---------|
-| `global.certManager.issuerName`       | The cert-manager Issuer (or ClusterIssuer if `useClusterIssuer` is set) to be used for certificate generation                     | `""`    |
-| `global.certManager.useClusterIssuer` | Use ClusterIssuer. If false, looks for a namespace-scoped Issuer.                                                                 | `true`  |
-| `global.certManager.autoApprove`      | Makes the credentials-operator auto-approve its CertificateRequests. Use when the cert-manager default auto-approver is disabled. | `false` |
+| `certManager.issuerName`       | The cert-manager Issuer (or ClusterIssuer if `useClusterIssuer` is set) to be used for certificate generation                     | `""`    |
+| `certManager.useClusterIssuer` | Use ClusterIssuer. If false, looks for a namespace-scoped Issuer.                                                                 | `true`  |
+| `certManager.autoApprove`      | Makes the credentials-operator auto-approve its CertificateRequests. Use when the cert-manager default auto-approver is disabled. | `false` |
 
 ## Common parameters
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default |

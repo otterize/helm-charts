@@ -80,13 +80,13 @@ spec:
         - --certificate-provider={{.Values.global.certificateProvider}}
         {{- end }}
         {{- if eq "cert-manager" .Values.global.certificateProvider }}
-          {{- if .Values.global.certManager.issuerName }}
-        - --cert-manager-issuer={{.Values.global.certManager.issuerName}}
+          {{- if .Values.certManager.issuerName }}
+        - --cert-manager-issuer={{.Values.certManager.issuerName }}
           {{- end }}
-          {{- if eq true .Values.global.certManager.useClusterIssuer }}
+          {{- if eq true .Values.certManager.useClusterIssuer }}
         - --cert-manager-use-cluster-issuer=true
           {{- end }}
-          {{- if eq true .Values.global.certManager.autoApprove }}
+          {{- if eq true .Values.certManager.autoApprove }}
         - --cert-manager-approve-requests
           {{- end }}
         {{- end }}

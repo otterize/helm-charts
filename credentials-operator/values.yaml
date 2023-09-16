@@ -19,6 +19,11 @@ spire:
   serverAddress:
   socketsPath: "/run/spire/sockets"
 
+certManager:
+  issuerName:
+  useClusterIssuer: true
+  autoApprove: false
+
 global:
   # Extra annotations for deployed pods
   podAnnotations: {}
@@ -51,10 +56,6 @@ global:
     apiExtraCAPEMSecret:
   spire:
     serverServiceName:
-  certManager:
-    issuerName:
-    useClusterIssuer: true
-    autoApprove: false
 
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
