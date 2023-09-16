@@ -75,9 +75,9 @@ spec:
         {{- end }}
         {{- if eq true .Values.global.otterizeCloud.useCloudToGenerateTLSCredentials }}
         {{- /*  Backward compatibility if still using this deprecated boolean */}}
-        - --credentials-provider=otterize-cloud
+        - --certificate-provider=otterize-cloud
         {{- else if .Values.global.certificateProvider }}
-        - --credentials-provider={{.Values.global.certificateProvider}}
+        - --certificate-provider={{.Values.global.certificateProvider}}
         {{- end }}
         {{- if eq "cert-manager" .Values.global.certificateProvider }}
           {{- if .Values.global.certManager.issuerName }}
@@ -85,6 +85,9 @@ spec:
           {{- end }}
           {{- if eq true .Values.global.certManager.useClusterIssuer }}
         - --cert-manager-use-cluster-issuer=true
+          {{- end }}
+          {{- if eq true .Values.global.certManager.autoApprove }}
+        - --cert-manager-approve-requests
           {{- end }}
         {{- end }}
         - --leader-elect

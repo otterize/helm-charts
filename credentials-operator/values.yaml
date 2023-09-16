@@ -54,6 +54,7 @@ global:
   certManager:
     issuerName:
     useClusterIssuer: true
+    autoApprove: false
 
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
