@@ -39,6 +39,8 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
       {{ if .Values.mapper.pullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.mapper.pullSecrets }}
@@ -102,6 +104,18 @@ spec:
               name: api-extra-ca-pem
               readOnly: true
             {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 20
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
