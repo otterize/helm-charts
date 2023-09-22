@@ -71,13 +71,13 @@ spec:
             httpGet:
               path: /healthz
               port: 9090
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             periodSeconds: 20
           readinessProbe:
             httpGet:
               path: /healthz
               port: 9090
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             periodSeconds: 20
           securityContext:
             privileged: false
