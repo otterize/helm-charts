@@ -61,5 +61,17 @@ spec:
             - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
               value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
             {{ end }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 20
       serviceAccountName: {{ template "otterize.istiowatcher.fullName" . }}
 {{ end }}

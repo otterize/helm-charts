@@ -40,6 +40,8 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
       {{ if .Values.kafkawatcher.pullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.kafkawatcher.pullSecrets }}
@@ -65,5 +67,24 @@ spec:
             - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
               value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
             {{ end }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
       serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
 {{ end }}
