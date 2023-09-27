@@ -144,6 +144,10 @@ spec:
           - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
             value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
           {{ end }}
+          - name: OTTERIZE_AWS_INTENTS_ENABLED
+            value: {{ .Values.global.aws.enabled | quote }}
+          - name: OTTERIZE_OIDC_URL
+            value: {{ .Values.global.aws.oidcUrl | quote }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
