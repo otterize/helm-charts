@@ -56,12 +56,7 @@ spec:
         {{- if eq false .Values.operator.enableKafkaACLCreation }}
         - --enable-kafka-acl-creation=false
         {{- end }}
-        {{- if eq false .Values.operator.autoCreateNetworkPoliciesForExternalTraffic }}
-        - --auto-create-network-policies-for-external-traffic=false
-        {{- end }}
-        {{- if eq true .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement }}
-        - --exp-auto-create-network-policies-for-external-traffic-disable-intents-requirement=true
-        {{- end }}
+        - --allow-external-traffic={{ template "otterize.operator.allowExternalTraffic" . }}
         {{- range .Values.watchedNamespaces }}
         - --watched-namespaces={{ . | quote }}
         {{- end }}
