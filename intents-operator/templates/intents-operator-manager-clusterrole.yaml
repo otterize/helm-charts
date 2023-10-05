@@ -4,16 +4,6 @@ kind: ClusterRole
 metadata:
   creationTimestamp: null
   name: otterize-intents-operator-manager-role
-  labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
-  annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
 rules:
 - apiGroups:
   - ""
@@ -192,13 +182,3 @@ rules:
   - patch
   - update
   - watch
-{{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
-- apiGroups:
-    - '*'
-  resources:
-    - '*'
-  verbs:
-    - get
-    - list
-    - watch
-{{ end }}
