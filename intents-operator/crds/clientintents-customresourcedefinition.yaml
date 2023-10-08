@@ -13,7 +13,7 @@ spec:
       clientConfig:
         service:
           name: intents-operator-webhook-service
-          namespace: {{ .Release.Namespace }}
+          namespace: otterize-system
           path: /convert
       conversionReviewVersions:
       - v1
