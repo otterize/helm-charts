@@ -54,6 +54,14 @@ spec:
           resources:
             {{- toYaml .Values.mapper.resources | nindent 12 }}
           env:
+            {{ if .Values.opentelemetry.enable }}
+            - name: OTTERIZE_ENABLE_OTEL_EXPORT
+              value: "true"
+            {{ end }}
+            {{ if .Values.opentelemetry.metricName }}
+            - name: OTTERIZE_OTEL_METRIC_NAME
+              value: "{{ .Values.opentelemetry.metricName }}"
+            {{ end }}
             - name: OTTERIZE_DEBUG
               value: {{ .Values.debug | quote }}
             {{ if .Values.global.otterizeCloud.apiAddress }}
@@ -97,6 +105,9 @@ spec:
             {{- else }}
             - name: OTTERIZE_TELEMETRY_ENABLED
               value: "true"
+            {{- end }}
+            {{- if .Values.mapper.extraEnvVars -}}
+            {{- toYaml .Values.mapper.extraEnvVars | nindent 12 -}}
             {{- end }}
           volumeMounts:
             {{- if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
