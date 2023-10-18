@@ -1,16 +1,23 @@
 # Parameters
 
 ## Mapper parameters
-| Key                            | Description                          | Default          |
-|--------------------------------|--------------------------------------|------------------|
-| `mapper.image.repository`      | Mapper image repository.             | `otterize`       |
-| `mapper.image.image`           | Mapper image.                        | `network-mapper` |
-| `mapper.image.tag`             | Mapper image tag.                    | `latest`         |
-| `mapper.pullPolicy`            | Mapper pull policy.                  | `(none)`         |
-| `mapper.pullSecrets`           | Mapper pull secrets.                 | `(none)`         |
-| `mapper.resources`             | Resources override.                  | `(none)`         |
-| `mapper.uploadIntervalSeconds` | Interval for uploading data to cloud | `60`             |
-| `mapper.excludeNamespaces`     | Namespaces excluded from reporting   | `[istio-system]` |
+| Key                            | Description                                                                                     | Default          |
+|--------------------------------|-------------------------------------------------------------------------------------------------|------------------|
+| `mapper.image.repository`      | Mapper image repository.                                                                        | `otterize`       |
+| `mapper.image.image`           | Mapper image.                                                                                   | `network-mapper` |
+| `mapper.image.tag`             | Mapper image tag.                                                                               | `latest`         |
+| `mapper.pullPolicy`            | Mapper pull policy.                                                                             | `(none)`         |
+| `mapper.pullSecrets`           | Mapper pull secrets.                                                                            | `(none)`         |
+| `mapper.resources`             | Resources override.                                                                             | `(none)`         |
+| `mapper.uploadIntervalSeconds` | Interval for uploading data to cloud                                                            | `60`             |
+| `mapper.excludeNamespaces`     | Namespaces excluded from reporting                                                              | `[istio-system]` |
+| `mapper.extraEnvVars`          | List of extra env vars for the mapper, formatted as in the Kubernetes PodSpec (name and value). | `(none)`         |
+
+## OpenTelemetry exporter parameters
+| Key                        | Description                                                                                                                                                                                                     | Default                              |
+|----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| `opentelemetry.enable`     | Whether to enable the OpenTelemetry exporter, which exports Grafana Tempo-style metrics for your network map. Configure the OpenTelemetry SDK using `mapper.extraEnvVars` (e.g. `OTEL_EXPORTER_OTLP_ENDPOINT`). | `false`                              |
+| `opentelemetry.metricName` | The name of the OpenTelemetry metric name exported for the Grafana Tempo-style metric.                                                                                                                          | `traces_service_graph_request_total` |
 
 ## Sniffer parameters
 | Key                        | Description                | Default                  |
