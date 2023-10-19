@@ -77,9 +77,9 @@ rules:
   - customresourcedefinitions
   verbs:
   - create
-  - patch
   - get
   - list
+  - patch
   - update
   - watch
 - apiGroups:
