@@ -1,10 +1,15 @@
 # Local configuration for network mapper chart
+opentelemetry:
+  enable: false
+  metricName: traces_service_graph_request_total
+
 mapper:
   repository: otterize
   image: network-mapper
   pullPolicy:
   pullSecrets:
   resources: { }
+  extraEnvVars:
   excludeNamespaces:
     - 'istio-system'
   # We usually recommend not to specify default resources and to leave this as a conscious
