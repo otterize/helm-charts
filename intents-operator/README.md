@@ -28,6 +28,8 @@
 | `operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement` | **experimental** - If `autoCreateNetworkPoliciesForExternalTraffic` is enabled, do not require ClientIntents resources - simply create network policies based off of the existence of an Ingress/Service resource.                     | `false`            |
 | `operator.resources`                                                            | Resources override.                                                                                                                                                                                                                    |                    |
 | `operator.enableDatabaseReconciler`                                             | **experimental** - Enables experimental support for database intents (coming soon!)                                                                                                                                                    | `false`            |
+| `operator.enableEgressNetworkPolicyCreation`                                    | **experimental** - Enables experimental support for egress network policies (coming soon!)                                                                                                                                             | `false`            |
+
 
 ## Watcher parameters
 | Key                        | Description                | Default                        |
