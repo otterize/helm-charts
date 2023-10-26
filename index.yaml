@@ -42,19 +42,6 @@ entries:
     version: 0.1.0
   intents-operator:
   - apiVersion: v2
-    appVersion: v1.0.41
-    created: "2023-10-26T08:23:16.890940386Z"
-    description: Otterize intents operator
-    digest: e29751589dca790d651abc9e0ee20448a7a55bfbbe493f188f63651f98e9cf28
-    home: https://github.com/otterize/intents-operator
-    name: intents-operator
-    sources:
-    - https://github.com/otterize/intents-operator
-    type: application
-    urls:
-    - https://otterize.github.io/helm-charts/intents-operator-1.0.1.tgz
-    version: 1.0.1
-  - apiVersion: v2
     appVersion: v1.0.40
     created: "2023-10-26T11:49:50.103604862Z"
     description: Otterize intents operator
@@ -191,39 +178,6 @@ entries:
     - https://otterize.github.io/helm-charts/network-mapper-0.1.0.tgz
     version: 0.1.0
   otterize-kubernetes:
-  - apiVersion: v2
-    created: "2023-10-26T08:23:16.895316972Z"
-    dependencies:
-    - alias: credentialsOperator
-      condition: deployment.credentialsOperator,global.deployment.credentialsOperator
-      name: credentials-operator
-      repository: file://./../credentials-operator
-      version: '>= 0.0.1'
-    - alias: spire
-      condition: deployment.spire,global.deployment.spire
-      name: spire
-      repository: file://./../spire
-      version: 1.0.0
-    - alias: intentsOperator
-      condition: deployment.intentsOperator,global.deployment.intentsOperator
-      name: intents-operator
-      repository: file://./../intents-operator
-      version: '>= 0.1.2'
-    - alias: networkMapper
-      condition: deployment.networkMapper,global.deployment.networkMapper
-      name: network-mapper
-      repository: file://./../network-mapper
-      version: '>= 0.1.0'
-    description: 'This chart contains the Otterize credentials-operator, SPIRE (server+agent),
-      the Otterize intents operator, and the Otterize network mapper. '
-    digest: f2a312b43ebb57d8e98f40c61aa52aea56b35b18c99bc3acc9655a63964ff3de
-    home: https://github.com/otterize/helm-charts
-    kubeVersion: '>=1.19.0-0'
-    name: otterize-kubernetes
-    type: application
-    urls:
-    - https://otterize.github.io/helm-charts/otterize-kubernetes-1.0.1.tgz
-    version: 1.0.1
   - apiVersion: v2
     created: "2023-10-26T11:49:50.108885203Z"
     dependencies:
