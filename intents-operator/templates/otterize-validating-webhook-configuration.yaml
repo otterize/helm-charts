@@ -3,6 +3,16 @@ kind: ValidatingWebhookConfiguration
 metadata:
   creationTimestamp: null
   name: otterize-validating-webhook-configuration
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -30,26 +40,6 @@ webhooks:
     service:
       name: intents-operator-webhook-service
       namespace: {{ .Release.Namespace }}
-      path: /validate-k8s-otterize-com-v1alpha3-clientintents
-  failurePolicy: Fail
-  name: clientintentsv1alpha3.kb.io
-  rules:
-  - apiGroups:
-    - k8s.otterize.com
-    apiVersions:
-    - v1alpha3
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - clientintents
-  sideEffects: None
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: intents-operator-webhook-service
-      namespace: {{ .Release.Namespace }}
       path: /validate-k8s-otterize-com-v1alpha2-protectedservice
   failurePolicy: Fail
   name: protectedservice.kb.io
@@ -58,26 +48,6 @@ webhooks:
     - k8s.otterize.com
     apiVersions:
     - v1alpha2
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - protectedservice
-  sideEffects: None
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: webhook-service
-      namespace: system
-      path: /validate-k8s-otterize-com-v1alpha3-protectedservice
-  failurePolicy: Fail
-  name: protectedservicev1alpha3.kb.io
-  rules:
-  - apiGroups:
-    - k8s.otterize.com
-    apiVersions:
-    - v1alpha3
     operations:
     - CREATE
     - UPDATE
