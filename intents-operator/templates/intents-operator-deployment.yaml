@@ -78,6 +78,9 @@ spec:
         {{- if eq true .Values.operator.enableDatabaseReconciler }}
         - --enable-database-reconciler=true
         {{- end }}
+        {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
+        - --exp-enable-egress-network-policies=true
+        {{- end }}
 
         command:
         - /manager
