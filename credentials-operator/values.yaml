@@ -24,6 +24,9 @@ certManager:
   useClusterIssuer: true
   autoApprove: false
 
+aws:
+  iamRole:
+
 global:
   # Extra annotations for deployed pods
   podAnnotations: {}
