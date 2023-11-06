@@ -8,7 +8,6 @@ global:
   aws:
     enabled: false
     oidcUrl:
-    iamRole:
 
   # Extra annotations for deployed pods
   podAnnotations: {}

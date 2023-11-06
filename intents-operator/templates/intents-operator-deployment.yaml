@@ -149,7 +149,7 @@ spec:
           {{ end }}
           - name: OTTERIZE_AWS_INTENTS_ENABLED
             value: {{ .Values.global.aws.enabled | quote }}
-          - name: OTTERIZE_OIDC_URL
+          - name: OTTERIZE_EKS_OIDC_URL
             value: {{ .Values.global.aws.oidcUrl | quote }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
