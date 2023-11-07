@@ -91,7 +91,7 @@ spec:
           {{- end }}
         {{- end }}
         {{ if eq true .Values.global.aws.enabled }}
-        - --aws-serviceaccount-binding=true
+        - --enable-aws-serviceaccount-management=true
         - --eks-oidc-url={{.Values.global.aws.oidcUrl | quote }}
         {{ end }}
         - --leader-elect
