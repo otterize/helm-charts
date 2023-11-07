@@ -90,6 +90,10 @@ spec:
         - --cert-manager-approve-requests
           {{- end }}
         {{- end }}
+        {{ if eq true .Values.global.aws.enabled }}
+        - --enable-aws-serviceaccount-management=true
+        - --eks-oidc-url={{.Values.global.aws.oidcUrl | quote }}
+        {{ end }}
         - --leader-elect
         command:
         - /manager
