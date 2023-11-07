@@ -24,7 +24,7 @@ spec:
       annotations:
         kubectl.kubernetes.io/default-container: manager
         intents.otterize.com/service-name: intents-operator
-        {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
+        {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.deployment.credentialsOperator) }}
         credentials-operator.otterize.com/tls-secret-name: intents-operator-spire-tls-controller-manager
         {{- end }}
         {{- with .Values.global.podAnnotations }}
@@ -65,7 +65,7 @@ spec:
         {{- range .Values.watchedNamespaces }}
         - --watched-namespaces={{ . | quote }}
         {{- end }}
-      {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
+      {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.deployment.credentialsOperator) }}
         - --kafka-server-tls-cert={{ template "otterize.operator.cert" }}
         - --kafka-server-tls-key={{ template "otterize.operator.key" }}
         - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
@@ -150,14 +150,14 @@ spec:
           - name: OTTERIZE_AWS_INTENTS_ENABLED
             value: {{ .Values.global.aws.enabled | quote }}
           - name: OTTERIZE_EKS_OIDC_URL
-            value: {{ required "If AWS support is enabled, your cluster's EKS OIDC URL must be specified" .Values.global.aws.oidcUrl | quote }}
+            value: {{ .Values.global.aws.oidcUrl | quote }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: cert
-        {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.certificateProvider) }}
+        {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.deployment.credentialsOperator) }}
         - mountPath: {{ template "otterize.operator.tlsPath" }}
           name: spire-tls
           readOnly: true
@@ -198,7 +198,7 @@ spec:
       - configMap:
           name: intents-operator-manager-config
         name: manager-config
-      {{ if .Values.certificateProvider }}
+      {{ if and (or .Values.operator.autoGenerateTLSUsingCredentialsOperator .Values.global.certificateProvider) (.Values.global.deployment.credentialsOperator) }}
       - name: spire-tls
         secret:
           secretName: intents-operator-spire-tls-controller-manager
