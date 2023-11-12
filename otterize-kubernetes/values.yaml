@@ -4,6 +4,11 @@ global:
     credentialsOperator: false
     intentsOperator: true
     networkMapper: true
+
+  aws:
+    enabled: false
+    oidcUrl:
+
   # Extra annotations for deployed pods
   podAnnotations: {}
   # Extra labels for deployed pods
