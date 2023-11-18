@@ -8,12 +8,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Increment chartVersion in Chart.yaml
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq -i '.version |= (split(".") | .[-1] |= ((. tag = "!!int") + 1) | join("."))' 'otterize-kubernetes/Chart.yaml'
-
-
       - name: Checkout
         uses: actions/checkout@v2
       - name: Publish Helm charts
