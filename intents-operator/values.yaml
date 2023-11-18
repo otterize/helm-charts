@@ -15,8 +15,21 @@ operator:
   # In either case, you can also use the other flags that control network policy creation, etc, to disable enforcement for a specific
   enableNetworkPolicyCreation: true
   enableKafkaACLCreation: true
-  autoCreateNetworkPoliciesForExternalTraffic: true
-  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: false
+  # **Deprecated, use allowExternalTraffic instead**
+  autoCreateNetworkPoliciesForExternalTraffic: # deprecated, use allowExternalTraffic instead
+  # **Deprecated, use allowExternalTraffic instead**
+  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: # deprecated, use allowExternalTraffic instead
+
+  # `allowExternalTraffic` controls whether the intents-operator will automatically create network policies for services
+  # that are accessible to external traffic.
+  # Possible values are:
+  # - `ifBlockedByOtterize` (default) - only create network policies for services that are protected by otterize
+  # - `off`                           - never create network policies for external traffic. If server is protected by
+  #                                     otterize and meant to be accessible from outside the cluster, it may need a
+  #                                     manually created network policy to allow external traffic
+  # - `always`                        - create network policies for every service that is accessible from outside the
+  #                                     cluster, regardless of whether it is protected by otterize or not
+  allowExternalTraffic: ifBlockedByOtterize
   enableIstioPolicyCreation: true
   enableDatabaseReconciler: false
   enableEgressNetworkPolicyCreation: false
@@ -51,7 +64,7 @@ global:
 
   aws:
     enabled: false
-    oidcUrl:
+    eksClusterNameOverride:
 
   # Extra annotations for deployed pods
   podAnnotations: {}

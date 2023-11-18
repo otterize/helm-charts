@@ -7,7 +7,7 @@ global:
 
   aws:
     enabled: false
-    oidcUrl:
+    eksClusterNameOverride:
 
   # Extra annotations for deployed pods
   podAnnotations: {}
@@ -57,7 +57,7 @@ intentsOperator:
     autoGenerateTLSUsingCredentialsOperator: true
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
-    autoCreateNetworkPoliciesForExternalTraffic: true
+    allowExternalTraffic: ifBlockedByOtterize
     enableIstioPolicyCreation: true
   watchedNamespaces: null # by default, watch all
 
