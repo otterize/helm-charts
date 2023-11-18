@@ -93,8 +93,9 @@ spec:
         {{ if eq true .Values.global.aws.enabled }}
         - --enable-aws-serviceaccount-management=true
         {{ end }}
-        {{ if .Values.global.aws.oidcUrl }}
-        - --eks-oidc-url={{.Values.global.aws.oidcUrl }}
+        {{ if .Values.global.aws.eksClusterNameOverride }}
+        - name: OTTERIZE_EKS_CLUSTER_NAME_OVERRIDE
+          value: {{ .Values.global.aws.eksClusterNameOverride | quote }}
         {{ end }}
         - --leader-elect
         command:
