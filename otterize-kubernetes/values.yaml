@@ -7,7 +7,7 @@ global:
 
   aws:
     enabled: false
-    oidcUrl:
+    eksClusterNameOverride:
 
   # Extra annotations for deployed pods
   podAnnotations: {}

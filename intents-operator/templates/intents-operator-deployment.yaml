@@ -144,8 +144,10 @@ spec:
           {{ end }}
           - name: OTTERIZE_ENABLE_AWS_IAM_POLICY
             value: {{ .Values.global.aws.enabled | quote }}
-          - name: OTTERIZE_EKS_OIDC_URL
-            value: {{ .Values.global.aws.oidcUrl | quote }}
+          {{ if .Values.global.aws.eksClusterNameOverride }}
+          - name: OTTERIZE_EKS_CLUSTER_NAME_OVERRIDE
+            value: {{ .Values.global.aws.eksClusterNameOverride | quote }}
+          {{ end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
