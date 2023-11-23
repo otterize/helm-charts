@@ -3,9 +3,9 @@ entries:
   credentials-operator:
   - apiVersion: v2
     appVersion: v1.0.4
-    created: "2023-11-23T15:48:42.565041741Z"
+    created: "2023-11-23T16:00:49.433374751Z"
     description: credentials-operator
-    digest: d4de95492b3eb255b641b3b1c1188e24c4d73cb3869b474d9a7b7b257e4aca16
+    digest: 6181ba8a03332862a2d4d84fb0fec61e1bbd64533fc30b00ac015b8de2a6233a
     home: https://github.com/otterize/credentials-operator
     name: credentials-operator
     sources:
@@ -56,9 +56,9 @@ entries:
   intents-operator:
   - apiVersion: v2
     appVersion: v1.0.50
-    created: "2023-11-23T15:48:42.56566468Z"
+    created: "2023-11-23T16:00:49.434554115Z"
     description: Otterize intents operator
-    digest: e1c1629ad8a1dc5e8f6becc71f3cb52ed0a9f95ccf15dd6a71614e3fb2a3188c
+    digest: 81f1eebd542193cc48d840424992d054c1a495694b07d742d8efcafe675d4869
     home: https://github.com/otterize/intents-operator
     name: intents-operator
     sources:
@@ -133,8 +133,8 @@ entries:
   network-mapper:
   - apiVersion: v2
     appVersion: v1.0.7
-    created: "2023-11-23T15:48:42.566162806Z"
-    digest: 132605b4972c026df1dd10458614522086d6cf69d9b06f89e1eee7aa001037e7
+    created: "2023-11-23T16:00:49.43505173Z"
+    digest: b79c7e7f067502f623fac37a0a90770a1bcdc1c4e65b9cde2ef1ad2ce4125b1f
     home: https://github.com/otterize/network-mapper
     name: network-mapper
     sources:
@@ -216,6 +216,38 @@ entries:
     - https://otterize.github.io/helm-charts/network-mapper-0.1.0.tgz
     version: 0.1.0
   otterize-kubernetes:
+  - apiVersion: v2
+    created: "2023-11-23T16:00:49.437689886Z"
+    dependencies:
+    - alias: credentialsOperator
+      name: credentials-operator
+      repository: file://./../credentials-operator
+      version: '>= 0.0.1'
+    - alias: spire
+      condition: deployment.spire,global.deployment.spire
+      name: spire
+      repository: file://./../spire
+      version: 1.0.0
+    - alias: intentsOperator
+      condition: deployment.intentsOperator,global.deployment.intentsOperator
+      name: intents-operator
+      repository: file://./../intents-operator
+      version: '>= 0.1.2'
+    - alias: networkMapper
+      condition: deployment.networkMapper,global.deployment.networkMapper
+      name: network-mapper
+      repository: file://./../network-mapper
+      version: '>= 0.1.0'
+    description: 'This chart contains the Otterize credentials-operator, SPIRE (server+agent),
+      the Otterize intents operator, and the Otterize network mapper. '
+    digest: 151489277a6c2848bdc86652e99c93755766af155ec927add395de71468a7b1b
+    home: https://github.com/otterize/helm-charts
+    kubeVersion: '>=1.19.0-0'
+    name: otterize-kubernetes
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/otterize-kubernetes-1.0.3.tgz
+    version: 1.0.3
   - apiVersion: v2
     created: "2023-11-23T15:48:42.568581645Z"
     dependencies:
@@ -394,7 +426,7 @@ entries:
   spire:
   - apiVersion: v2
     appVersion: 1.5.4
-    created: "2023-11-23T15:48:42.570039237Z"
+    created: "2023-11-23T16:00:49.438393608Z"
     description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
       Please note this chart requires Projected Service Account Tokens which has to
       be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
@@ -405,7 +437,7 @@ entries:
       command:         - kube-apiserver         - --api-audiences=api,spire-server         -
       --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
       --service-account-signing-key-file=/run/config/pki/sa.key ``` '
-    digest: 89790df63f49592ca0c7044f3e9fd5886bb16e8dc4990cf3532a5efd6bb7ba29
+    digest: 55cb41f5496cc84e313182136f63d0eefe7c06c378422fd8acc1169e041e38a0
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -432,4 +464,4 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-23T15:48:42.564422129Z"
+generated: "2023-11-23T16:00:49.432712808Z"
