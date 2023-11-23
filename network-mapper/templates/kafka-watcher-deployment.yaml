@@ -67,6 +67,14 @@ spec:
             - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
               value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
             {{ end }}
+            {{ if .Values.kafkawatcher.kafkaReportInterval }}
+            - name: OTTERIZE_KAFKA_REPORT_INTERVAL
+              value: {{ .Values.kafkawatcher.kafkaReportInterval | quote }}
+            {{ end }}
+            {{ if .Values.kafkawatcher.kafkaCooldownInterval }}
+            - name: OTTERIZE_KAFKA_COOLDOWN_INTERVAL
+              value: {{ .Values.kafkawatcher.kafkaCooldownInterval | quote }}
+            {{ end }}
           livenessProbe:
             httpGet:
               path: /healthz
