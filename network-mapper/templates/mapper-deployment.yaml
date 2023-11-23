@@ -53,6 +53,11 @@ spec:
           {{ end }}
           resources:
             {{- toYaml .Values.mapper.resources | nindent 12 }}
+          ports:
+            - containerPort: 9090
+              name: graphql
+            - containerPort: 2112
+              name: metrics
           env:
             {{ if .Values.opentelemetry.enable }}
             - name: OTTERIZE_ENABLE_OTEL_EXPORT
