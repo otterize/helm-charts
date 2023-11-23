@@ -3,7 +3,7 @@
 ## Global parameters
 | Key                                        | Description                                                                                                                                                                                                                                                                                                            | Default                             |
 |--------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `global.certificateProvider`               | What provider should be used to generate certificates/credentials - `"spire"`, `"otterize-cloud"` or `"cert-manager"`                       | `"spire"` |
+| `global.certificateProvider`               | What provider should be used to generate certificates/credentials - `"spire"`, `"otterize-cloud"` or `"cert-manager"`                                                                                                                                                                                                  | `"spire"`                           |
 | `global.spire.serverServiceName`           | If deployed with SPIRE, this key specifies SPIRE-server's service name. You should use either this **OR** `spire.serverAddress` (not both).                                                                                                                                                                            |                                     |
 | `global.allowGetAllResources`              | If defined overrides `allowGetAllResources`.                                                                                                                                                                                                                                                                           |                                     |                                                                      | `false` |
 | `global.commonAnnotations`                 | Annotations to add to all deployed objects                                                                                                                                                                                                                                                                             | {}                                  |
@@ -11,7 +11,8 @@
 | `global.podAnnotations`                    | Annotations to add to all deployed pods                                                                                                                                                                                                                                                                                | {}                                  |
 | `global.podLabels`                         | Labels to add to all deployed pods                                                                                                                                                                                                                                                                                     | {}                                  |
 | `global.serviceNameOverrideAnnotationName` | Which annotation to use (in the [service name resolution algorithm](https://docs.otterize.com/reference/service-identities#kubernetes-service-identity-resolution)) for setting a pod's service name, if not the default. Use this if you already have annotations on your pods that provide the correct service name. | `intents.otterize.com/service-name` |
-
+| `global.aws.enabled`                       | Enable or disable AWS integration                                                                                                                                                                                                                                                                                      | `false`                             |
+| `global.aws.eksClusterNameOverride`        | EKS cluster name (overrides auto-detection)                                                                                                                                                                                                                                                                            | `(none)`                            | 
 
 ## SPIRE parameters
 
@@ -22,12 +23,12 @@
 
 ## Operator parameters
 
-| Key                         | Description                | Default                      |
-|-----------------------------|----------------------------|------------------------------|
-| `operator.image.repository` | Operator image repository. | `otterize`                   |
+| Key                         | Description                | Default                |
+|-----------------------------|----------------------------|------------------------|
+| `operator.image.repository` | Operator image repository. | `otterize`             |
 | `operator.image.image`      | Operator image.            | `credentials-operator` |
-| `operator.image.tag`        | Operator image tag.        | `latest`                     |
-| `operator.pullPolicy`       | Operator pull policy.      | `(none)`                     |
+| `operator.image.tag`        | Operator image tag.        | `latest`               |
+| `operator.pullPolicy`       | Operator pull policy.      | `(none)`               |
 
 ## Cloud parameters
 | Key                                                        | Description                                                                                                                                                                                  | Default  |
@@ -40,8 +41,8 @@
 | `global.otterizeCloud.apiExtraCAPEMSecret`                 | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## cert-manager parameters
-| Key                                   | Description                                                                                                                       | Default |
-|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|---------|
+| Key                            | Description                                                                                                                       | Default |
+|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|---------|
 | `certManager.issuerName`       | The cert-manager Issuer (or ClusterIssuer if `useClusterIssuer` is set) to be used for certificate generation                     | `""`    |
 | `certManager.useClusterIssuer` | Use ClusterIssuer. If false, looks for a namespace-scoped Issuer.                                                                 | `true`  |
 | `certManager.autoApprove`      | Makes the credentials-operator auto-approve its CertificateRequests. Use when the cert-manager default auto-approver is disabled. | `false` |
@@ -51,3 +52,8 @@
 |------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `allowGetAllResources` | Gives get, list and watch permission to watch on all resources. This is used to resolve service names when pods have owners that are custom resources. When disabled, a limited set of permissions is used that only allows access to built-in Kubernetes resources that deploy Pods and Pods themselves - Deployments, StatefulSets, DaemonSets, ReplicaSets and Services. Resolving may not be able to complete if the owning resource is not one of those. | `true`  |
 | `resources`            | Resources of the container                                                                                                                                                                                                                                                                                                                                                                                                                                    | `{}`    |
+
+## AWS integration parameters
+| Key           | Description                                              | Default  |
+|---------------|----------------------------------------------------------|----------|
+| `aws.roleARN` | ARN of the AWS role the operator will use to access AWS. | `(none)` |
