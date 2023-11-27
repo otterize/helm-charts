@@ -1,11 +1,11 @@
 ---
 name: Bug report
-about: Report a bug to help us improve the intents-operator
+about: Report a bug to help us improve the Helm charts for Otterize
 
 ---
 
 <!--
-Bugs should be filed for issues encountered whilst operating intents-operator.
+Bugs should be filed for issues encountered whilst using the Otterize Helm chaarts.
 You should first attempt to resolve your issues through the community support
 channels, e.g. Slack, in order to rule out individual configuration errors.
 Please provide as much detail as possible. 
@@ -33,5 +33,5 @@ gain an understanding of the problem.-->
 **Environment details:**:
 - Kubernetes version:
 - Cloud-provider/provisioner:
-- intents-operator image version: 
-- Install method: e.g. helm/static manifests
+- Component (intents-operator/network-mapper/credentials-operator/all)
+- Component version:

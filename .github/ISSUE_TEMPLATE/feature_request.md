@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea to improve the intents-operator
+about: Suggest an idea to improve the Helm charts for Otterize
 
 ---
 
@@ -19,5 +19,5 @@ about: Suggest an idea to improve the intents-operator
 **Environment details (remove if not applicable)**:
 - Kubernetes version:
 - Cloud-provider/provisioner:
-- Intents-operator version: 
-- Install method: e.g. helm/static manifests
+- Component (intents-operator/network-mapper/credentials-operator/all)
+- Component version:
