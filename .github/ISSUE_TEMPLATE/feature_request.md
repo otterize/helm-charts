@@ -19,5 +19,5 @@ about: Suggest an idea to improve the Helm charts for Otterize
 **Environment details (remove if not applicable)**:
 - Kubernetes version:
 - Cloud-provider/provisioner:
-- Component (intents-operator/network-mapper/credentials-operator/all)
+- Component (intents-operator/network-mapper/credentials-operator/all):
 - Component version:
