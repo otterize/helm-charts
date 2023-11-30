@@ -2,12 +2,12 @@
 # Parameters
 
 ## Deployment parameters
-| Key                                     | Description                                                                      | Default |
-|-----------------------------------------|----------------------------------------------------------------------------------|---------|
-| `global.deployment.spire`               | Whether or not to deploy SPIRE.  Required for mTLS, if not using Otterize Cloud. | `true`  |
-| `global.deployment.credentialsOperator` | Whether or not to deploy credentials-operator. Required for mTLS.                | `false` |
-| `global.deployment.intentsOperator`     | Whether or not to deploy intents-operator.                                       | `true`  |
-| `global.deployment.networkMapper`       | Whether or not to deploy network-mapper.                                         | `true`  |
+| Key                                     | Description                                                                                                                           | Default |
+|-----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|---------|
+| `global.deployment.spire`               | Whether or not to deploy SPIRE.  Required for mTLS, if not using Otterize Cloud.                                                      | `true`  |
+| `global.deployment.credentialsOperator` | Whether or not to deploy credentials-operator. Required to provision mTLS credentials, database username/password, and AWS IAM roles. | `true`  |
+| `global.deployment.intentsOperator`     | Whether or not to deploy intents-operator.                                                                                            | `true`  |
+| `global.deployment.networkMapper`       | Whether or not to deploy network-mapper.                                                                                              | `true`  |
 
 ## Global parameters
 These parameters are used by multiple charts, and must be kept the same for the correct functioning of the separate components.

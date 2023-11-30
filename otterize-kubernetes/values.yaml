@@ -1,7 +1,7 @@
 global:
   deployment:
     spire: false
-    credentialsOperator: false
+    credentialsOperator: true
     intentsOperator: true
     networkMapper: true
 
