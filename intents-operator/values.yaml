@@ -57,7 +57,7 @@ allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
 global:
   deployment:
-    credentialsOperator: false # used to determine whether to require credentials from credentials operator
+    credentialsOperator: true
     spire: false
     intentsOperator: true
     networkMapper: true
