@@ -13,6 +13,11 @@
 | `mapper.excludeNamespaces`     | Namespaces excluded from reporting                                                              | `[istio-system]` |
 | `mapper.extraEnvVars`          | List of extra env vars for the mapper, formatted as in the Kubernetes PodSpec (name and value). | `(none)`         |
 
+## Internet-facing traffic reporting
+| Key                                    | Description                                                                                                                 | Default |
+|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|---------|
+| `enableInternetFacingTrafficReporting` | Whether to report internet-facing traffic to Otterize Cloud. This is a temporary flag that will soon be enabled by default. | `false` |
+
 ## OpenTelemetry exporter parameters
 | Key                        | Description                                                                                                                                                                                                     | Default                              |
 |----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
