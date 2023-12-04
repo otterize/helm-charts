@@ -73,6 +73,10 @@ spec:
             - name: OTTERIZE_API_ADDRESS
               value: "{{ .Values.global.otterizeCloud.apiAddress }}"
             {{ end }}
+            {{ if .Values.enableInternetFacingTrafficReporting }}
+            - name: OTTERIZE_CAPTURE_EXTERNAL_TRAFFIC_ENABLED
+              value: "true"
+            {{ end }}
             {{ if .Values.global.serviceNameOverrideAnnotationName }}
             - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
               value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
