@@ -73,7 +73,7 @@ spec:
             - name: OTTERIZE_API_ADDRESS
               value: "{{ .Values.global.otterizeCloud.apiAddress }}"
             {{ end }}
-            {{ if eq true .Values.captureInternetTraffic }}
+            {{ if .Values.enableInternetFacingTrafficReporting }}
             - name: OTTERIZE_CAPTURE_EXTERNAL_TRAFFIC_ENABLED
               value: "true"
             {{ end }}
