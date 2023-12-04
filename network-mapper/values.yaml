@@ -2,6 +2,7 @@
 opentelemetry:
   enable: false
   metricName: traces_service_graph_request_total
+enableInternetFacingTrafficReporting: false
 
 mapper:
   repository: otterize
@@ -10,7 +11,6 @@ mapper:
   pullSecrets:
   resources: { }
   extraEnvVars:
-  enableInternetFacingTrafficReporting: false
   excludeNamespaces:
     - 'istio-system'
   # We usually recommend not to specify default resources and to leave this as a conscious
