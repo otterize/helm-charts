@@ -178,9 +178,6 @@ spec:
         - containerPort: 8443
           name: https
           protocol: TCP
-        - containerPort: 9443
-          name: webhook-server
-          protocol: TCP
         resources:
           limits:
             cpu: 500m
