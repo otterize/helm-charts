@@ -121,4 +121,7 @@ global:
     # The secret should be placed in the same namespace as the Otterize deployment
     apiExtraCAPEMSecret:
   telemetry:
-    enabled:
+    usage:
+      enabled:
+    errors:
+      enabled:

@@ -37,7 +37,7 @@ jobs:
       - name: Deploy Otterize
         run: |-
           helm dep up ./otterize-kubernetes
-          helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace --set global.telemetry.enabled=false
+          helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace --set global.telemetry.usage.enabled=false --set global.telemetry.errors.enabled=false
 
 
           

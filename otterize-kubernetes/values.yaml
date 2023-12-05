@@ -48,7 +48,10 @@ global:
 
   # Global telemetry configuration
   telemetry:
-    enabled: true
+    usage:
+      enabled: true
+    errors:
+      enabled: true
 
 # alias for intents-operator values
 intentsOperator:

@@ -44,7 +44,11 @@ global:
 
   # Specify an annotation name that by setting it, one can override otterize's service name resolution.
   serviceNameOverrideAnnotationName: intents.otterize.com/service-name
-
+  telemetry:
+    usage:
+      enabled:
+    errors:
+      enabled:
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0

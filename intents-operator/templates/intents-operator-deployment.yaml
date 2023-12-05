@@ -65,10 +65,15 @@ spec:
         - --kafka-server-tls-key={{ template "otterize.operator.key" }}
         - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
         {{- end }}
-        {{- if eq false .Values.global.telemetry.enabled }}
-        - --telemetry-enabled=false
+        {{- if eq false .Values.global.telemetry.usage.enabled }}
+        - --telemetry-usage-enabled=false
         {{- else }}
-        - --telemetry-enabled=true
+        - --telemetry-usage-enabled=true
+        {{- end }}
+        {{- if eq false .Values.global.telemetry.errors.enabled }}
+        - --telemetry-errors-enabled=false
+        {{- else }}
+        - --telemetry-errors-enabled=true
         {{- end }}
         {{- if eq true .Values.operator.enableDatabaseReconciler }}
         - --enable-database-reconciler=true
