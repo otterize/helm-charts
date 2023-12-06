@@ -86,6 +86,7 @@ global:
       enabled:
     errors:
       enabled:
+      stage:
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:

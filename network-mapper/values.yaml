@@ -125,3 +125,4 @@ global:
       enabled:
     errors:
       enabled:
+      stage:

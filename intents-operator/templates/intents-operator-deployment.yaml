@@ -156,6 +156,10 @@ spec:
           - name: OTTERIZE_EKS_CLUSTER_NAME_OVERRIDE
             value: {{ .Values.global.aws.eksClusterNameOverride | quote }}
           {{ end }}
+          {{- if .Values.global.telemetry.errors.stage }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
+            value: {{ .Values.global.telemetry.errors.stage | quote }}
+          {{- end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config

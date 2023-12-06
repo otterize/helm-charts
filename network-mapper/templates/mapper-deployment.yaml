@@ -122,6 +122,10 @@ spec:
             - name: OTTERIZE_TELEMETRY_ERRORS_ENABLED
               value: "true"
             {{- end }}
+            {{- if .Values.global.telemetry.errors.stage }}
+            - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
+              value: {{ .Values.global.telemetry.errors.stage | quote }}
+            {{- end }}
             {{- if .Values.mapper.extraEnvVars -}}
             {{- toYaml .Values.mapper.extraEnvVars | nindent 12 -}}
             {{- end }}
