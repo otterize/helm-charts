@@ -65,7 +65,7 @@ spec:
         - --kafka-server-tls-key={{ template "otterize.operator.key" }}
         - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
         {{- end }}
-        {{- if eq false .Values.global.telemetry.usage.enabled }}
+        {{- if eq false .Values.global.telemetry.enabled }}
         - --telemetry-enabled=false
         {{- else }}
         - --telemetry-enabled=true
