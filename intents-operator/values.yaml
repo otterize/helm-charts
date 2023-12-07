@@ -87,6 +87,9 @@ global:
     errors:
       enabled:
       stage:
+      endpointAddress:
+      apiKey: 60a78208a2b4fe714ef9fb3d3fdc0714
+
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:

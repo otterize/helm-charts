@@ -52,6 +52,8 @@ global:
       enabled: true
     errors:
       enabled: true
+      endpointAddress: "https://app.otterize.com/api/errors"
+      stage:
 
 # alias for intents-operator values
 intentsOperator:
