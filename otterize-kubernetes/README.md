@@ -62,9 +62,15 @@ Further information about intents-operator parameters can be found [in the Inten
 
 Otterize OSS components report anonymous usage information back to the Otterize team, to help the team understand how the software is used in the community and what aspects users find useful. No personal or organizational identifying information is transmitted in these metrics: they only reflect patterns of usage. You may opt out at any time through a single configuration flag.
 
-| Key                        | Description                                                        | Default |
-|----------------------------|--------------------------------------------------------------------|---------|
-| `global.telemetry.enabled` | If set to `false`, anonymous telemetry collection will be disabled | `true`  |
+| Key                                                 | Description                                                                                                                   | Default  |
+|-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|----------|
+| `global.telemetry.usage.enabled`                    | If set to `false`, collection of anonymous telemetries on product usage will be disabled                                      | `true`   |
+| `global.telemetry.errors.enabled`                   | If set to `false`, collection of anonymous telemetries on application crashes and errors will be disabled                     | `true`   |
+| `global.telemetry.errors.endpointAddress`           | If set, overrides the default endpoint address for anonymous telemetries on application crashes and errors                    | `(none)` |
+| `global.telemetry.errors.stage`                     | If set, overrides the default stage for anonymous telemetries on application crashes and errors                               | `(none)` |
+| `global.telemetry.errors.networkMapperApiKey`       | If set, overrides the default API key for anonymous telemetries on application crashes and errors in the network mapper       | `(none)` |
+| `global.telemetry.errors.credentialsOperatorApiKey` | If set, overrides the default API key for anonymous telemetries on application crashes and errors in the credentials operator | `(none)` |
+| `global.telemetry.errors.intentsOperatorApiKey`     | If set, overrides the default API key for anonymous telemetries on application crashes and errors in the intents operator     | `(none)` |
 
 
 ## SPIRE parameters

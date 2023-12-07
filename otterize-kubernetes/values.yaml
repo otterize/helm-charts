@@ -54,6 +54,9 @@ global:
       enabled: true
       endpointAddress: "https://app.otterize.com/api/errors"
       stage:
+      networkMapperApiKey: d86195588a41fa03aa6711993bb1c765
+      intentsOperatorApiKey: 60a78208a2b4fe714ef9fb3d3fdc0714
+      credentialsOperatorApiKey: 20b1b74678347375fedfdba65171acb2
 
 # alias for intents-operator values
 intentsOperator:

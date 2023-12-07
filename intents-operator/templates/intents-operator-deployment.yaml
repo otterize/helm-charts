@@ -160,6 +160,14 @@ spec:
           - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
             value: {{ .Values.global.telemetry.errors.stage | quote }}
           {{- end }}
+          {{- if .Values.global.telemetry.errors.endpointAddress }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_ADDRESS
+            value: {{ .Values.global.telemetry.errors.endpointAddress | quote }}
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.intentsOperatorApiKey }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
+            value: {{ .Values.global.telemetry.errors.intentsOperatorApiKey | quote }}
+          {{- end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config

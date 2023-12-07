@@ -50,6 +50,8 @@ global:
     errors:
       enabled:
       stage:
+      endpointAddress:
+      credentialsOperatorApiKey: 20b1b74678347375fedfdba65171acb2
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0
