@@ -48,6 +48,7 @@ global:
 
   # Global telemetry configuration
   telemetry:
+    enabled: true
     usage:
       enabled: true
     errors:

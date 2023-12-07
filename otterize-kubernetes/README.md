@@ -64,6 +64,7 @@ Otterize OSS components report anonymous usage information back to the Otterize 
 
 | Key                                                 | Description                                                                                                                   | Default  |
 |-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|----------|
+| `global.telemetry.enabled`                          | If set to `false`, all anonymous telemetries collection will be disabled                                                      | `true`   |
 | `global.telemetry.usage.enabled`                    | If set to `false`, collection of anonymous telemetries on product usage will be disabled                                      | `true`   |
 | `global.telemetry.errors.enabled`                   | If set to `false`, collection of anonymous telemetries on application crashes and errors will be disabled                     | `true`   |
 | `global.telemetry.errors.endpointAddress`           | If set, overrides the default endpoint address for anonymous telemetries on application crashes and errors                    | `(none)` |

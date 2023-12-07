@@ -108,6 +108,13 @@ spec:
             - name: OTTERIZE_EXCLUDE_NAMESPACES
               value: {{ join " " .Values.mapper.excludeNamespaces }}
             {{ end }}
+            {{- if eq false .Values.global.telemetry.enabled }}
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "false"
+            {{- else }}
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "true"
+            {{- end }}
             {{- if eq false .Values.global.telemetry.usage.enabled }}
             - name: OTTERIZE_TELEMETRY_USAGE_ENABLED
               value: "false"

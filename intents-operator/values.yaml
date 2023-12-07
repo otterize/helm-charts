@@ -82,6 +82,7 @@ global:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0
   telemetry:
+    enabled:
     usage:
       enabled:
     errors:
