@@ -70,6 +70,16 @@ spec:
         {{- else }}
         - --telemetry-enabled=true
         {{- end }}
+        {{- if eq false .Values.global.telemetry.usage.enabled }}
+        - --telemetry-usage-enabled=false
+        {{- else }}
+        - --telemetry-usage-enabled=true
+        {{- end }}
+        {{- if eq false .Values.global.telemetry.errors.enabled }}
+        - --telemetry-errors-enabled=false
+        {{- else }}
+        - --telemetry-errors-enabled=true
+        {{- end }}
         {{- if eq true .Values.operator.enableDatabaseReconciler }}
         - --enable-database-reconciler=true
         {{- end }}
@@ -151,6 +161,18 @@ spec:
           - name: OTTERIZE_EKS_CLUSTER_NAME_OVERRIDE
             value: {{ .Values.global.aws.eksClusterNameOverride | quote }}
           {{ end }}
+          {{- if .Values.global.telemetry.errors.stage }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
+            value: {{ .Values.global.telemetry.errors.stage | quote }}
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.endpointAddress }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_ADDRESS
+            value: {{ .Values.global.telemetry.errors.endpointAddress | quote }}
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.intentsOperatorApiKey }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
+            value: {{ .Values.global.telemetry.errors.intentsOperatorApiKey | quote }}
+          {{- end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
           name: manager-config
