@@ -17,8 +17,8 @@ metadata:
 spec:
   ports:
   - name: https
-    port: 8443
+    port: 2112
     protocol: TCP
-    targetPort: https
+    targetPort: 2112
   selector:
     app: intents-operator
