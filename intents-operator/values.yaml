@@ -83,6 +83,14 @@ global:
     tag: v0.11.0
   telemetry:
     enabled:
+    usage:
+      enabled:
+    errors:
+      enabled:
+      stage:
+      endpointAddress:
+      intentsOperatorApiKey: 60a78208a2b4fe714ef9fb3d3fdc0714
+
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:

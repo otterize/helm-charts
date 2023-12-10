@@ -122,3 +122,10 @@ global:
     apiExtraCAPEMSecret:
   telemetry:
     enabled:
+    usage:
+      enabled:
+    errors:
+      enabled:
+      stage:
+      endpointAddress:
+      networkMapperApiKey: d86195588a41fa03aa6711993bb1c765
