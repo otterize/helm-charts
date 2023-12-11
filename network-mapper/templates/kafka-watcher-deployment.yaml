@@ -108,6 +108,10 @@ spec:
             - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
               value: {{ .Values.global.telemetry.errors.networkMapperApiKey | quote }}
             {{- end }}
+            {{- if .Values.global.otterizeCloud.credentials.clientId }}
+            - name: OTTERIZE_CLIENT_ID
+              value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
