@@ -106,5 +106,13 @@ spec:
               port: 9090
             initialDelaySeconds: 30
             periodSeconds: 20
+          volumeMounts:
+            - mountPath: /etc/otterize
+              name: component-config
+              readOnly: true
       serviceAccountName: {{ template "otterize.istiowatcher.fullName" . }}
+      volumes:
+        - name: component-config
+          configMap:
+            name: {{ template "otterize.mapper.componentConfigmap" . }}
 {{ end }}

@@ -124,6 +124,9 @@ spec:
           - mountPath: /hostproc
             name: proc
             readOnly: true
+          - mountPath: /etc/otterize
+            name: component-config
+            readOnly: true
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       volumes:
@@ -131,4 +134,7 @@ spec:
             path: /proc
             type: ""
           name: proc
+        - name: component-config
+          configMap:
+            name: {{ template "otterize.mapper.componentConfigmap" . }}
 {{ end }}

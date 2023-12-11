@@ -150,6 +150,9 @@ spec:
               name: api-extra-ca-pem
               readOnly: true
             {{- end }}
+            - mountPath: /etc/otterize
+              name: component-config
+              readOnly: false
           livenessProbe:
             httpGet:
               path: /healthz
@@ -174,3 +177,6 @@ spec:
           secret:
             secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
         {{ end }}
+        - name: component-config
+          configMap:
+            name: {{ template "otterize.mapper.componentConfigmap" . }}

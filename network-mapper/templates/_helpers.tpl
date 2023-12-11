@@ -13,6 +13,9 @@ otterize-network-mapper
 {{- define "otterize.mapper.configMapName" -}}
 otterize-network-mapper-store
 {{- end -}}
+{{- define "otterize.mapper.componentConfigmap" -}}
+otterize-network-mapper-component-config-map
+{{- end -}}
 {{ define "otterize.mapper.port" -}}
 9090
 {{- end -}}
