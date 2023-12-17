@@ -31,7 +31,7 @@ operator:
   #                                     cluster, regardless of whether it is protected by otterize or not
   allowExternalTraffic: ifBlockedByOtterize
   enableIstioPolicyCreation: true
-  enableDatabaseCredentialsCreation: true
+  enableDatabasePolicyCreation: true
   enableEgressNetworkPolicyCreation: false
 
   resources: { }
