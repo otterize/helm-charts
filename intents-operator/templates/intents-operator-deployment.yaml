@@ -80,8 +80,8 @@ spec:
         {{- else }}
         - --telemetry-errors-enabled=true
         {{- end }}
-        {{- if eq false .Values.operator.enableDatabaseCredentialsCreation }}
-        - --enable-database-credentials-creation=false
+        {{- if eq false .Values.operator.enableDatabasePolicyCreation }}
+        - --enable-database-policy-creation=false
         {{- end }}
         {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
         - --exp-enable-egress-network-policies=true
