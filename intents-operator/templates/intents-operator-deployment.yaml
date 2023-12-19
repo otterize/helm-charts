@@ -80,8 +80,8 @@ spec:
         {{- else }}
         - --telemetry-errors-enabled=true
         {{- end }}
-        {{- if eq true .Values.operator.enableDatabaseReconciler }}
-        - --enable-database-reconciler=true
+        {{- if eq false .Values.operator.enableDatabasePolicyCreation }}
+        - --enable-database-policy-creation=false
         {{- end }}
         {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
         - --exp-enable-egress-network-policies=true
