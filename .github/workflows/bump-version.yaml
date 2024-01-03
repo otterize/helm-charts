@@ -2,7 +2,7 @@ name: Bump Chart Versions
 on:
   push:
     branches:
-      - david/auto-increment-helm-chart-versions
+      - main
 
 jobs:
   bump-chart-versions:
