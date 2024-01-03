@@ -36,10 +36,11 @@ jobs:
               if [ "$operator" == "$file" ]; then
                 echo "Bumping version for $file"
                 
-                if [[ $(cat "${operator}/Chart.yaml" | grep '^version:') =~ $regex ]]; then
+                chart_path="${operator}/Chart.yaml"
+                if [[ $(cat "${chart_path}" | grep '^version:') =~ $regex ]]; then
                   patch_version=$((${BASH_REMATCH[3]} + 1))
                   new_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${patch_version}"
-                  sed -i "s#^version:.*#version: ${new_version}#g" "${LS_CHART_PATH}"
+                  sed -i "s#^version:.*#version: ${new_version}#g" "${chart_path}"
                 fi
               fi
             done
