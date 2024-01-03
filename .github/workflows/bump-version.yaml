@@ -45,6 +45,14 @@ jobs:
               fi
             done
           done
+          
+          echo "Bumping version for otterize-kubernetes"
+          chart_path="otterize-kubernetes/Chart.yaml"
+          if [[ $(cat "${chart_path}" | grep '^version:') =~ $regex ]]; then
+            patch_version=$((${BASH_REMATCH[3]} + 1))
+            new_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${patch_version}"
+            sed -i "s#^version:.*#version: ${new_version}#g" "${chart_path}"
+          fi
 
       - name: Commit and Push
         run: |
