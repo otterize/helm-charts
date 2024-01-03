@@ -2,7 +2,7 @@ name: Bump Chart Versions
 on:
   push:
     branches:
-      - david/DEV-3285-auto-increment-helm-chart-versions
+      - david/auto-increment-helm-chart-versions
 
 jobs:
   changed-dirs:
@@ -28,13 +28,13 @@ jobs:
       - name: List all changed files
         run: echo '${{ steps.changed-files.outputs.all_changed_files }}'
 
-  bump-version:
+  bump-operator-version:
     name: Bump operators helm chart versions
     runs-on: ubuntu-latest
     needs: [changed-dirs]
     strategy:
       matrix:
-        files: ${{ fromJSON(needs.changed-dirs.outputs.matrix) }}
+        dirs: ${{ fromJSON(needs.changed-dirs.outputs.matrix) }}
       max-parallel: 4
       fail-fast: false
     steps:
@@ -43,4 +43,9 @@ jobs:
 
       - name: Bump ${{ matrix.files }} version
         run: |
-          echo ${{ matrix.files }}
+          operators=("credentials-operator" "intents-operator" "network-mapper")
+          for operator in "${operators[@]}"; do
+            if [ "$operator" == "${{ matrix.dirs }}" ]; then
+              echo "Found: ${{ matrix.dirs }}"
+            fi
+          done
