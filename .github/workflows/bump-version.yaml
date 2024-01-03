@@ -22,7 +22,7 @@ jobs:
         with:
           # Get only root level directories
           dir_names: true
-          dir_names_max_depth: 2
+          dir_names_max_depth: 1
           json: true
           escape_json: false
       - name: List all changed files
@@ -41,6 +41,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Test
+      - name: Bump ${{ matrix.files }} version
         run: |
           echo ${{ matrix.files }}
