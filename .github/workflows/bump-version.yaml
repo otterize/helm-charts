@@ -31,8 +31,7 @@ jobs:
         run: |
           operators=("credentials-operator" "intents-operator" "network-mapper")
           for operator in "${operators[@]}"; do
-            for file in "$ALL_CHANGED_FILES"; do
-              echo "$file $operator"
+            for file in $ALL_CHANGED_FILES; do
               if [ "$operator" == "$file" ]; then
                 echo "Bumping version for $file"
               fi
