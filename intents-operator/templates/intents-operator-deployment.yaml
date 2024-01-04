@@ -45,48 +45,6 @@ spec:
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       containers:
-      - args:
-        {{- if eq true .Values.operator.enableIstioPolicyCreation }}
-        - --enable-istio-policy-creation=true
-        {{- end }}
-        - --enforcement-default-state={{ template "otterize.operator.mode" . }}
-        {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
-        - --enable-network-policy-creation=false
-        {{- end }}
-        {{- if eq false .Values.operator.enableKafkaACLCreation }}
-        - --enable-kafka-acl-creation=false
-        {{- end }}
-        - --allow-external-traffic={{ template "otterize.operator.allowExternalTraffic" . }}
-        {{- range .Values.watchedNamespaces }}
-        - --watched-namespaces={{ . | quote }}
-        {{- end }}
-      {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
-        - --kafka-server-tls-cert={{ template "otterize.operator.cert" }}
-        - --kafka-server-tls-key={{ template "otterize.operator.key" }}
-        - --kafka-server-tls-ca={{ template "otterize.operator.ca" }}
-        {{- end }}
-        {{- if eq false .Values.global.telemetry.enabled }}
-        - --telemetry-enabled=false
-        {{- else }}
-        - --telemetry-enabled=true
-        {{- end }}
-        {{- if eq false .Values.global.telemetry.usage.enabled }}
-        - --telemetry-usage-enabled=false
-        {{- else }}
-        - --telemetry-usage-enabled=true
-        {{- end }}
-        {{- if eq false .Values.global.telemetry.errors.enabled }}
-        - --telemetry-errors-enabled=false
-        {{- else }}
-        - --telemetry-errors-enabled=true
-        {{- end }}
-        {{- if eq false .Values.operator.enableDatabasePolicyCreation }}
-        - --enable-database-policy-creation=false
-        {{- end }}
-        {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
-        - --exp-enable-egress-network-policies=true
-        {{- end }}
-
         command:
         - /manager
         image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
@@ -126,6 +84,8 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+          - name: OTTERIZE_WATCHED_NAMESPACES
+            value: {{ join " " .Values.watchedNamespaces }}
           {{ if .Values.global.otterizeCloud.apiAddress }}
           - name: OTTERIZE_API_ADDRESS
             value: "{{ .Values.global.otterizeCloud.apiAddress }}"
@@ -172,6 +132,50 @@ spec:
           {{- if .Values.global.telemetry.errors.intentsOperatorApiKey }}
           - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
             value: {{ .Values.global.telemetry.errors.intentsOperatorApiKey | quote }}
+          {{- end }}
+          {{- if eq true .Values.operator.enableIstioPolicyCreation }}
+          - name: OTTERIZE_ENABLE_ISTIO_POLICY_CREATION
+            value: "true"
+          {{- end }}
+          - name: OTTERIZE_ENFORCEMENT_DEFAULT_STATE
+            value: {{ template "otterize.operator.mode" . }}
+          {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
+          - name: OTTERIZE_ENABLE_NETWORK_POLICY_CREATION
+            value: "false"
+          {{- end }}
+          {{- if eq false .Values.operator.enableKafkaACLCreation }}
+          - name: OTTERIZE_ENABLE_KAFKA_ACL_CREATION
+            value: "false"
+          {{- end }}
+          - name: OTTERIZE_ALLOW_EXTERNAL_TRAFFIC
+            value: {{ template "otterize.operator.allowExternalTraffic" . }}
+          {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
+          - name: OTTERIZE_KAFKA_SERVER_TLS_CERT
+            value: {{ template "otterize.operator.cert" }}
+          - name: OTTERIZE_KAFKA_SERVER_TLS_KEY
+            value: {{ template "otterize.operator.key" }}
+          - name: OTTERIZE_KAFKA_SERVER_TLS_CA
+            value: {{ template "otterize.operator.ca" }}
+          {{- end }}
+          {{- if eq false .Values.global.telemetry.enabled }}
+          - name: OTTERIZE_TELEMETRY_ENABLED
+            value: "false"
+          {{- end }}
+          {{- if eq false .Values.global.telemetry.usage.enabled }}
+          - name: OTTERIZE_TELEMETRY_USAGE_ENABLED
+            value: "false"
+          {{- end }}
+          {{- if eq false .Values.global.telemetry.errors.enabled }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_ENABLED
+            value: "false"
+          {{- end }}
+          {{- if eq false .Values.operator.enableDatabasePolicyCreation }}
+          - name: OTTERIZE_ENABLE_DATABASE_POLICY_CREATION
+            value: "false"
+          {{- end }}
+          {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
+          - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICY_CREATION
+            value: "false"
           {{- end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
