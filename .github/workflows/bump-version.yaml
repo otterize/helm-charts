@@ -54,10 +54,13 @@ jobs:
             sed -i "s#^version:.*#version: ${new_version}#g" "${chart_path}"
           fi
 
+      - name: Setup git config
+        run: |
+          git config user.name "otterizebot"
+          git config user.email "otterizebot@users.noreply.github.com"
+
       - name: Commit and Push
         run: |
-          git config --global user.name "Otterize bump-bot"
-          git config --global user.email "bump-bot@otterize.com"
           git add .
           git commit -m 'Bump chart versions'
           git push origin
