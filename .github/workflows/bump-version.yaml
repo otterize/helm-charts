@@ -5,6 +5,7 @@ on:
       - main
       - david/add-nobump-rule-to-auto-bump-version
 
+
 jobs:
   bump-chart-versions:
     name: Bump chart versions
