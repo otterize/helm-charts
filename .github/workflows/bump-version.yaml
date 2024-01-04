@@ -3,11 +3,13 @@ on:
   push:
     branches:
       - main
+      - david/auto-increment-helm-chart-versions
 
 jobs:
   bump-chart-versions:
     name: Bump chart versions
     runs-on: ubuntu-latest
+    if: github.actor != 'otterizebot'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
