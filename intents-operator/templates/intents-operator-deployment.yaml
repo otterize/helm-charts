@@ -45,7 +45,7 @@ spec:
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       containers:
-        command:
+      - command:
         - /manager
         image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
         {{ if .Values.operator.pullPolicy }}
@@ -85,7 +85,7 @@ spec:
               fieldRef:
                 fieldPath: metadata.namespace
           - name: OTTERIZE_WATCHED_NAMESPACES
-            value: {{ join " " .Values.watchedNamespaces }}
+            value: {{ join " " .Values.watchedNamespaces | quote }}
           {{ if .Values.global.otterizeCloud.apiAddress }}
           - name: OTTERIZE_API_ADDRESS
             value: "{{ .Values.global.otterizeCloud.apiAddress }}"
@@ -151,11 +151,11 @@ spec:
             value: {{ template "otterize.operator.allowExternalTraffic" . }}
           {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
           - name: OTTERIZE_KAFKA_SERVER_TLS_CERT
-            value: {{ template "otterize.operator.cert" }}
+            value: {{ include "otterize.operator.cert" | quote}}
           - name: OTTERIZE_KAFKA_SERVER_TLS_KEY
-            value: {{ template "otterize.operator.key" }}
+            value: {{ include "otterize.operator.key" | quote}}
           - name: OTTERIZE_KAFKA_SERVER_TLS_CA
-            value: {{ template "otterize.operator.ca" }}
+            value: {{ include "otterize.operator.ca" | quote }}
           {{- end }}
           {{- if eq false .Values.global.telemetry.enabled }}
           - name: OTTERIZE_TELEMETRY_ENABLED
