@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - david/auto-increment-helm-chart-versions
 
 jobs:
   bump-chart-versions:
