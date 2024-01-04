@@ -1,0 +1,68 @@
+name: Bump Chart Versions
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-chart-versions:
+    name: Bump chart versions
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'nobump')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.OTTERIZEBOT_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+        with:
+          # Get only root level directories
+          dir_names: true
+          dir_names_max_depth: 1
+
+      - name: List all changed folders
+        run: echo '${{ steps.changed-files.outputs.all_changed_files }}'
+
+      - name: Bump operators helm chart versions
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          regex="^version:[[:space:]]*([0-9-]+).([0-9-]+).([0-9-]+)"
+          operators=("credentials-operator" "intents-operator" "network-mapper")
+          for operator in "${operators[@]}"; do
+            for file in $ALL_CHANGED_FILES; do
+              if [ "$operator" == "$file" ]; then
+                echo "Bumping version for $file"
+                
+                chart_path="${operator}/Chart.yaml"
+                if [[ $(cat "${chart_path}" | grep '^version:') =~ $regex ]]; then
+                  patch_version=$((${BASH_REMATCH[3]} + 1))
+                  new_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${patch_version}"
+                  sed -i "s#^version:.*#version: ${new_version}#g" "${chart_path}"
+                fi
+              fi
+            done
+          done
+          
+          echo "Bumping version for otterize-kubernetes"
+          chart_path="otterize-kubernetes/Chart.yaml"
+          if [[ $(cat "${chart_path}" | grep '^version:') =~ $regex ]]; then
+            patch_version=$((${BASH_REMATCH[3]} + 1))
+            new_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${patch_version}"
+            sed -i "s#^version:.*#version: ${new_version}#g" "${chart_path}"
+          fi
+
+      - name: Setup git config
+        run: |
+          git config user.name "otterizebot"
+          git config user.email "otterizebot@users.noreply.github.com"
+
+      - name: Commit and Push
+        run: |
+          git add .
+          git commit -m 'Bump chart versions [nobump]'
+          git push origin
