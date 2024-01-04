@@ -8,7 +8,7 @@ jobs:
   bump-chart-versions:
     name: Bump chart versions
     runs-on: ubuntu-latest
-    if: github.actor != 'otterizebot'
+    if: "!contains(github.event.head_commit.message, 'nobump')"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -64,5 +64,5 @@ jobs:
       - name: Commit and Push
         run: |
           git add .
-          git commit -m 'Bump chart versions'
+          git commit -m 'Bump chart versions [nobump]'
           git push origin
