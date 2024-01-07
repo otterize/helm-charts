@@ -90,6 +90,13 @@ istiowatcher:
 debug: false
 allowGetAllResources: true
 
+aws:
+  proxy:
+    enabled: false
+    dnsServer: false
+    injectDnsServer: false
+
+
 # Fields from All-in-one chart
 global:
   # Extra annotations for deployed pods

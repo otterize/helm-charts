@@ -1,0 +1,13 @@
+{{ if .Values.aws.proxy.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: dnsproxy
+spec:
+  selector:
+    app: dnsproxy
+  ports:
+    - protocol: UDP
+      port: 53
+      targetPort: 53
+{{ end }}

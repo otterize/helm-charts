@@ -1,0 +1,40 @@
+{{ if .Values.aws.proxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnsproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dnsproxy
+  template:
+    metadata:
+      labels:
+        app: dnsproxy
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: dnsproxy
+            defaultMode: 420
+            items:
+              - key: Corefile
+                path: Corefile
+              - key: amazonaws.com.zone
+                path: amazonaws.com.zone
+      containers:
+        - name: coredns
+          image: coredns/coredns
+          args:
+            - "-conf"
+            - "/etc/coredns/Corefile"
+          ports:
+            - name: dns
+              protocol: UDP
+              containerPort: 53
+          volumeMounts:
+            - name: "config-volume"
+              readOnly: true
+              mountPath: "/etc/coredns"
+{{ end }}
