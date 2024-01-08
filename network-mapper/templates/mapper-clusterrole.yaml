@@ -36,7 +36,18 @@ rules:
       - 'replicasets'
       - 'statefulsets'
     verbs:
-      - 'get'
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
+      - jobs
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups:
       - ''
     resources:
