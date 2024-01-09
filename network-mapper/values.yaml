@@ -4,6 +4,9 @@ opentelemetry:
   metricName: traces_service_graph_request_total
 enableInternetFacingTrafficReporting: false
 
+serviceMonitor:
+  enabled: false
+
 mapper:
   repository: otterize
   image: network-mapper
