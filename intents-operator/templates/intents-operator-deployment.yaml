@@ -151,11 +151,11 @@ spec:
             value: {{ template "otterize.operator.allowExternalTraffic" . }}
           {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
           - name: OTTERIZE_KAFKA_SERVER_TLS_CERT
-            value: {{ include "otterize.operator.cert" | quote}}
+            value: {{ include "otterize.operator.cert" . | quote}}
           - name: OTTERIZE_KAFKA_SERVER_TLS_KEY
-            value: {{ include "otterize.operator.key" | quote}}
+            value: {{ include "otterize.operator.key" . | quote}}
           - name: OTTERIZE_KAFKA_SERVER_TLS_CA
-            value: {{ include "otterize.operator.ca" | quote }}
+            value: {{ include "otterize.operator.ca" . | quote }}
           {{- end }}
           {{- if eq false .Values.global.telemetry.enabled }}
           - name: OTTERIZE_TELEMETRY_ENABLED
