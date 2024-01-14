@@ -175,7 +175,7 @@ spec:
           {{- end }}
           {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
           - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICY_CREATION
-            value: "false"
+            value: "true"
           {{- end }}
         volumeMounts:
         - mountPath: /controller_manager_config.yaml
