@@ -1,0 +1,30 @@
+{{ if .Values.aws.visibility.enabled }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: otterize-aws-visibility-mutating-webhook-configuration
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: otterize-network-mapper-webhook-service
+        namespace: '{{ .Release.Namespace }}'
+        path: /mutate-v1-pod
+        port: 9443
+    failurePolicy: Fail
+    name: pods.network-mapper.otterize.com
+    objectSelector:
+      matchLabels:
+        "network-mapper.otterize.com/aws-visibility": "true"
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+        resources:
+          - pods
+    sideEffects: NoneOnDryRun
+{{ end }}

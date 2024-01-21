@@ -1,22 +1,22 @@
-{{ if .Values.aws.proxy.enabled }}
+{{ if .Values.aws.visibility.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dnsproxy
+  name: otterize-dns
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dnsproxy
+      app: otterize-dns
   template:
     metadata:
       labels:
-        app: dnsproxy
+        app: otterize-dns
     spec:
       volumes:
         - name: config-volume
           configMap:
-            name: dnsproxy
+            name: otterize-dns
             defaultMode: 420
             items:
               - key: Corefile

@@ -91,11 +91,8 @@ debug: false
 allowGetAllResources: true
 
 aws:
-  proxy:
+  visibility:
     enabled: false
-    dnsServer: false
-    injectDnsServer: false
-
 
 # Fields from All-in-one chart
 global:

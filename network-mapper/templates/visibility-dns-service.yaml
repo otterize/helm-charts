@@ -1,11 +1,11 @@
-{{ if .Values.aws.proxy.enabled }}
+{{ if .Values.aws.visibility.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: dnsproxy
+  name: otterize-dns
 spec:
   selector:
-    app: dnsproxy
+    app: otterize-dns
   ports:
     - protocol: UDP
       port: 53
