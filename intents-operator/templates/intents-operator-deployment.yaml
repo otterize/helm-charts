@@ -174,7 +174,7 @@ spec:
             value: "false"
           {{- end }}
           {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
-          - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICY_CREATION
+          - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICIES
             value: "true"
           {{- end }}
         volumeMounts:
