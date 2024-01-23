@@ -52,11 +52,10 @@ rules:
       - ''
     resources:
       - 'configmaps'
-    resourceNames:
-      - {{ template "otterize.mapper.componentConfigmap" . }}
     verbs:
       - 'get'
       - 'update'
+      - 'create'
   - apiGroups:
       - admissionregistration.k8s.io
     resources:

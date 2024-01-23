@@ -22,3 +22,12 @@ rules:
     verbs:
       - 'get'
       - 'update'
+  - apiGroups:
+      - ''
+    resources:
+      - 'secrets'
+    verbs:
+      - 'get'
+      - 'update'
+      - 'create'
+      - 'delete'
