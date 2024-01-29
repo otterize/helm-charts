@@ -26,5 +26,5 @@ webhooks:
           - CREATE
         resources:
           - pods
-    sideEffects: NoneOnDryRun
+    sideEffects: None
 {{ end }}
