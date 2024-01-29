@@ -147,6 +147,14 @@ spec:
             - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
               value: {{ .Values.global.telemetry.errors.networkMapperApiKey | quote }}
             {{- end }}
+            {{- if .Values.aws.visibility.enabled }}
+            - name: OTTERIZE_AWS_VISIBILITY_ENABLED
+              value: "true"
+            {{- end }}
+            {{- if .Values.aws.visibility.selfSignedCert }}
+            - name: OTTERIZE_CREATE_WEBHOOK_CERTIFICATE
+              value: "true"
+            {{- end }}
             {{- if .Values.mapper.extraEnvVars -}}
             {{- toYaml .Values.mapper.extraEnvVars | nindent 12 -}}
             {{- end }}

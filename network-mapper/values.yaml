@@ -93,6 +93,7 @@ allowGetAllResources: true
 aws:
   visibility:
     enabled: false
+    selfSignedCert: false
 
 # Fields from All-in-one chart
 global:
