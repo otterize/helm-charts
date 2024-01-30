@@ -23,4 +23,23 @@ spec:
       targetPort: 9443
   selector:
     app: otterize-network-mapper
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name}}-allow-webhook-access-from-all-namespaces
+spec:
+  ingress:
+    - ports:
+        - port: 9443
+          protocol: TCP
+        - port: 9090
+          protocol: TCP
+        - port: 2112
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app: {{ template "otterize.mapper.fullName" . }}
+  policyTypes:
+    - Ingress
 {{ end }}

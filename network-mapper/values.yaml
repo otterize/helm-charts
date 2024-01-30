@@ -90,6 +90,13 @@ istiowatcher:
 debug: false
 allowGetAllResources: true
 
+iamlive:
+  repository: otterize
+  image: iamlive
+  tag:
+  pullPolicy:
+  pullSecrets:
+
 aws:
   visibility:
     enabled: false

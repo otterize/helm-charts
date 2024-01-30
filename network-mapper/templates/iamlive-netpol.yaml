@@ -2,17 +2,17 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-dns-access-from-all-namespaces
+  name: allow-iamlive-access-from-all-namespaces
 spec:
   ingress:
     - ports:
-        - port: 53
-          protocol: UDP
-      from:
-        - namespaceSelector: {}
+        - protocol: TCP
+          port: 10080
+        - protocol: TCP
+          port: 10443
   podSelector:
     matchLabels:
-      app: otterize-dns
+      app: {{ .Release.Name }}-iamlive
   policyTypes:
     - Ingress
 {{ end }}

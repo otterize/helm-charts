@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otterize-dns
+  name: {{ .Release.Name }}-dns
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: otterize-dns
+      app: {{ .Release.Name }}-dns
   template:
     metadata:
       labels:
-        app: otterize-dns
+        app: {{ .Release.Name }}-dns
     spec:
       volumes:
         - name: config-volume
           configMap:
-            name: otterize-dns
+            name: {{ .Release.Name }}-dns
             defaultMode: 420
             items:
               - key: Corefile

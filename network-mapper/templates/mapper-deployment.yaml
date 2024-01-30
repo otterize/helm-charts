@@ -148,7 +148,7 @@ spec:
               value: {{ .Values.global.telemetry.errors.networkMapperApiKey | quote }}
             {{- end }}
             {{- if .Values.aws.visibility.enabled }}
-            - name: OTTERIZE_AWS_VISIBILITY_ENABLED
+              name: OTTERIZE_ENABLE_AWS_VISIBILITY_WEBHOOK
               value: "true"
             {{- end }}
             {{- if .Values.aws.visibility.selfSignedCert }}
