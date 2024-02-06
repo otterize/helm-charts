@@ -87,6 +87,9 @@ istiowatcher:
   #   cpu: 100m
   #   memory: 128Mi
 
+webhook:
+  generateSelfSignedCert: false
+
 debug: false
 allowGetAllResources: true
 
@@ -100,7 +103,6 @@ iamlive:
 aws:
   visibility:
     enabled: false
-    selfSignedCert: false
 
 # Fields from All-in-one chart
 global:
