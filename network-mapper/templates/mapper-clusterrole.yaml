@@ -52,11 +52,19 @@ rules:
       - ''
     resources:
       - 'configmaps'
-    resourceNames:
-      - {{ template "otterize.mapper.componentConfigmap" . }}
     verbs:
       - 'get'
       - 'update'
+      - 'create'
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+    verbs:
+      - get
+      - list
+      - patch
+      - update
 {{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
   - apiGroups:
       - '*'

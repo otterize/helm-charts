@@ -87,8 +87,22 @@ istiowatcher:
   #   cpu: 100m
   #   memory: 128Mi
 
+webhook:
+  generateSelfSignedCert: false
+
 debug: false
 allowGetAllResources: true
+
+iamlive:
+  repository: otterize
+  image: iamlive
+  tag:
+  pullPolicy:
+  pullSecrets:
+
+aws:
+  visibility:
+    enabled: false
 
 # Fields from All-in-one chart
 global:

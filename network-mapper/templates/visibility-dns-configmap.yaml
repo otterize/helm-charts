@@ -1,0 +1,19 @@
+{{ if .Values.aws.visibility.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-dns
+data:
+  Corefile: |
+    .:53 {
+      errors
+      loop
+      log
+      loadbalance
+      file /etc/coredns/amazonaws.com.zone amazonaws.com
+      forward . /etc/resolv.conf
+    }
+  amazonaws.com.zone: |
+    amazonaws.com.  IN  SOA dns-external-master.amazon.com. hostmaster.amazon.com. 2016969706 180 60 2592000 3600
+    * IN  CNAME {{ .Release.Name }}-iamlive.{{ .Release.Namespace }}.svc.cluster.local.
+{{ end }}
