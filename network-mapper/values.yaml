@@ -95,7 +95,7 @@ allowGetAllResources: true
 
 iamlive:
   repository: otterize
-  image: iamlive
+  image: network-mapper-iamlive
   tag:
   pullPolicy:
   pullSecrets:

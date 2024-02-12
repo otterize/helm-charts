@@ -22,7 +22,7 @@ spec:
       {{ end }}
       containers:
         - name: iamlive
-          image: "{{ .Values.iamlive.repository }}/{{ .Values.iamlive.image }}:{{ .Values.iamlive.tag }}"
+          image: "{{ .Values.iamlive.repository }}/{{ .Values.iamlive.image }}:{{ default $.Chart.AppVersion .Values.iamlive.tag }}"
           {{ if .Values.iamlive.pullPolicy }}
           imagePullPolicy: {{ .Values.iamlive.pullPolicy }}
           {{ end }}
