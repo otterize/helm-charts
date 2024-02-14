@@ -20,7 +20,7 @@ rules:
     verbs:
     - get
     - list
-    - update
+    - patch
   - apiGroups:
     - k8s.otterize.com
     resources:
