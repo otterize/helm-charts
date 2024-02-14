@@ -14,6 +14,21 @@ metadata:
     app.kubernetes.io/version: {{ .Chart.Version }}
 rules:
   - apiGroups:
+    - k8s.otterize.com
+    resources:
+    - clientintents/status
+    verbs:
+    - get
+    - list
+    - update
+  - apiGroups:
+    - k8s.otterize.com
+    resources:
+    - clientintents
+    verbs:
+    - get
+    - list
+  - apiGroups:
       - ''
     resources:
       - 'endpoints'
