@@ -88,7 +88,7 @@ istiowatcher:
   #   memory: 128Mi
 
 webhook:
-  generateSelfSignedCert: false
+  generateSelfSignedCert: true
 
 debug: false
 allowGetAllResources: true
