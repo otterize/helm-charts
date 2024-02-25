@@ -70,7 +70,7 @@ global:
     eksClusterNameOverride:
 
   azure:
-    enabled: true
+    enabled: false
 
   # Extra annotations for deployed pods
   podAnnotations: {}
