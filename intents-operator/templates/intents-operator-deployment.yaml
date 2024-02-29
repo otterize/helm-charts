@@ -182,8 +182,8 @@ spec:
           {{- if .Values.global.aws.rolesAnywhere.enabled }}
           - name: OTTERIZE_TRUST_DOMAIN
             value: {{ .Values.global.aws.rolesAnywhere.trustDomain | quote }}
-          - name: OTTERIZE_TRUST_ANCHOR
-            value: {{ .Values.global.aws.rolesAnywhere.trustDomain | quote }}
+          - name: OTTERIZE_TRUST_ANCHOR_ARN
+            value: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
           - name: AWS_SHARED_CREDENTIALS_FILE
             value: "/aws-config/credentials"
           - name: AWS_REGION
