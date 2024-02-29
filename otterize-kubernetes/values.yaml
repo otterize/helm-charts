@@ -7,7 +7,7 @@ global:
 
   aws:
     enabled: false
-    useSoftDeleteStrategy: false
+    useSoftDelete: false
     eksClusterNameOverride:
 
   # Extra annotations for deployed pods
