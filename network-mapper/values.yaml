@@ -88,14 +88,14 @@ istiowatcher:
   #   memory: 128Mi
 
 webhook:
-  generateSelfSignedCert: false
+  generateSelfSignedCert: true
 
 debug: false
 allowGetAllResources: true
 
 iamlive:
   repository: otterize
-  image: iamlive
+  image: network-mapper-iamlive
   tag:
   pullPolicy:
   pullSecrets:

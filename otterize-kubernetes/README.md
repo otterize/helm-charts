@@ -44,6 +44,11 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.aws.eksClusterNameOverride` | EKS cluster name (overrides auto-detection)                                                     | `(none)` |
 | `global.aws.useSoftDeleteStrategy`  | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
 
+## Azure Integration parameters
+| Key                                 | Description                                 | Default  |
+|-------------------------------------|---------------------------------------------|----------|
+| `global.azure.enabled`              | Enable or disable Azure integration         | `false`  |
+
 ## Intents operator parameters
 All configurable parameters of intents-operator can be configured under the alias `intentsOperator`.
 Further information about intents-operator parameters can be found [in the Intents Operator's helm chart](https://github.com/otterize/helm-charts/tree/main/intents-operator).

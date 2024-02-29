@@ -27,6 +27,9 @@ certManager:
 aws:
   roleARN:
 
+azure:
+  userAssignedIdentityID:
+
 global:
   # Extra annotations for deployed pods
   podAnnotations: {}
@@ -42,6 +45,9 @@ global:
     useSoftDeleteStrategy: false
     eksClusterNameOverride:
     roleARN:
+
+  azure:
+    enabled: false
 
   # Specify an annotation name that by setting it, one can override otterize's service name resolution.
   serviceNameOverrideAnnotationName: intents.otterize.com/service-name

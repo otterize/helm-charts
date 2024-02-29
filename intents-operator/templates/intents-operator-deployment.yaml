@@ -121,6 +121,8 @@ spec:
           - name: OTTERIZE_EKS_CLUSTER_NAME_OVERRIDE
             value: {{ .Values.global.aws.eksClusterNameOverride | quote }}
           {{ end }}
+          - name: OTTERIZE_ENABLE_AZURE_IAM_POLICY
+            value: {{ .Values.global.azure.enabled | quote }}
           {{- if .Values.global.telemetry.errors.stage }}
           - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
             value: {{ .Values.global.telemetry.errors.stage | quote }}
