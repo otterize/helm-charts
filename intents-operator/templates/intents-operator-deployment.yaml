@@ -179,7 +179,20 @@ spec:
           - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICIES
             value: "true"
           {{- end }}
+          {{- if .Values.global.aws.rolesAnywhere.enabled }}
+          - name: OTTERIZE_TRUST_DOMAIN
+            value: {{ .Values.global.aws.rolesAnywhere.trustDomain | quote }}
+          - name: OTTERIZE_TRUST_ANCHOR
+            value: {{ .Values.global.aws.rolesAnywhere.trustDomain | quote }}
+          - name: AWS_SHARED_CREDENTIALS_FILE
+            value: "/aws-config/credentials"
+          - name: AWS_REGION
+            value: {{ .Values.global.aws.region | quote }}
+          {{- end }}
         volumeMounts:
+        - mountPath: /aws-config
+          name: spiffe
+          readOnly: true
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
@@ -215,8 +228,6 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
-      securityContext:
-        runAsNonRoot: true
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
@@ -242,4 +253,13 @@ spec:
         secret:
           secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
       {{ end }}
+      - name: spiffe
+        csi:
+          driver: spiffe.csi.cert-manager.io
+          readOnly: true
+          volumeAttributes:
+            aws.spiffe.csi.cert-manager.io/trust-profile: {{ .Values.global.aws.rolesAnywhere.intentsOperatorTrustProfileARN | quote }}
+            aws.spiffe.csi.cert-manager.io/trust-anchor: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
+            aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
+            aws.spiffe.csi.cert-manager.io/enable: "true"
       - name: cert

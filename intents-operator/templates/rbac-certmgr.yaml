@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: intents-operator-certificaterequest-creator
+  namespace: otterize-system
+rules:
+  - apiGroups: ["cert-manager.io"]
+    resources: ["certificaterequests"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: intents-operator-certificaterequest
+  namespace: otterize-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: intents-operator-certificaterequest-creator
+subjects:
+  - kind: ServiceAccount
+    name: intents-operator-controller-manager
+    namespace: otterize-system
