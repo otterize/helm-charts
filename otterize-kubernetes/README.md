@@ -38,10 +38,11 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.otterizeCloud.apiExtraCAPEMSecret`                 | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## AWS Integration parameters
-| Key                                 | Description                                 | Default  |
-|-------------------------------------|---------------------------------------------|----------|
-| `global.aws.enabled`                | Enable or disable AWS integration           | `false`  |
-| `global.aws.eksClusterNameOverride` | EKS cluster name (overrides auto-detection) | `(none)` |
+| Key                                 | Description                                                                                     | Default  |
+|-------------------------------------|-------------------------------------------------------------------------------------------------|----------|
+| `global.aws.enabled`                | Enable or disable AWS integration                                                               | `false`  |
+| `global.aws.eksClusterNameOverride` | EKS cluster name (overrides auto-detection)                                                     | `(none)` |
+| `global.aws.useSoftDeleteStrategy`  | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
 
 ## Intents operator parameters
 All configurable parameters of intents-operator can be configured under the alias `intentsOperator`.

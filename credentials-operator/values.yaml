@@ -39,6 +39,7 @@ global:
 
   aws:
     enabled: false
+    useSoftDeleteStrategy: false
     eksClusterNameOverride:
     roleARN:
 
