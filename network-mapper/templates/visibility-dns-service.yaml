@@ -1,0 +1,13 @@
+{{ if .Values.aws.visibility.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-dns
+spec:
+  selector:
+    app: {{ .Release.Name }}-dns
+  ports:
+    - protocol: UDP
+      port: 53
+      targetPort: 53
+{{ end }}

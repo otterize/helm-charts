@@ -121,6 +121,8 @@ spec:
           - name: OTTERIZE_EKS_CLUSTER_NAME_OVERRIDE
             value: {{ .Values.global.aws.eksClusterNameOverride | quote }}
           {{ end }}
+          - name: OTTERIZE_ENABLE_AZURE_IAM_POLICY
+            value: {{ .Values.global.azure.enabled | quote }}
           {{- if .Values.global.telemetry.errors.stage }}
           - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
             value: {{ .Values.global.telemetry.errors.stage | quote }}
@@ -174,7 +176,7 @@ spec:
             value: "false"
           {{- end }}
           {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
-          - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICY_CREATION
+          - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICIES
             value: "true"
           {{- end }}
         volumeMounts:

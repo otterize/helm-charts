@@ -2,7 +2,7 @@
 opentelemetry:
   enable: false
   metricName: traces_service_graph_request_total
-enableInternetFacingTrafficReporting: false
+enableInternetFacingTrafficReporting: true
 
 mapper:
   repository: otterize
@@ -87,8 +87,22 @@ istiowatcher:
   #   cpu: 100m
   #   memory: 128Mi
 
+webhook:
+  generateSelfSignedCert: true
+
 debug: false
 allowGetAllResources: true
+
+iamlive:
+  repository: otterize
+  image: network-mapper-iamlive
+  tag:
+  pullPolicy:
+  pullSecrets:
+
+aws:
+  visibility:
+    enabled: false
 
 # Fields from All-in-one chart
 global:

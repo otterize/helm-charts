@@ -58,6 +58,8 @@ spec:
               name: graphql
             - containerPort: 2112
               name: metrics
+            - containerPort: 9443
+              name: webhook
           env:
             {{ if .Values.opentelemetry.enable }}
             - name: OTTERIZE_ENABLE_OTEL_EXPORT
@@ -99,6 +101,10 @@ spec:
                   key: otterize-cloud-client-secret
           {{ end }}
             {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: OTTERIZE_API_EXTRA_CA_PEM
               value: {{ template "otterize.operator.apiExtraCAPEM" }}
             {{ end }}
@@ -141,6 +147,14 @@ spec:
             - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
               value: {{ .Values.global.telemetry.errors.networkMapperApiKey | quote }}
             {{- end }}
+            {{- if .Values.aws.visibility.enabled }}
+            - name: OTTERIZE_ENABLE_AWS_VISIBILITY_WEBHOOK
+              value: "true"
+            {{- end }}
+            {{- if .Values.webhook.generateSelfSignedCert }}
+            - name: OTTERIZE_CREATE_WEBHOOK_CERTIFICATE
+              value: "true"
+            {{- end }}
             {{- if .Values.mapper.extraEnvVars -}}
             {{- toYaml .Values.mapper.extraEnvVars | nindent 12 -}}
             {{- end }}
@@ -153,6 +167,8 @@ spec:
             - mountPath: /etc/otterize
               name: component-config
               readOnly: false
+            - mountPath: /tmp/k8s-webhook-server/serving-certs
+              name: webhook-cert
           livenessProbe:
             httpGet:
               path: /healthz
@@ -180,3 +196,4 @@ spec:
         - name: component-config
           configMap:
             name: {{ template "otterize.mapper.componentConfigmap" . }}
+        - name: webhook-cert

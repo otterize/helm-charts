@@ -17,7 +17,7 @@
 | `global.serviceNameOverrideAnnotationName`      | Which annotation to use (in the [service name resolution algorithm](https://docs.otterize.com/reference/service-identities#kubernetes-service-identity-resolution)) for setting a pod's service name, if not the default. Use this if you already have annotations on your pods that provide the correct service name. | `intents.otterize.com/service-name` |
 | `global.aws.enabled`                            | Enable or disable AWS integration                                                                                                                                                                                                                                                                                      | `false`                             |
 | `global.aws.eksClusterNameOverride`             | EKS cluster name (overrides auto-detection)                                                                                                                                                                                                                                                                            | `(none)`                            |
-
+| `global.azure.enabled`                          | Enable or disable Azure integration                                                                                                                                                                                                                                                                                    | `false`                             |
 
 ## Operator parameters
 | Key                                                                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Default               |
@@ -67,3 +67,8 @@
 | Key           | Description                                              | Default  |
 |---------------|----------------------------------------------------------|----------|
 | `aws.roleARN` | ARN of the AWS role the operator will use to access AWS. | `(none)` |
+
+## Azure integration parameters
+| Key                            | Description                                                            | Default  |
+|--------------------------------|------------------------------------------------------------------------|----------|
+| `azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |
