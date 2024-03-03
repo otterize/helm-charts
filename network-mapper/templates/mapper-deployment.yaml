@@ -155,6 +155,10 @@ spec:
             - name: OTTERIZE_CREATE_WEBHOOK_CERTIFICATE
               value: "true"
             {{- end }}
+            {{- if .Values.dnsClientIntentsUpdateEnabled }}
+            - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
+              value: "true"
+            {{- end }}
             {{- if .Values.mapper.extraEnvVars -}}
             {{- toYaml .Values.mapper.extraEnvVars | nindent 12 -}}
             {{- end }}
