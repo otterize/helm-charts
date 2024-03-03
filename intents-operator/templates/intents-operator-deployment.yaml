@@ -123,6 +123,18 @@ spec:
           {{ end }}
           - name: OTTERIZE_ENABLE_AZURE_IAM_POLICY
             value: {{ .Values.global.azure.enabled | quote }}
+          {{ if .Values.azure.subscriptionID }}
+          - name: OTTERIZE_AZURE_SUBSCRIPTION_ID
+            value: {{ .Values.azure.subscriptionID | quote }}
+          {{ end }}
+          {{ if .Values.azure.resourceGroup }}
+          - name: OTTERIZE_AZURE_RESOURCE_GROUP
+            value: {{ .Values.azure.resourceGroup | quote }}
+          {{ end }}
+          {{ if .Values.azure.aksClusterName }}
+          - name: OTTERIZE_AZURE_AKS_CLUSTER_NAME
+            value: {{ .Values.azure.aksClusterName | quote }}
+          {{ end }}
           {{- if .Values.global.telemetry.errors.stage }}
           - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
             value: {{ .Values.global.telemetry.errors.stage | quote }}
