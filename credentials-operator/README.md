@@ -14,6 +14,7 @@
 | `global.aws.enabled`                                | Enable or disable AWS integration                                                                                                                                                                                                                                                                                      | `false`                             |
 | `global.aws.eksClusterNameOverride`                 | EKS cluster name (overrides auto-detection)                                                                                                                                                                                                                                                                            | `(none)`                            |
 | `global.azure.enabled`                              | Enable or disable Azure integration                                                                                                                                                                                                                                                                                    | `false`                             |
+| `global.aws.useSoftDelete`                  | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies                                                                                                                                                                                                                        | `false`                             |
 | `global.telemetry.enabled`                          | If set to `false`, all anonymous telemetries collection will be disabled                                                                                                                                                                                                                                               | `true`                              |
 | `global.telemetry.usage.enabled`                    | If set to `false`, collection of anonymous telemetries on product usage will be disabled                                                                                                                                                                                                                               | `true`                              |
 | `global.telemetry.errors.enabled`                   | If set to `false`, collection of anonymous telemetries on application crashes and errors will be disabled                                                                                                                                                                                                              | `true`                              |
@@ -61,9 +62,13 @@
 | `resources`            | Resources of the container                                                                                                                                                                                                                                                                                                                                                                                                                                    | `{}`    |
 
 ## AWS integration parameters
-| Key           | Description                                              | Default  |
-|---------------|----------------------------------------------------------|----------|
-| `aws.roleARN` | ARN of the AWS role the operator will use to access AWS. | `(none)` |
+| Key                                 | Description                                                                                     | Default  |
+|-------------------------------------|-------------------------------------------------------------------------------------------------|----------|
+| `aws.roleARN`                       | ARN of the AWS role the operator will use to access AWS.                                        | `(none)` |
+| `global.aws.enabled`                | Enable or disable AWS integration                                                               | `false`  |
+| `global.aws.eksClusterNameOverride` | EKS cluster name (overrides auto-detection)                                                     | `(none)` |
+| `global.aws.useSoftDelete`  | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
+
 
 ## Azure integration parameters
 | Key                            | Description                                                            | Default  |

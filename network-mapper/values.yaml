@@ -3,6 +3,7 @@ opentelemetry:
   enable: false
   metricName: traces_service_graph_request_total
 enableInternetFacingTrafficReporting: true
+dnsClientIntentsUpdateEnabled: false
 
 mapper:
   repository: otterize
