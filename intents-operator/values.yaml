@@ -75,6 +75,9 @@ global:
   azure:
     enabled: false
 
+  gcp:
+    enabled: false
+
   # Extra annotations for deployed pods
   podAnnotations: {}
   # Extra labels for deployed pods
