@@ -43,6 +43,9 @@ spec:
         {{- end }}
         app: intents-operator
         app.kubernetes.io/version: {{ .Chart.Version }}
+        {{ if .Values.global.azure.enabled }}
+        azure.workload.identity/use: "true"
+        {{ end }}
     spec:
       containers:
       - command:
