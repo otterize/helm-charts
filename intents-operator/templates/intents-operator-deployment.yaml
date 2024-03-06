@@ -209,9 +209,11 @@ spec:
             value: {{ .Values.global.aws.region | quote }}
           {{- end }}
         volumeMounts:
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
         - mountPath: /aws-config
           name: spiffe
           readOnly: true
+{{- end }}
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
@@ -272,6 +274,7 @@ spec:
         secret:
           secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
       {{ end }}
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
       - name: spiffe
         csi:
           driver: spiffe.csi.cert-manager.io
@@ -281,4 +284,5 @@ spec:
             aws.spiffe.csi.cert-manager.io/trust-anchor: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
             aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
             aws.spiffe.csi.cert-manager.io/enable: "true"
+{{- end }}
       - name: cert

@@ -1,3 +1,4 @@
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -22,3 +23,4 @@ subjects:
     name: credentials-operator-controller-manager
     namespace: otterize-system
 ---
+{{- end }}
