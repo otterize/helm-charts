@@ -78,6 +78,9 @@ spec:
             {{ if .Values.enableInternetFacingTrafficReporting }}
             - name: OTTERIZE_CAPTURE_EXTERNAL_TRAFFIC_ENABLED
               value: "true"
+            {{ else }}
+            - name: OTTERIZE_CAPTURE_EXTERNAL_TRAFFIC_ENABLED
+              value: "false"
             {{ end }}
             {{ if .Values.global.serviceNameOverrideAnnotationName }}
             - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
