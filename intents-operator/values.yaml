@@ -51,6 +51,9 @@ aws:
 
 azure:
   userAssignedIdentityID:
+  subscriptionID:
+  resourceGroup:
+  aksClusterName:
 
 # allowGetAllResources gives get permission to watch on all resources. If disabled, the operator will only
 # be able to resolve pods up to their built-in owners. For example, a Pod is owned by a ReplicaSet that is owned by a Deployment.
@@ -70,6 +73,9 @@ global:
     eksClusterNameOverride:
 
   azure:
+    enabled: false
+
+  gcp:
     enabled: false
 
   # Extra annotations for deployed pods

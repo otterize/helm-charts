@@ -29,6 +29,9 @@ aws:
 
 azure:
   userAssignedIdentityID:
+  subscriptionID:
+  resourceGroup:
+  aksClusterName:
 
 global:
   # Extra annotations for deployed pods
@@ -42,10 +45,14 @@ global:
 
   aws:
     enabled: false
+    useSoftDelete: false
     eksClusterNameOverride:
     roleARN:
 
   azure:
+    enabled: false
+
+  gcp:
     enabled: false
 
   # Specify an annotation name that by setting it, one can override otterize's service name resolution.
