@@ -249,7 +249,8 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
-{{- if ne false (default .Values.global.aws.rolesAnywhere.enabled false) }}
+# Only runAsNonRoot when not using rolesAnywhere
+{{- if ne true (default .Values.global.aws.rolesAnywhere.enabled false) }}
           runAsNonRoot: true
 {{- end }}
       serviceAccountName: intents-operator-controller-manager
