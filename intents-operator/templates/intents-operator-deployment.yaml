@@ -198,7 +198,22 @@ spec:
           - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICIES
             value: "true"
           {{- end }}
+          {{- if .Values.global.aws.rolesAnywhere.enabled }}
+          - name: OTTERIZE_TRUST_DOMAIN
+            value: {{ .Values.global.aws.rolesAnywhere.trustDomain | quote }}
+          - name: OTTERIZE_TRUST_ANCHOR_ARN
+            value: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
+          - name: AWS_SHARED_CREDENTIALS_FILE
+            value: "/aws-config/credentials"
+          - name: AWS_REGION
+            value: {{ .Values.global.aws.region | quote }}
+          {{- end }}
         volumeMounts:
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
+        - mountPath: /aws-config
+          name: spiffe
+          readOnly: true
+{{- end }}
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
@@ -234,8 +249,10 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
-      securityContext:
-        runAsNonRoot: true
+# Only runAsNonRoot when not using rolesAnywhere
+{{- if ne true (default .Values.global.aws.rolesAnywhere.enabled false) }}
+          runAsNonRoot: true
+{{- end }}
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
@@ -261,4 +278,15 @@ spec:
         secret:
           secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
       {{ end }}
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
+      - name: spiffe
+        csi:
+          driver: spiffe.csi.cert-manager.io
+          readOnly: true
+          volumeAttributes:
+            aws.spiffe.csi.cert-manager.io/trust-profile: {{ .Values.global.aws.rolesAnywhere.intentsOperatorTrustProfileARN | quote }}
+            aws.spiffe.csi.cert-manager.io/trust-anchor: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
+            aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
+            aws.spiffe.csi.cert-manager.io/enable: "true"
+{{- end }}
       - name: cert
