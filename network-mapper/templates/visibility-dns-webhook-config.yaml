@@ -3,6 +3,9 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: {{ .Release.Name }}-aws-visibility-mutating-webhook-configuration
+  labels:
+    app.kubernetes.io/part-of: otterize
+    app.kubernetes.io/component: credentials-operator
 webhooks:
   - admissionReviewVersions:
       - v1
