@@ -47,6 +47,11 @@ spec:
         azure.workload.identity/use: "true"
         {{ end }}
     spec:
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
       containers:
       - command:
         - /manager
@@ -255,7 +260,6 @@ spec:
           allowPrivilegeEscalation: false
           runAsGroup: 65532
           runAsUser: 65532
-          fsGroup: 65532
           runAsNonRoot: true
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
