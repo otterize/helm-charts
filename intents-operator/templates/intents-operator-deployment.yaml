@@ -253,10 +253,10 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
-          runAsGroup: 65532
-          runAsUser: 65532
-          fsGroup: 65532
+# Only runAsNonRoot when not using rolesAnywhere
+{{- if ne true (default .Values.global.aws.rolesAnywhere.enabled false) }}
           runAsNonRoot: true
+{{- end }}
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
@@ -292,6 +292,5 @@ spec:
             aws.spiffe.csi.cert-manager.io/trust-anchor: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
             aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
             aws.spiffe.csi.cert-manager.io/enable: "true"
-            spiffe.csi.cert-manager.io/fs-group: "65532"
 {{- end }}
       - name: cert
