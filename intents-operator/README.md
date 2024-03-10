@@ -70,9 +70,9 @@
 | `aws.roleARN` | ARN of the AWS role the operator will use to access AWS. | `(none)` |
 
 ## Azure integration parameters
-| Key                            | Description                                                            | Default  |
-|--------------------------------|------------------------------------------------------------------------|----------|
-| `azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |
-| `azure.subscriptionID`         | ID of the Azure subscription in which the AKS cluster is deployed.     | `(none)` |
-| `azure.resoureceGroup`         | Name of the Azure resource group in which the AKS cluster is deployed. | `(none)` |
-| `azure.aksClusterName`         | Name of the AKS cluster in which the operator is deployed.             | `(none)` |
+| Key                                   | Description                                                            | Default  |
+|---------------------------------------|------------------------------------------------------------------------|----------|
+| `global.azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |
+| `global.azure.subscriptionID`         | ID of the Azure subscription in which the AKS cluster is deployed.     | `(none)` |
+| `global.azure.resoureceGroup`         | Name of the Azure resource group in which the AKS cluster is deployed. | `(none)` |
+| `global.azure.aksClusterName`         | Name of the AKS cluster in which the operator is deployed.             | `(none)` |

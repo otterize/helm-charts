@@ -71,6 +71,9 @@
 | `global.aws.useSoftDelete`          | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
 
 ## Azure integration parameters
-| Key                            | Description                                                            | Default  |
-|--------------------------------|------------------------------------------------------------------------|----------|
-| `azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |
+| Key                                   | Description                                                            | Default  |
+|---------------------------------------|------------------------------------------------------------------------|----------|
+| `global.azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |
+| `global.azure.subscriptionID`         | ID of the Azure subscription in which the AKS cluster is deployed.     | `(none)` |
+| `global.azure.resoureceGroup`         | Name of the Azure resource group in which the AKS cluster is deployed. | `(none)` |
+| `global.azure.aksClusterName`         | Name of the AKS cluster in which the operator is deployed.             | `(none)` |
