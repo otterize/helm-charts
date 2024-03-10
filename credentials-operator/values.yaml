@@ -27,12 +27,6 @@ certManager:
 aws:
   roleARN:
 
-azure:
-  userAssignedIdentityID:
-  subscriptionID:
-  resourceGroup:
-  aksClusterName:
-
 global:
   # Extra annotations for deployed pods
   podAnnotations: {}
@@ -53,6 +47,10 @@ global:
 
   azure:
     enabled: false
+    userAssignedIdentityID:
+    subscriptionID:
+    resourceGroup:
+    aksClusterName:
 
   gcp:
     enabled: false

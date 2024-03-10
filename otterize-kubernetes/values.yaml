@@ -12,6 +12,13 @@ global:
     useSoftDelete: false
     eksClusterNameOverride:
 
+  azure:
+    enabled: false
+    userAssignedIdentityID:
+    subscriptionID:
+    resourceGroup:
+    aksClusterName:
+
   # Extra annotations for deployed pods
   podAnnotations: {}
   # Extra labels for deployed pods

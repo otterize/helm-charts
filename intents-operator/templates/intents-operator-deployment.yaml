@@ -127,18 +127,12 @@ spec:
           - name: OTTERIZE_ENABLE_AZURE_IAM_POLICY
             value: {{ .Values.global.azure.enabled | quote }}
           {{ if .Values.global.azure.enabled }}
-          {{ if .Values.azure.subscriptionID }}
           - name: OTTERIZE_AZURE_SUBSCRIPTION_ID
-            value: {{ required "You must specify the Azure subscription ID." .Values.azure.subscriptionID | quote }}
-          {{ end }}
-          {{ if .Values.azure.resourceGroup }}
+            value: {{ required "You must specify the Azure subscription ID." .Values.global.azure.subscriptionID | quote }}
           - name: OTTERIZE_AZURE_RESOURCE_GROUP
-            value: {{ required "You must specify the Azure resource group." .Values.azure.resourceGroup | quote }}
-          {{ end }}
-          {{ if .Values.azure.aksClusterName }}
+            value: {{ required "You must specify the Azure resource group." .Values.global.azure.resourceGroup | quote }}
           - name: OTTERIZE_AZURE_AKS_CLUSTER_NAME
-            value: {{ required "You must specify the AKS cluster name." .Values.azure.aksClusterName | quote }}
-          {{ end }}
+            value: {{ required "You must specify the AKS cluster name." .Values.global.azure.aksClusterName | quote }}
           {{ end }}
           - name: OTTERIZE_ENABLE_GCP_IAM_POLICY
             value: {{ .Values.global.gcp.enabled | quote }}
@@ -253,10 +247,10 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
-          runAsGroup: 65532
-          runAsUser: 65532
-          fsGroup: 65532
+# Only runAsNonRoot when not using rolesAnywhere
+{{- if ne true (default .Values.global.aws.rolesAnywhere.enabled false) }}
           runAsNonRoot: true
+{{- end }}
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
@@ -292,6 +286,5 @@ spec:
             aws.spiffe.csi.cert-manager.io/trust-anchor: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
             aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
             aws.spiffe.csi.cert-manager.io/enable: "true"
-            spiffe.csi.cert-manager.io/fs-group: "65532"
 {{- end }}
       - name: cert
