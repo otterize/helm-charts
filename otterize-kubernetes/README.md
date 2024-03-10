@@ -45,9 +45,13 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.aws.useSoftDelete`  | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
 
 ## Azure Integration parameters
-| Key                                 | Description                                 | Default  |
-|-------------------------------------|---------------------------------------------|----------|
-| `global.azure.enabled`              | Enable or disable Azure integration         | `false`  |
+| Key                                   | Description                                 | Default  |
+|---------------------------------------|---------------------------------------------|----------|
+| `global.azure.enabled`                | Enable or disable Azure integration         | `false`  |
+| `global.azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |
+| `global.azure.subscriptionID`         | ID of the Azure subscription in which the AKS cluster is deployed.     | `(none)` |
+| `global.azure.resoureceGroup`         | Name of the Azure resource group in which the AKS cluster is deployed. | `(none)` |
+| `global.azure.aksClusterName`         | Name of the AKS cluster in which the operator is deployed.             | `(none)` |
 
 ## Intents operator parameters
 All configurable parameters of intents-operator can be configured under the alias `intentsOperator`.
