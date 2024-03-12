@@ -73,21 +73,6 @@ kafkawatcher:
   #   cpu: 100m
   #   memory: 128Mi
 
-istiowatcher:
-  enable: true
-  repository: otterize
-  image: network-mapper-istio-watcher
-  tag:
-  pullPolicy:
-  pullSecrets:
-  resources: { }
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
 webhook:
   generateSelfSignedCert: true
 
