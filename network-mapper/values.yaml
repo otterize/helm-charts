@@ -5,6 +5,9 @@ opentelemetry:
 enableInternetFacingTrafficReporting: true
 dnsClientIntentsUpdateEnabled: false
 
+serviceMonitor:
+  enabled: false
+
 mapper:
   repository: otterize
   image: network-mapper
