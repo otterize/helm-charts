@@ -120,6 +120,7 @@ spec:
           capabilities:
             add:
               - SYS_PTRACE
+              - NET_RAW
         volumeMounts:
           - mountPath: /hostproc
             name: proc
