@@ -213,3 +213,17 @@ rules:
   - patch
   - update
   - watch
+{{ if .Values.global.gcp.enabled }}
+- apiGroups:
+    - iam.cnrm.cloud.google.com
+  resources:
+    - iampartialpolicies
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+{{ end }}
