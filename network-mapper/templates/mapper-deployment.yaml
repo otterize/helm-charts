@@ -162,6 +162,10 @@ spec:
             - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
               value: "true"
             {{- end }}
+            {{- if .Values.enableIstioCollection }}
+            - name: OTTERIZE_ENABLE_ISTIO_COLLECTION
+              value: "true"
+            {{- end }}
             {{- if .Values.mapper.extraEnvVars -}}
             {{- toYaml .Values.mapper.extraEnvVars | nindent 12 -}}
             {{- end }}
