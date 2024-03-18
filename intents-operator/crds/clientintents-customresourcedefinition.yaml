@@ -215,7 +215,7 @@ spec:
                         items:
                           type: string
                         type: array
-                      azureKeyVaultPermissions:
+                      azureKeyVaultPolicy:
                         properties:
                           certificatePermissions:
                             items:
