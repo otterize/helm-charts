@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-aws-visibility-mutating-webhook-configuration
   labels:
     app.kubernetes.io/part-of: otterize
-    app.kubernetes.io/component: credentials-operator
+    app.kubernetes.io/component: network-mapper
     {{- with .Values.global.commonLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
