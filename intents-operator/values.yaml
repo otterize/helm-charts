@@ -55,6 +55,7 @@ aws:
 # For this resolving to be successful, the operator needs to be able to `get` all resources.
 allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
+enforcedNamespaces: null # by default, when mode is defaultActive, enforce in all namespaces, when mode is defaultShadow, enforce in none
 global:
   deployment:
     credentialsOperator: true
