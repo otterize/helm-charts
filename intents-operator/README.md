@@ -40,15 +40,6 @@
 | `enforcedNamespaces`                               | When using "shadow enforcement" mode, namespaces in this list will be treated as if the enforcement were active.                                                                                                                                                                                                                                                                                                                                                                                                                             | `(nil) meaning watch all` |
 | `operator.autoGenerateTLSUsingCredentialsOperator` | If set to true, adds the necessary pod annotations in order to integrate with credentials-operator, and get tls certificate.                                                                                                                                                                                                                                                                                                                                                                                                                 | `false`                   |
 
-## Watcher parameters
-| Key                        | Description                | Default                        |
-|----------------------------|----------------------------|--------------------------------|
-| `watcher.image.repository` | Watcher image repository.  | `otterize`                     |
-| `watcher.image.image`      | Watcher image.             | `intents-operator-pod-watcher` |
-| `watcher.image.tag`        | Watcher image tag.         | `latest`                       |
-| `watcher.pullPolicy`       | Watcher image pull policy. | `(none)`                       |
-| `watcher.resources`        | Watcher Resources.         |                                |
-
 ## Cloud parameters
 | Key                                                        | Description                                                                                                                                                                                  | Default  |
 |------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
