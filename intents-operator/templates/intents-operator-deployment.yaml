@@ -94,6 +94,8 @@ spec:
                 fieldPath: metadata.namespace
           - name: OTTERIZE_WATCHED_NAMESPACES
             value: {{ join " " .Values.watchedNamespaces | quote }}
+          - name: OTTERIZE_ACTIVE_ENFORCEMENT_NAMESPACES
+            value: {{ join " " .Values.enforcedNamespaces | quote }}
           {{ if .Values.global.otterizeCloud.apiAddress }}
           - name: OTTERIZE_API_ADDRESS
             value: "{{ .Values.global.otterizeCloud.apiAddress }}"
