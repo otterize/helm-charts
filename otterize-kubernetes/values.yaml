@@ -7,7 +7,17 @@ global:
 
   aws:
     enabled: false
+    rolesAnywhere:
+      enabled: false
+    useSoftDelete: false
     eksClusterNameOverride:
+
+  azure:
+    enabled: false
+    userAssignedIdentityID:
+    subscriptionID:
+    resourceGroup:
+    aksClusterName:
 
   # Extra annotations for deployed pods
   podAnnotations: {}

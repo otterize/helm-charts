@@ -49,15 +49,13 @@ operator:
 aws:
   roleARN:
 
-azure:
-  userAssignedIdentityID:
-
 # allowGetAllResources gives get permission to watch on all resources. If disabled, the operator will only
 # be able to resolve pods up to their built-in owners. For example, a Pod is owned by a ReplicaSet that is owned by a Deployment.
 # If that Deployment is owned by a custom resource, the operator will not be able to resolve it.
 # For this resolving to be successful, the operator needs to be able to `get` all resources.
 allowGetAllResources: true
 watchedNamespaces: null # by default, watch all
+enforcedNamespaces: null # by default, when mode is defaultActive, enforce in all namespaces, when mode is defaultShadow, enforce in none
 global:
   deployment:
     credentialsOperator: true
@@ -67,9 +65,18 @@ global:
 
   aws:
     enabled: false
+    rolesAnywhere:
+      enabled: false
     eksClusterNameOverride:
 
   azure:
+    enabled: false
+    userAssignedIdentityID:
+    subscriptionID:
+    resourceGroup:
+    aksClusterName:
+
+  gcp:
     enabled: false
 
   # Extra annotations for deployed pods

@@ -43,7 +43,15 @@ spec:
         {{- end }}
         app: intents-operator
         app.kubernetes.io/version: {{ .Chart.Version }}
+        {{ if .Values.global.azure.enabled }}
+        azure.workload.identity/use: "true"
+        {{ end }}
     spec:
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
       containers:
       - command:
         - /manager
@@ -86,6 +94,8 @@ spec:
                 fieldPath: metadata.namespace
           - name: OTTERIZE_WATCHED_NAMESPACES
             value: {{ join " " .Values.watchedNamespaces | quote }}
+          - name: OTTERIZE_ACTIVE_ENFORCEMENT_NAMESPACES
+            value: {{ join " " .Values.enforcedNamespaces | quote }}
           {{ if .Values.global.otterizeCloud.apiAddress }}
           - name: OTTERIZE_API_ADDRESS
             value: "{{ .Values.global.otterizeCloud.apiAddress }}"
@@ -123,6 +133,16 @@ spec:
           {{ end }}
           - name: OTTERIZE_ENABLE_AZURE_IAM_POLICY
             value: {{ .Values.global.azure.enabled | quote }}
+          {{ if .Values.global.azure.enabled }}
+          - name: OTTERIZE_AZURE_SUBSCRIPTION_ID
+            value: {{ required "You must specify the Azure subscription ID." .Values.global.azure.subscriptionID | quote }}
+          - name: OTTERIZE_AZURE_RESOURCE_GROUP
+            value: {{ required "You must specify the Azure resource group." .Values.global.azure.resourceGroup | quote }}
+          - name: OTTERIZE_AZURE_AKS_CLUSTER_NAME
+            value: {{ required "You must specify the AKS cluster name." .Values.global.azure.aksClusterName | quote }}
+          {{ end }}
+          - name: OTTERIZE_ENABLE_GCP_IAM_POLICY
+            value: {{ .Values.global.gcp.enabled | quote }}
           {{- if .Values.global.telemetry.errors.stage }}
           - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
             value: {{ .Values.global.telemetry.errors.stage | quote }}
@@ -179,7 +199,26 @@ spec:
           - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICIES
             value: "true"
           {{- end }}
+          {{- if .Values.global.aws.rolesAnywhere.enabled }}
+          - name: OTTERIZE_ENABLE_AWS_IAM_ROLESANYWHERE
+            value: "true"
+          - name: OTTERIZE_ROLESANYWHERE_SPIFFE_TRUST_DOMAIN
+            value: {{ .Values.global.aws.rolesAnywhere.trustDomain | quote }}
+          - name: OTTERIZE_ROLESANYWHERE_TRUST_ANCHOR_ARN
+            value: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
+          - name: OTTERIZE_ROLESANYWHERE_CLUSTER_NAME
+            value: {{ .Values.global.aws.rolesAnywhere.clusterName | quote }}
+          - name: AWS_SHARED_CREDENTIALS_FILE
+            value: "/aws-config/credentials"
+          - name: AWS_REGION
+            value: {{ .Values.global.aws.region | quote }}
+          {{- end }}
         volumeMounts:
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
+        - mountPath: /aws-config
+          name: spiffe
+          readOnly: true
+{{- end }}
         - mountPath: /controller_manager_config.yaml
           name: manager-config
           subPath: controller_manager_config.yaml
@@ -215,8 +254,9 @@ spec:
             memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
-      securityContext:
-        runAsNonRoot: true
+          runAsGroup: 65532
+          runAsUser: 65532
+          runAsNonRoot: true
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
@@ -242,4 +282,16 @@ spec:
         secret:
           secretName: {{ .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
       {{ end }}
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
+      - name: spiffe
+        csi:
+          driver: spiffe.csi.cert-manager.io
+          readOnly: true
+          volumeAttributes:
+            aws.spiffe.csi.cert-manager.io/trust-profile: {{ .Values.global.aws.rolesAnywhere.intentsOperatorTrustProfileARN | quote }}
+            aws.spiffe.csi.cert-manager.io/trust-anchor: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
+            aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
+            aws.spiffe.csi.cert-manager.io/enable: "true"
+            spiffe.csi.cert-manager.io/fs-group: "65532"
+{{- end }}
       - name: cert

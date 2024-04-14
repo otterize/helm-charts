@@ -40,6 +40,16 @@ rules:
   - apiGroups:
       - ''
     resources:
+    # used by Istio network mapping capability
+      - 'pods/exec'
+    verbs:
+      - 'get'
+      - 'list'
+      - 'watch'
+      - 'create'
+  - apiGroups:
+      - ''
+    resources:
       - namespaces
     verbs:
       - 'get'
