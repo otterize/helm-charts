@@ -7,6 +7,17 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
   - endpoints
   verbs:
   - get
@@ -169,6 +180,18 @@ rules:
 - apiGroups:
   - k8s.otterize.com
   resources:
+  - postgresqlserverconfigs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - k8s.otterize.com
+  resources:
   - protectedservices
   verbs:
   - create
@@ -225,3 +248,13 @@ rules:
   - patch
   - update
   - watch
+{{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
+- apiGroups:
+    - '*'
+  resources:
+    - '*'
+  verbs:
+    - get
+    - list
+    - watch
+{{ end }}
