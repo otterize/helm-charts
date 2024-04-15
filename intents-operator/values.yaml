@@ -90,6 +90,7 @@ global:
 
   # Specify an annotation name that by setting it, one can override otterize's service name resolution.
   serviceNameOverrideAnnotationName: intents.otterize.com/service-name
+  experimentalUseDockerImageAsServiceNameForJobs: false
 
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
