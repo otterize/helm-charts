@@ -44,6 +44,13 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.aws.eksClusterNameOverride` | EKS cluster name (overrides auto-detection)                                                     | `(none)` |
 | `global.aws.useSoftDelete`  | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
 
+### AWS Integration - RolesAnywhere parameters
+| Key                                    | Description                                                                                                                                                                                                                                                                                             | Default |
+|----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| `global.aws.rolesAnywhere.enabled`     | Enable or disable AWS integration                                                                                                                                                                                                                                                                       | `false` |
+| `global.aws.rolesAnywhere.clusterName` | Cluster name to represent this cluster in resources created on AWS                                                                                                                                                                                                                                      | `(nil)` |
+| `global.aws.rolesAnywhere.accounts`    | List of AWS account objects, with the following fields: `id`, `roleARN`, `profileARN`, `trustAnchorARN`, `trustDomain`. At least one account is required. If more than one is specified, the pod label `credentials-operator.otterize.com/create-aws-role`'s value must be the targeted AWS account ID. | `(nil)` |
+
 ## Azure Integration parameters
 | Key                                   | Description                                 | Default  |
 |---------------------------------------|---------------------------------------------|----------|

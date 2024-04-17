@@ -42,6 +42,7 @@ global:
     useSoftDelete: false
     rolesAnywhere:
       enabled: false
+      accounts:
     eksClusterNameOverride:
     roleARN:
 

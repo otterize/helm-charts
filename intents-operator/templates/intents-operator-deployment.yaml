@@ -202,10 +202,6 @@ spec:
           {{- if .Values.global.aws.rolesAnywhere.enabled }}
           - name: OTTERIZE_ENABLE_AWS_IAM_ROLESANYWHERE
             value: "true"
-          - name: OTTERIZE_ROLESANYWHERE_SPIFFE_TRUST_DOMAIN
-            value: {{ .Values.global.aws.rolesAnywhere.trustDomain | quote }}
-          - name: OTTERIZE_ROLESANYWHERE_TRUST_ANCHOR_ARN
-            value: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
           - name: OTTERIZE_ROLESANYWHERE_CLUSTER_NAME
             value: {{ .Values.global.aws.rolesAnywhere.clusterName | quote }}
           - name: AWS_SHARED_CREDENTIALS_FILE
@@ -221,6 +217,9 @@ spec:
 {{- if .Values.global.aws.rolesAnywhere.enabled }}
         - mountPath: /aws-config
           name: spiffe
+          readOnly: true
+        - name: extended-config
+          mountPath: /etc/otterize
           readOnly: true
 {{- end }}
         - mountPath: /controller_manager_config.yaml
@@ -264,9 +263,6 @@ spec:
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
-      - configMap:
-          name: intents-operator-manager-config
-        name: manager-config
       {{ if and (or .Values.operator.autoGenerateTLSUsingCredentialsOperator .Values.global.certificateProvider) (.Values.global.certificateProvider) }}
       - name: spire-tls
         secret:
@@ -297,5 +293,8 @@ spec:
             aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
             aws.spiffe.csi.cert-manager.io/enable: "true"
             spiffe.csi.cert-manager.io/fs-group: "65532"
+      - name: extended-config
+        configMap:
+          name: intents-operator-config
 {{- end }}
       - name: cert
