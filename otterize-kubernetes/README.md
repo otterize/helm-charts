@@ -42,7 +42,7 @@ These parameters are used by multiple charts, and must be kept the same for the 
 |-------------------------------------|-------------------------------------------------------------------------------------------------|----------|
 | `global.aws.enabled`                | Enable or disable AWS integration                                                               | `false`  |
 | `global.aws.eksClusterNameOverride` | EKS cluster name (overrides auto-detection)                                                     | `(none)` |
-| `global.aws.useSoftDelete`  | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
+| `global.aws.useSoftDelete`          | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
 
 ### AWS Integration - RolesAnywhere parameters
 | Key                                    | Description                                                                                                                                                                                                                                                                                             | Default |
