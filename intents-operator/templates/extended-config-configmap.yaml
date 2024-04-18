@@ -1,0 +1,29 @@
+{{- if .Values.global.aws.rolesAnywhere.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: intents-operator-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+data:
+  config.yaml: |-
+    aws:
+{{- range $account := .Values.global.aws.rolesAnywhere.accounts | required "AWS RolesAnywhere accounts must be configured if RolesAnywhere is enabled" }}
+      - account: {{ $account.id | quote | required "AWS RolesAnywhere account ID required: account.id" }}
+        roleARN: {{ $account.intentsOperator.roleARN | required "AWS RolesAnywhere role ARN required: account.roleARN" }}
+        profileARN: {{ $account.intentsOperator.profileARN | required "AWS RolesAnywhere profile ARN required: account.profileARN" }}
+        trustAnchorARN: {{ $account.trustAnchorARN | required "AWS RolesAnywhere trust anchor ARN required: account.trustAnchorARN" }}
+        trustDomain: {{ $account.trustDomain | required "AWS RolesAnywhere trust domain required: account.trustDomain" }}
+
+
+    {{ end }}
+{{- end }}
