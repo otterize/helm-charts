@@ -15,12 +15,15 @@ metadata:
     {{- end }}
     app.kubernetes.io/version: {{ .Chart.Version }}
 data:
-  aws.yaml: |-
-    {{- range $account := .Values.global.aws.rolesAnywhere.accounts | required "AWS RolesAnywhere accounts must be configured if RolesAnywhere is enabled" }}
-    - account: {{ $account.id | required "AWS RolesAnywhere account ID required: account.id" }}
-      roleARN: {{ $account.roleARN | required "AWS RolesAnywhere role ARN required: account.roleARN" }}
-      profileARN: {{ $account.profileARN | required "AWS RolesAnywhere profile ARN required: account.profileARN" }}
-      trustAnchorARN: {{ $account.trustAnchorARN | required "AWS RolesAnywhere trust anchor ARN required: account.trustAnchorARN" }}
-      trustDomain: {{ $account.trustDomain | required "AWS RolesAnywhere trust domain required: account.trustDomain" }}
-    {{- end }}
+  config.yaml: |-
+    aws:
+{{- range $account := .Values.global.aws.rolesAnywhere.accounts | required "AWS RolesAnywhere accounts must be configured if RolesAnywhere is enabled" }}
+      - account: {{ $account.id | quote | required "AWS RolesAnywhere account ID required: account.id" }}
+        roleARN: {{ $account.intentsOperator.roleARN | required "AWS RolesAnywhere role ARN required: account.roleARN" }}
+        profileARN: {{ $account.intentsOperator.profileARN | required "AWS RolesAnywhere profile ARN required: account.profileARN" }}
+        trustAnchorARN: {{ $account.trustAnchorARN | required "AWS RolesAnywhere trust anchor ARN required: account.trustAnchorARN" }}
+        trustDomain: {{ $account.trustDomain | required "AWS RolesAnywhere trust domain required: account.trustDomain" }}
+
+
+    {{ end }}
 {{- end }}

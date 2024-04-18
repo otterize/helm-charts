@@ -204,8 +204,6 @@ spec:
             value: "true"
           - name: OTTERIZE_ROLESANYWHERE_CLUSTER_NAME
             value: {{ .Values.global.aws.rolesAnywhere.clusterName | quote }}
-          - name: AWS_SHARED_CREDENTIALS_FILE
-            value: "/aws-config/credentials"
           - name: AWS_REGION
             value: {{ .Values.global.aws.region | quote }}
           {{- end }}
@@ -222,9 +220,6 @@ spec:
           mountPath: /etc/otterize
           readOnly: true
 {{- end }}
-        - mountPath: /controller_manager_config.yaml
-          name: manager-config
-          subPath: controller_manager_config.yaml
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: cert
         {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
@@ -288,9 +283,9 @@ spec:
           driver: spiffe.csi.cert-manager.io
           readOnly: true
           volumeAttributes:
-            aws.spiffe.csi.cert-manager.io/trust-profile: {{ .Values.global.aws.rolesAnywhere.intentsOperatorTrustProfileARN | quote }}
-            aws.spiffe.csi.cert-manager.io/trust-anchor: {{ .Values.global.aws.rolesAnywhere.trustAnchorARN | quote }}
-            aws.spiffe.csi.cert-manager.io/role: {{ .Values.aws.roleARN | quote }}
+            aws.spiffe.csi.cert-manager.io/trust-profile: {{ (index .Values.global.aws.rolesAnywhere.accounts 0).intentsOperator.profileARN | quote }}
+            aws.spiffe.csi.cert-manager.io/trust-anchor: {{ (index .Values.global.aws.rolesAnywhere.accounts 0).trustAnchorARN | quote }}
+            aws.spiffe.csi.cert-manager.io/role: {{ (index .Values.global.aws.rolesAnywhere.accounts 0).intentsOperator.roleARN | quote }}
             aws.spiffe.csi.cert-manager.io/enable: "true"
             spiffe.csi.cert-manager.io/fs-group: "65532"
       - name: extended-config
