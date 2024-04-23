@@ -4,7 +4,6 @@ metadata:
   labels:
     app.kubernetes.io/component: intents-operator
     app.kubernetes.io/part-of: otterize
-    app.kubernetes.io/component: intents-operator
   name: otterize-validating-webhook-configuration
 webhooks:
 - admissionReviewVersions:
