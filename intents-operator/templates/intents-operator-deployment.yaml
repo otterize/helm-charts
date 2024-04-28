@@ -212,7 +212,7 @@ spec:
             value: "true"
           {{- end }}
           {{- if .Values.operator.extraEnvVars -}}
-          {{- toYaml .Values.operator.extraEnvVars | nindent 12 -}}
+          {{- toYaml .Values.operator.extraEnvVars | nindent 10 -}}
           {{- end }}
         volumeMounts:
 {{- if .Values.global.aws.rolesAnywhere.enabled }}
