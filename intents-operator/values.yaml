@@ -33,6 +33,7 @@ operator:
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
   enableEgressNetworkPolicyCreation: false
+  extraEnvVars:
 
   resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
