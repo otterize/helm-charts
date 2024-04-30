@@ -211,6 +211,9 @@ spec:
           - name: OTTERIZE_USE_IMAGE_NAME_FOR_SERVICE_ID_FOR_JOBS
             value: "true"
           {{- end }}
+          {{- if .Values.operator.extraEnvVars -}}
+          {{- toYaml .Values.operator.extraEnvVars | nindent 10 -}}
+          {{- end }}
         volumeMounts:
 {{- if .Values.global.aws.rolesAnywhere.enabled }}
         - mountPath: /aws-config
