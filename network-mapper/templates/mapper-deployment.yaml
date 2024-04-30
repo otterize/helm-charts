@@ -38,9 +38,7 @@ spec:
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 65532
-        runAsGroup: 65532
+        {{- toYaml .Values.mapper.podSecurityContext | nindent 10 }}
       {{ if .Values.mapper.pullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.mapper.pullSecrets }}
@@ -197,10 +195,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 20
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - "ALL"
+            {{- toYaml .Values.mapper.containerSecurityContext | nindent 12 }}
       serviceAccountName: {{ template "otterize.mapper.fullName" . }}
       volumes:
         {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}

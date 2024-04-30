@@ -2,6 +2,19 @@ operator:
   repository: otterize
   image: intents-operator
   pullPolicy:
+  podSecurityContext:
+    fsGroup: 65532
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65532
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    runAsGroup: 65532
+    runAsUser: 65532
+    runAsNonRoot: true
+    capabilities:
+      drop:
+        - "ALL"
 
   autoGenerateTLSUsingCredentialsOperator: false
 
