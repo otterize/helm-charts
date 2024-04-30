@@ -3,9 +3,9 @@
 ## Mapper parameters
 | Key                            | Description                                                                                     | Default          |
 |--------------------------------|-------------------------------------------------------------------------------------------------|------------------|
-| `mapper.image.repository`      | Mapper image repository.                                                                        | `otterize`       |
-| `mapper.image.image`           | Mapper image.                                                                                   | `network-mapper` |
-| `mapper.image.tag`             | Mapper image tag.                                                                               | `latest`         |
+| `mapper.repository`            | Mapper image repository.                                                                        | `otterize`       |
+| `mapper.image`                 | Mapper image.                                                                                   | `network-mapper` |
+| `mapper.tag`                   | Mapper image tag.                                                                               | (pinned to latest version as of this Helm chart version's publish)         |
 | `mapper.pullPolicy`            | Mapper pull policy.                                                                             | `(none)`         |
 | `mapper.pullSecrets`           | Mapper pull secrets.                                                                            | `(none)`         |
 | `mapper.resources`             | Resources override.                                                                             | `(none)`         |
@@ -25,41 +25,41 @@
 | `opentelemetry.metricName` | The name of the OpenTelemetry metric name exported for the Grafana Tempo-style metric.                                                                                                                          | `traces_service_graph_request_total` |
 
 ## Sniffer parameters
-| Key                        | Description                | Default                  |
-|----------------------------|----------------------------|--------------------------|
-| `sniffer.enable`           | Enable sniffer deployment. | `true`                   |
-| `sniffer.image.repository` | Sniffer image repository.  | `otterize`               |
-| `sniffer.image.image`      | Sniffer image.             | `network-mapper-sniffer` |
-| `sniffer.image.tag`        | Sniffer image tag.         | `latest`                 |
-| `sniffer.pullPolicy`       | Sniffer pull policy.       | `(none)`                 |
-| `sniffer.pullSecrets`      | Sniffer pull secrets.      | `(none)`                 |
-| `sniffer.resources`        | Resources override.        | `(none)`                 |   
-| `sniffer.resources`        | Resources override.        | `(none)`                 |
-| `sniffer.tolerations`      | Tolerations override.      | `(none)`                 |   
-| `sniffer.priorityClassName`| Set priorityClassName.     | `(none)`                 |
+| Key                         | Description                | Default                  |
+|-----------------------------|----------------------------|--------------------------|
+| `sniffer.enable`            | Enable sniffer deployment. | `true`                   |
+| `sniffer.repository`        | Sniffer image repository.  | `otterize`               |
+| `sniffer.image`             | Sniffer image.             | `network-mapper-sniffer` |
+| `sniffer.tag`               | Sniffer image tag.         | (pinned to latest version as of this Helm chart version's publish)                 |
+| `sniffer.pullPolicy`        | Sniffer pull policy.       | `(none)`                 |
+| `sniffer.pullSecrets`       | Sniffer pull secrets.      | `(none)`                 |
+| `sniffer.resources`         | Resources override.        | `(none)`                 |   
+| `sniffer.resources`         | Resources override.        | `(none)`                 |
+| `sniffer.tolerations`       | Tolerations override.      | `(none)`                 |   
+| `sniffer.priorityClassName` | Set priorityClassName.     | `(none)`                 |
 
 ## Kafka watcher parameters
-| Key                             | Description                                                 | Default                        |
-|---------------------------------|-------------------------------------------------------------|--------------------------------|
-| `kafkawatcher.enable`           | Enable Kafka watcher deployment (beta).                     | `false`                        |
-| `kafkawatcher.image.repository` | Kafka watcher image repository.                             | `otterize`                     |
-| `kafkawatcher.image.image`      | Kafka watcher image.                                        | `network-mapper-kafka-watcher` |
-| `kafkawatcher.image.tag`        | Kafka watcher image tag.                                    | `latest`                       |
-| `kafkawatcher.pullPolicy`       | Kafka watcher pull policy.                                  | `(none)`                       |
-| `kafkawatcher.pullSecrets`      | Kafka watcher pull secrets.                                 | `(none)`                       |
-| `kafkawatcher.resources`        | Resources override.                                         | `(none)`                       |
-| `kafkawatcher.kafkaServers`     | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                       |
+| Key                         | Description                                                 | Default                        |
+|-----------------------------|-------------------------------------------------------------|--------------------------------|
+| `kafkawatcher.enable`       | Enable Kafka watcher deployment (beta).                     | `false`                        |
+| `kafkawatcher.repository`   | Kafka watcher image repository.                             | `otterize`                     |
+| `kafkawatcher.image`        | Kafka watcher image.                                        | `network-mapper-kafka-watcher` |
+| `kafkawatcher.tag`          | Kafka watcher image tag.                                    | (pinned to latest version as of this Helm chart version's publish)                       |
+| `kafkawatcher.pullPolicy`   | Kafka watcher pull policy.                                  | `(none)`                       |
+| `kafkawatcher.pullSecrets`  | Kafka watcher pull secrets.                                 | `(none)`                       |
+| `kafkawatcher.resources`    | Resources override.                                         | `(none)`                       |
+| `kafkawatcher.kafkaServers` | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                       |
 
 ## Istio watcher parameters
-| Key                             | Description                             | Default                        |
-|---------------------------------|-----------------------------------------|--------------------------------|
-| `istiowatcher.enable`           | Enable Istio watcher deployment (beta). | `false`                        |
-| `istiowatcher.image.repository` | Istio watcher image repository.         | `otterize`                     |
-| `istiowatcher.image.image`      | Istio watcher image.                    | `network-mapper-istio-watcher` |
-| `istiowatcher.image.tag`        | Istio watcher image tag.                | `latest`                       |
-| `istiowatcher.pullPolicy`       | Istio watcher pull policy.              | `(none)`                       |
-| `istiowatcher.pullSecrets`      | Istio watcher pull secrets.             | `(none)`                       |
-| `istiowatcher.resources`        | Resources override.                     | `(none)`                       |
+| Key                        | Description                             | Default                        |
+|----------------------------|-----------------------------------------|--------------------------------|
+| `istiowatcher.enable`      | Enable Istio watcher deployment (beta). | `false`                        |
+| `istiowatcher.repository`  | Istio watcher image repository.         | `otterize`                     |
+| `istiowatcher.image`       | Istio watcher image.                    | `network-mapper-istio-watcher` |
+| `istiowatcher.tag`         | Istio watcher image tag.                | (pinned to latest version as of this Helm chart version's publish)                       |
+| `istiowatcher.pullPolicy`  | Istio watcher pull policy.              | `(none)`                       |
+| `istiowatcher.pullSecrets` | Istio watcher pull secrets.             | `(none)`                       |
+| `istiowatcher.resources`   | Resources override.                     | `(none)`                       |
 
 ## Cloud parameters
 | Key                                                        | Description                                                                                                                                                                                  | Default  |

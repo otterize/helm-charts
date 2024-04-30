@@ -32,12 +32,12 @@
 
 ## Operator parameters
 
-| Key                         | Description                | Default                |
-|-----------------------------|----------------------------|------------------------|
-| `operator.image.repository` | Operator image repository. | `otterize`             |
-| `operator.image.image`      | Operator image.            | `credentials-operator` |
-| `operator.image.tag`        | Operator image tag.        | `latest`               |
-| `operator.pullPolicy`       | Operator pull policy.      | `(none)`               |
+| Key                   | Description                | Default                |
+|-----------------------|----------------------------|------------------------|
+| `operator.repository` | Operator image repository. | `otterize`             |
+| `operator.image`      | Operator image.            | `credentials-operator` |
+| `operator.tag`        | Operator image tag.        | (pinned to latest version as of this Helm chart version's publish)               |
+| `operator.pullPolicy` | Operator pull policy.      | `(none)`               |
 
 ## Cloud parameters
 | Key                                                        | Description                                                                                                                                                                                  | Default  |
