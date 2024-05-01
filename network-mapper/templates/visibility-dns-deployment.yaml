@@ -13,8 +13,10 @@ spec:
       labels:
         app: {{ .Release.Name }}-dns
     spec:
+    {{- if .Values.visibilitydns.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.visibilitydns.podSecurityContext | nindent 10 }}
+    {{- end }}
       imagePullSecrets:
         {{- toYaml .Values.visibilitydns.pullSecrets | nindent 10 }}
       volumes:
@@ -31,8 +33,10 @@ spec:
         - name: coredns
           image: "{{ .Values.visibilitydns.repository }}/{{.Values.visibilitydns.image }}:{{ .Values.visibilitydns.tag }}"
           imagePullPolicy: {{ .Values.visibilitydns.pullPolicy }}
+          {{- if .Values.visibilitydns.containerSecurityContext }}
           securityContext:
             {{- toYaml .Values.visibilitydns.containerSecurityContext | nindent 12 }}
+          {{- end }}
           args:
             - "-conf"
             - "/etc/coredns/Corefile"
