@@ -47,11 +47,10 @@ spec:
         azure.workload.identity/use: "true"
         {{ end }}
     spec:
+    {{- if .Values.operator.podSecurityContext }}
       securityContext:
-        fsGroup: 65532
-        runAsGroup: 65532
-        runAsNonRoot: true
-        runAsUser: 65532
+        {{- toYaml .Values.operator.podSecurityContext | nindent 8 }}
+    {{- end }}
       containers:
       - command:
         - /manager
@@ -81,8 +80,10 @@ spec:
           periodSeconds: 10
         resources:
           {{- toYaml .Values.operator.resources | nindent 10 }}
+        {{- if .Values.operator.containerSecurityContext }}
         securityContext:
-          allowPrivilegeEscalation: false
+          {{- toYaml .Values.operator.containerSecurityContext | nindent 10 }}
+        {{- end }}
         env:
           - name: POD_NAME
             valueFrom:
@@ -253,11 +254,10 @@ spec:
           requests:
             cpu: 5m
             memory: 64Mi
+        {{- if .Values.operator.containerSecurityContext }}
         securityContext:
-          allowPrivilegeEscalation: false
-          runAsGroup: 65532
-          runAsUser: 65532
-          runAsNonRoot: true
+          {{- toYaml .Values.operator.containerSecurityContext | nindent 10 }}
+        {{- end }}
       serviceAccountName: intents-operator-controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
