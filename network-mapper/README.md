@@ -1,17 +1,19 @@
 # Parameters
 
 ## Mapper parameters
-| Key                            | Description                                                                                     | Default          |
-|--------------------------------|-------------------------------------------------------------------------------------------------|------------------|
-| `mapper.image.repository`      | Mapper image repository.                                                                        | `otterize`       |
-| `mapper.image.image`           | Mapper image.                                                                                   | `network-mapper` |
-| `mapper.image.tag`             | Mapper image tag.                                                                               | `latest`         |
-| `mapper.pullPolicy`            | Mapper pull policy.                                                                             | `(none)`         |
-| `mapper.pullSecrets`           | Mapper pull secrets.                                                                            | `(none)`         |
-| `mapper.resources`             | Resources override.                                                                             | `(none)`         |
-| `mapper.uploadIntervalSeconds` | Interval for uploading data to cloud                                                            | `60`             |
-| `mapper.excludeNamespaces`     | Namespaces excluded from reporting                                                              | `[istio-system]` |
-| `mapper.extraEnvVars`          | List of extra env vars for the mapper, formatted as in the Kubernetes PodSpec (name and value). | `(none)`         |
+| Key                               | Description                                                                                     | Default                                                            |
+|-----------------------------------|-------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| `mapper.repository`               | Mapper image repository.                                                                        | `otterize`                                                         |
+| `mapper.image`                    | Mapper image.                                                                                   | `network-mapper`                                                   |
+| `mapper.tag`                      | Mapper image tag.                                                                               | (pinned to latest version as of this Helm chart version's publish) |
+| `mapper.containerSecurityContext` | Security context for the containers.                                                            | `(consult values.yaml)`                                            |
+| `mapper.podSecurityContext`       | Security context for the pod.                                                                   | `(consult values.yaml)`                                            |
+| `mapper.pullPolicy`               | Mapper pull policy.                                                                             | `(none)`                                                           |
+| `mapper.pullSecrets`              | Mapper pull secrets.                                                                            | `(none)`                                                           |
+| `mapper.resources`                | Resources override.                                                                             | `(none)`                                                           |
+| `mapper.uploadIntervalSeconds`    | Interval for uploading data to cloud                                                            | `60`                                                               |
+| `mapper.excludeNamespaces`        | Namespaces excluded from reporting                                                              | `[istio-system]`                                                   |
+| `mapper.extraEnvVars`             | List of extra env vars for the mapper, formatted as in the Kubernetes PodSpec (name and value). | `(none)`                                                           |
 
 ## Internet-facing traffic reporting
 | Key                                    | Description                                                                                                                 | Default |
@@ -25,41 +27,61 @@
 | `opentelemetry.metricName` | The name of the OpenTelemetry metric name exported for the Grafana Tempo-style metric.                                                                                                                          | `traces_service_graph_request_total` |
 
 ## Sniffer parameters
-| Key                        | Description                | Default                  |
-|----------------------------|----------------------------|--------------------------|
-| `sniffer.enable`           | Enable sniffer deployment. | `true`                   |
-| `sniffer.image.repository` | Sniffer image repository.  | `otterize`               |
-| `sniffer.image.image`      | Sniffer image.             | `network-mapper-sniffer` |
-| `sniffer.image.tag`        | Sniffer image tag.         | `latest`                 |
-| `sniffer.pullPolicy`       | Sniffer pull policy.       | `(none)`                 |
-| `sniffer.pullSecrets`      | Sniffer pull secrets.      | `(none)`                 |
-| `sniffer.resources`        | Resources override.        | `(none)`                 |   
-| `sniffer.resources`        | Resources override.        | `(none)`                 |
-| `sniffer.tolerations`      | Tolerations override.      | `(none)`                 |   
-| `sniffer.priorityClassName`| Set priorityClassName.     | `(none)`                 |
+| Key                                | Description                          | Default                                                            |
+|------------------------------------|--------------------------------------|--------------------------------------------------------------------|
+| `sniffer.enable`                   | Enable sniffer deployment.           | `true`                                                             |
+| `sniffer.repository`               | Sniffer image repository.            | `otterize`                                                         |
+| `sniffer.image`                    | Sniffer image.                       | `network-mapper-sniffer`                                           |
+| `sniffer.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)`                                            |
+| `sniffer.podSecurityContext`       | Security context for the pods.       | `(consult values.yaml)`                                            |
+| `sniffer.tag`                      | Sniffer image tag.                   | (pinned to latest version as of this Helm chart version's publish) |
+| `sniffer.pullPolicy`               | Sniffer pull policy.                 | `(none)`                                                           |
+| `sniffer.pullSecrets`              | Sniffer pull secrets.                | `(none)`                                                           |
+| `sniffer.resources`                | Resources override.                  | `(none)`                                                           |   
+| `sniffer.resources`                | Resources override.                  | `(none)`                                                           |
+| `sniffer.tolerations`              | Tolerations override.                | `(none)`                                                           |   
+| `sniffer.priorityClassName`        | Set priorityClassName.               | `(none)`                                                           |
 
 ## Kafka watcher parameters
-| Key                             | Description                                                 | Default                        |
-|---------------------------------|-------------------------------------------------------------|--------------------------------|
-| `kafkawatcher.enable`           | Enable Kafka watcher deployment (beta).                     | `false`                        |
-| `kafkawatcher.image.repository` | Kafka watcher image repository.                             | `otterize`                     |
-| `kafkawatcher.image.image`      | Kafka watcher image.                                        | `network-mapper-kafka-watcher` |
-| `kafkawatcher.image.tag`        | Kafka watcher image tag.                                    | `latest`                       |
-| `kafkawatcher.pullPolicy`       | Kafka watcher pull policy.                                  | `(none)`                       |
-| `kafkawatcher.pullSecrets`      | Kafka watcher pull secrets.                                 | `(none)`                       |
-| `kafkawatcher.resources`        | Resources override.                                         | `(none)`                       |
-| `kafkawatcher.kafkaServers`     | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                       |
+| Key                                     | Description                                                 | Default                                                            |
+|-----------------------------------------|-------------------------------------------------------------|--------------------------------------------------------------------|
+| `kafkawatcher.enable`                   | Enable Kafka watcher deployment (beta).                     | `false`                                                            |
+| `kafkawatcher.repository`               | Kafka watcher image repository.                             | `otterize`                                                         |
+| `kafkawatcher.image`                    | Kafka watcher image.                                        | `network-mapper-kafka-watcher`                                     |
+| `kafkawatcher.containerSecurityContext` | Security context for the containers.                        | `(consult values.yaml)`                                            |
+| `kafkawatcher.podSecurityContext`       | Security context for the pod.                               | `(consult values.yaml)`                                            |
+| `kafkawatcher.tag`                      | Kafka watcher image tag.                                    | (pinned to latest version as of this Helm chart version's publish) |
+| `kafkawatcher.pullPolicy`               | Kafka watcher pull policy.                                  | `(none)`                                                           |
+| `kafkawatcher.pullSecrets`              | Kafka watcher pull secrets.                                 | `(none)`                                                           |
+| `kafkawatcher.resources`                | Resources override.                                         | `(none)`                                                           |
+| `kafkawatcher.kafkaServers`             | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                                                           |
 
-## Istio watcher parameters
-| Key                             | Description                             | Default                        |
-|---------------------------------|-----------------------------------------|--------------------------------|
-| `istiowatcher.enable`           | Enable Istio watcher deployment (beta). | `false`                        |
-| `istiowatcher.image.repository` | Istio watcher image repository.         | `otterize`                     |
-| `istiowatcher.image.image`      | Istio watcher image.                    | `network-mapper-istio-watcher` |
-| `istiowatcher.image.tag`        | Istio watcher image tag.                | `latest`                       |
-| `istiowatcher.pullPolicy`       | Istio watcher pull policy.              | `(none)`                       |
-| `istiowatcher.pullSecrets`      | Istio watcher pull secrets.             | `(none)`                       |
-| `istiowatcher.resources`        | Resources override.                     | `(none)`                       |
+## IAMLive parameters
+Deployed only when `aws.visibility.enabled` is set to `true`.
+
+| Key                                | Description                          | Default                                                            |
+|------------------------------------|--------------------------------------|--------------------------------------------------------------------|
+| `iamlive.repository`               | IAMLive image repository.            | `otterize`                                                         |
+| `iamlive.image`                    | IAMLive image.                       | `network-mapper-iamlive`                                           |
+| `iamlive.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)`                                            |
+| `iamlive.podSecurityContext`       | Security context for the pod.        | `(consult values.yaml)`                                            |
+| `iamlive.tag`                      | IAMLive image tag.                   | (pinned to latest version as of this Helm chart version's publish) |
+| `iamlive.pullPolicy`               | IAMLive pull policy.                 | `(none)`                                                           |
+| `iamlive.pullSecrets`              | IAMLive pull secrets.                | `(none)`                                                           |
+
+## DNS visibility parameters
+Deployed only when `aws.visibility.enabled` is set to `true`.
+
+| Key                                      | Description                          | Default                 |
+|------------------------------------------|--------------------------------------|-------------------------|
+| `visibilitydns.repository`               | Image repository.                    | `coredns`               |
+| `visibilitydns.image`                    | Image.                               | `coredns`               |
+| `visibilitydns.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)` |
+| `visibilitydns.podSecurityContext`       | Security context for the pod.        | `(consult values.yaml)` |
+| `visibilitydns.tag`                      | Image tag.                           | `latest`                |
+| `visibilitydns.pullPolicy`               | Pull policy.                         | `(none)`                |
+| `visibilitydns.pullSecrets`              | Pull secrets.                        | `(none)`                |
+
 
 ## Cloud parameters
 | Key                                                        | Description                                                                                                                                                                                  | Default  |

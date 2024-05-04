@@ -32,22 +32,24 @@
 
 ## Operator parameters
 
-| Key                         | Description                | Default                |
-|-----------------------------|----------------------------|------------------------|
-| `operator.image.repository` | Operator image repository. | `otterize`             |
-| `operator.image.image`      | Operator image.            | `credentials-operator` |
-| `operator.image.tag`        | Operator image tag.        | `latest`               |
-| `operator.pullPolicy`       | Operator pull policy.      | `(none)`               |
+| Key                                 | Description                          | Default                                                            |
+|-------------------------------------|--------------------------------------|--------------------------------------------------------------------|
+| `operator.repository`               | Operator image repository.           | `otterize`                                                         |
+| `operator.image`                    | Operator image.                      | `credentials-operator`                                             |
+| `operator.tag`                      | Operator image tag.                  | (pinned to latest version as of this Helm chart version's publish) |
+| `operator.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)`                                            |
+| `operator.podSecurityContext`       | Security context for the pod.        | `(consult values.yaml)`                                            |
+| `operator.pullPolicy`               | Operator pull policy.                | `(none)`                                                           |
 
 ## Cloud parameters
-| Key                                                        | Description                                                                                                                                                                                  | Default  |
-|------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| `global.otterizeCloud.credentials.clientId`                | Client ID for connecting to Otterize Cloud.                                                                                                                                                  | `(none)` |
-| `global.otterizeCloud.credentials.clientSecret`            | Client secret for connecting to Otterize Cloud.                                                                                                                                              | `(none)` |
-| `global.otterizeCloud.credentials.secretKeyRef.secretName` | If specified, the name of a pre-created Kubernetes Secret to be used instead of creating a secret with the value of clientSecret.                                                            | `(none)` |
-| `global.otterizeCloud.credentials.secretKeyRef.secretKey`  | If specified, the key for the clientSecret in a pre-created Kubernetes Secret to be used instead of creating a secret with the value of clientSecret.                                        | `(none)` |
-| `global.otterizeCloud.apiAddress`                          | Overrides Otterize Cloud default API address.                                                                                                                                                | `(none)` |
-| `global.otterizeCloud.apiExtraCAPEMSecret`                 | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
+| Key                                                              | Description                                                                                                                                                                                  | Default  |
+|------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| `global.otterizeCloud.credentials.clientId`                      | Client ID for connecting to Otterize Cloud.                                                                                                                                                  | `(none)` |
+| `global.otterizeCloud.credentials.clientSecret`                  | Client secret for connecting to Otterize Cloud.                                                                                                                                              | `(none)` |
+| `global.otterizeCloud.credentials.clientSecretKeyRef.secretName` | If specified, the name of a pre-created Kubernetes Secret to be used instead of creating a secret with the value of clientSecret.                                                            | `(none)` |
+| `global.otterizeCloud.credentials.clientSecretKeyRef.secretKey`  | If specified, the key for the clientSecret in a pre-created Kubernetes Secret to be used instead of creating a secret with the value of clientSecret.                                        | `(none)` |
+| `global.otterizeCloud.apiAddress`                                | Overrides Otterize Cloud default API address.                                                                                                                                                | `(none)` |
+| `global.otterizeCloud.apiExtraCAPEMSecret`                       | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## cert-manager parameters
 | Key                            | Description                                                                                                                       | Default |
