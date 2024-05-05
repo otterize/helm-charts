@@ -10,19 +10,6 @@ mapper:
   repository: otterize
   image: network-mapper
   pullPolicy:
-  podSecurityContext:
-    fsGroup: 65532
-    runAsGroup: 65532
-    runAsNonRoot: true
-    runAsUser: 65532
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    runAsGroup: 65532
-    runAsUser: 65532
-    runAsNonRoot: true
-    capabilities:
-      drop:
-        - "ALL"
   pullSecrets:
   resources: { }
   extraEnvVars:
@@ -45,16 +32,6 @@ sniffer:
   repository: otterize
   image: network-mapper-sniffer
   pullPolicy:
-  podSecurityContext:
-    runAsNonRoot: false
-  containerSecurityContext:
-    privileged: false
-    allowPrivilegeEscalation: false
-    readOnlyRootFilesystem: true
-    capabilities:
-      add:
-        - SYS_PTRACE
-        - NET_RAW
   pullSecrets:
   tolerations: []
   #The options to add tolerations
@@ -78,14 +55,6 @@ kafkawatcher:
   repository: otterize
   image: network-mapper-kafka-watcher
   pullPolicy:
-  podSecurityContext:
-    runAsNonRoot: true
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    runAsNonRoot: true
-    capabilities:
-      drop:
-        - "ALL"
   pullSecrets:
   resources: { }
   # Kafka servers to watch, specified as `pod.namespace` items.
@@ -116,23 +85,6 @@ iamlive:
   image: network-mapper-iamlive
   tag:
   pullPolicy:
-  podSecurityContext:
-    runAsNonRoot: true
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    runAsNonRoot: true
-    capabilities:
-      drop:
-        - "ALL"
-  pullSecrets:
-
-visibilitydns:
-  repository: coredns
-  image: coredns
-  tag: latest
-  pullPolicy:
-  podSecurityContext:
-  containerSecurityContext:
   pullSecrets:
 
 aws:

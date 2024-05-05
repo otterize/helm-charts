@@ -39,7 +39,9 @@ spec:
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       securityContext:
-        {{- toYaml .Values.kafkawatcher.containerSecurityContext | nindent 10 }}
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
       {{ if .Values.kafkawatcher.pullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.kafkawatcher.pullSecrets }}
@@ -123,7 +125,12 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 20
           securityContext:
-            {{- toYaml .Values.kafkawatcher.containerSecurityContext | nindent 10 }}
+            privileged: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
           volumeMounts:
             - mountPath: /etc/otterize
               name: component-config

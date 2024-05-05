@@ -15,10 +15,6 @@ spec:
       labels:
         app: {{ .Release.Name }}-iamlive
     spec:
-    {{- if .Values.iamlive.podSecurityContext }}
-      securityContext:
-        {{- toYaml .Values.iamlive.podSecurityContext | nindent 8 }}
-    {{- end }}
       serviceAccountName: otterize-network-mapper
       {{ if .Values.iamlive.pullPolicy }}
       imagePullSecrets:
@@ -37,8 +33,4 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          {{- if .Values.iamlive.containerSecurityContext }}
-          securityContext:
-            {{- toYaml .Values.iamlive.containerSecurityContext | nindent 12 }}
-          {{- end }}
 {{ end }}
