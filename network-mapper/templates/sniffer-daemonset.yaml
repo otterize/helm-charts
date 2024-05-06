@@ -37,6 +37,10 @@ spec:
         {{- end }}
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
+    {{- if .Values.sniffer.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.sniffer.podSecurityContext | nindent 8 }}
+    {{- end }}
       {{ if .Values.sniffer.pullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.sniffer.pullSecrets }}
@@ -113,14 +117,10 @@ spec:
             port: 9090
           initialDelaySeconds: 30
           periodSeconds: 20
+        {{- if .Values.sniffer.containerSecurityContext }}
         securityContext:
-          privileged: false
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            add:
-              - SYS_PTRACE
-              - NET_RAW
+          {{- toYaml .Values.sniffer.containerSecurityContext | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - mountPath: /hostproc
             name: proc
