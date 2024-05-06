@@ -35,7 +35,9 @@ jobs:
         run: |-
           helm dep up ./otterize-kubernetes
           # schema validation using kubectl dry run
+          kubectl create namespace otterize-system # required for dry-run
           helm template otterize ./otterize-kubernetes -n otterize-system --set global.telemetry.enabled=false | kubectl apply --dry-run=server -f -
+          kubectl delete namespace otterize-system # clean up
           
           # installation
           helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace --set global.telemetry.enabled=false
