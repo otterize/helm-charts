@@ -158,9 +158,9 @@ spec:
             - name: OTTERIZE_CREATE_WEBHOOK_CERTIFICATE
               value: "true"
             {{- end }}
-            {{- if .Values.dnsClientIntentsUpdateEnabled }}
+            {{- if eq false .Values.dnsClientIntentsUpdateEnabled }}
             - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
-              value: "true"
+              value: "false"
             {{- end }}
             {{- if .Values.enableIstioCollection }}
             - name: OTTERIZE_ENABLE_ISTIO_COLLECTION
