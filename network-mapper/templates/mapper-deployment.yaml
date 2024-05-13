@@ -154,9 +154,9 @@ spec:
             - name: OTTERIZE_ENABLE_AWS_VISIBILITY_WEBHOOK
               value: "true"
             {{- end }}
-            {{- if .Values.webhook.generateSelfSignedCert }}
+            {{- if eq false .Values.webhook.generateSelfSignedCert }}
             - name: OTTERIZE_CREATE_WEBHOOK_CERTIFICATE
-              value: "true"
+              value: "false"
             {{- end }}
             {{- if .Values.dnsClientIntentsUpdateEnabled }}
             - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
