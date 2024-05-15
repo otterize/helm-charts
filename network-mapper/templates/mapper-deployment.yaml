@@ -161,6 +161,9 @@ spec:
             {{- if eq false .Values.dnsClientIntentsUpdateEnabled }}
             - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
               value: "false"
+            {{- else }}
+            - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
+              value: "true"
             {{- end }}
             {{- if .Values.enableIstioCollection }}
             - name: OTTERIZE_ENABLE_ISTIO_COLLECTION
