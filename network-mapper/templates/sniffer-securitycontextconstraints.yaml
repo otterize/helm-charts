@@ -1,0 +1,46 @@
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: 'otterize-network-sniffer-scc allows the Otterize network sniffers to capture traffic on their host nodes,
+    as well as read /proc in order to match traffic with pods. For this, allowHostDirVolumePlugin, allowHostNetwork, allowHostPID, and the capabilities SYS_PTRACE and NET_RAW are required.'
+    release.openshift.io/create-only: "true"
+  name: otterize-network-sniffer-scc
+allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: false
+allowPrivilegeEscalation: false
+allowPrivilegedContainer: false
+allowedCapabilities:
+  - SYS_PTRACE
+  - NET_RAW
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: null
+readOnlyRootFilesystem: true
+requiredDropCapabilities:
+  - KILL
+  - MKNOD
+  - SETUID
+  - SETGID
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users: []
+volumes:
+  - configMap
+  - csi
+  - downwardAPI
+  - emptyDir
+  - ephemeral
+  - hostPath
+  - persistentVolumeClaim
+  - projected
+  - secret

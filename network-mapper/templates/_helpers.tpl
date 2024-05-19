@@ -7,6 +7,12 @@ otterize-kafka-watcher
 {{- define "otterize.mapper.fullName" -}}
 otterize-network-mapper
 {{- end -}}
+{{- define "otterize.iamlive.fullName" -}}
+otterize-iamlive
+{{- end -}}
+{{- define "otterize.visibilitydns.fullName" -}}
+otterize-visibility-dns
+{{- end -}}
 {{- define "otterize.mapper.configMapName" -}}
 otterize-network-mapper-store
 {{- end -}}

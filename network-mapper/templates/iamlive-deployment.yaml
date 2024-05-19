@@ -2,24 +2,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-iamlive
+  name: {{ template "otterize.iamlive.fullName" . }}
   labels:
-    app: {{ .Release.Name }}-iamlive
+    {{- with .Values.global.commonLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-iamlive
+      app: {{ template "otterize.iamlive.fullName" . }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-iamlive
+        {{- with .Values.global.commonLabels }}
+          {{- toYaml . | nindent 4 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+        app: {{ template "otterize.iamlive.fullName" . }}
+      annotations:
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 4 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
     {{- if .Values.iamlive.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.iamlive.podSecurityContext | nindent 8 }}
     {{- end }}
-      serviceAccountName: otterize-network-mapper
+      serviceAccountName: {{ template "otterize.iamlive.fullName" . }}
       {{ if .Values.iamlive.pullPolicy }}
       imagePullSecrets:
         - name: {{ .Values.iamlive.pullPolicy }}
