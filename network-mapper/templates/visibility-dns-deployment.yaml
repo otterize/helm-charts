@@ -2,17 +2,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-dns
+  name: {{ template "otterize.visibilitydns.fullName" .}}
+  labels:
+    {{- with .Values.global.commonLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-dns
+      app: {{ template "otterize.visibilitydns.fullName" .}}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-dns
+        {{- with .Values.global.commonLabels }}
+          {{- toYaml . | nindent 4 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+        app: {{ template "otterize.visibilitydns.fullName" .}}
+      annotations:
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 4 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
+      serviceAccountName: {{ template "otterize.visibilitydns.fullName" .}}
     {{- if .Values.visibilitydns.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.visibilitydns.podSecurityContext | nindent 10 }}

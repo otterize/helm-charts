@@ -106,6 +106,8 @@ global:
   serviceNameOverrideAnnotationName: intents.otterize.com/service-name
   experimentalUseDockerImageAsServiceNameForJobs: false
 
+  openshift: false
+
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy
     tag: v0.11.0

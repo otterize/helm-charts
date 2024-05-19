@@ -37,6 +37,7 @@ spec:
         {{- end }}
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
+      serviceAccountName: {{ template "otterize.sniffer.fullName" . }}
     {{- if .Values.sniffer.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.sniffer.podSecurityContext | nindent 8 }}
