@@ -63,7 +63,8 @@ metadata:
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
-    resourceNames: ["otterize-network-sniffer-scc"]
+    resourceNames:
+      - {{ template "otterize.sniffer.securityContextConstraintsName" . }}
     verbs: ["use"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1

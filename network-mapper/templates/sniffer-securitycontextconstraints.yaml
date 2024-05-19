@@ -1,3 +1,4 @@
+{{- if .Values.global.openshift }}
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
@@ -5,7 +6,7 @@ metadata:
     kubernetes.io/description: 'otterize-network-sniffer-scc allows the Otterize network sniffers to capture traffic on their host nodes,
     as well as read /proc in order to match traffic with pods. For this, allowHostDirVolumePlugin, allowHostNetwork, allowHostPID, and the capabilities SYS_PTRACE and NET_RAW are required.'
     release.openshift.io/create-only: "true"
-  name: otterize-network-sniffer-scc
+  name: {{ template "otterize.sniffer.securityContextConstraintsName" . }}
 allowHostDirVolumePlugin: true
 allowHostIPC: false
 allowHostNetwork: true
@@ -44,3 +45,4 @@ volumes:
   - persistentVolumeClaim
   - projected
   - secret
+{{- end }}
