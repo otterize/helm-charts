@@ -37,10 +37,10 @@ spec:
         {{- end }}
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
+      {{- if .Values.mapper.podSecurityContext }}
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 65532
-        runAsGroup: 65532
+        {{- toYaml .Values.mapper.podSecurityContext | nindent 8 }}
+      {{- end }}
       {{ if .Values.mapper.pullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.mapper.pullSecrets }}
@@ -158,7 +158,10 @@ spec:
             - name: OTTERIZE_CREATE_WEBHOOK_CERTIFICATE
               value: "true"
             {{- end }}
-            {{- if .Values.dnsClientIntentsUpdateEnabled }}
+            {{- if eq false .Values.dnsClientIntentsUpdateEnabled }}
+            - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
+              value: "false"
+            {{- else }}
             - name: OTTERIZE_DNS_CLIENT_INTENTS_UPDATE_ENABLED
               value: "true"
             {{- end }}
@@ -196,11 +199,10 @@ spec:
               port: 9090
             initialDelaySeconds: 5
             periodSeconds: 20
+          {{- if .Values.mapper.containerSecurityContext }}
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - "ALL"
+            {{- toYaml .Values.mapper.containerSecurityContext | nindent 12 }}
+          {{- end }}
       serviceAccountName: {{ template "otterize.mapper.fullName" . }}
       volumes:
         {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}

@@ -1,11 +1,20 @@
 {{- define "otterize.sniffer.fullName" -}}
 otterize-network-sniffer
 {{- end -}}
+{{- define "otterize.sniffer.securityContextConstraintsName" -}}
+{{ template "otterize.sniffer.fullName" . }}-scc
+{{- end -}}
 {{- define "otterize.kafkawatcher.fullName" -}}
 otterize-kafka-watcher
 {{- end -}}
 {{- define "otterize.mapper.fullName" -}}
 otterize-network-mapper
+{{- end -}}
+{{- define "otterize.iamlive.fullName" -}}
+otterize-iamlive
+{{- end -}}
+{{- define "otterize.visibilitydns.fullName" -}}
+otterize-visibility-dns
 {{- end -}}
 {{- define "otterize.mapper.configMapName" -}}
 otterize-network-mapper-store
