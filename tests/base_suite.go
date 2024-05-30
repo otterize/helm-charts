@@ -8,6 +8,7 @@ import (
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/cli"
 	"helm_tests/config"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
@@ -16,6 +17,7 @@ import (
 type BaseSuite struct {
 	suite.Suite
 	Client           *kubernetes.Clientset
+	DynamicClient    *dynamic.DynamicClient
 	HelmActionConfig *action.Configuration
 }
 
@@ -29,6 +31,10 @@ func (s *BaseSuite) SetupSuite() {
 	client, err := kubernetes.NewForConfig(kubeConfig)
 	s.Require().NoError(err)
 	s.Client = client
+
+	dynamicClient, err := dynamic.NewForConfig(kubeConfig)
+	s.Require().NoError(err)
+	s.DynamicClient = dynamicClient
 
 	actionConfig := new(action.Configuration)
 	settings := cli.New() // Requires helm-cli to be installed first
