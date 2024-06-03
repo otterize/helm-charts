@@ -1,4 +1,4 @@
-package tests
+package databases
 
 import (
 	"fmt"
@@ -8,6 +8,8 @@ import (
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/cli"
 	"helm_tests/config"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
@@ -15,8 +17,10 @@ import (
 
 type BaseSuite struct {
 	suite.Suite
-	Client           *kubernetes.Clientset
-	HelmActionConfig *action.Configuration
+	Client             *kubernetes.Clientset
+	IntentsClient      dynamic.NamespaceableResourceInterface
+	PGServerConfClient dynamic.NamespaceableResourceInterface
+	HelmActionConfig   *action.Configuration
 }
 
 func (s *BaseSuite) SetupSuite() {
@@ -35,4 +39,18 @@ func (s *BaseSuite) SetupSuite() {
 	err = actionConfig.Init(settings.RESTClientGetter(), "otterize-system", os.Getenv("HELM_DRIVER"), logrus.Debugf)
 	s.Require().NoError(err)
 	s.HelmActionConfig = actionConfig
+
+	dynamicClient, err := dynamic.NewForConfig(kubeConfig)
+	s.Require().NoError(err)
+	s.IntentsClient = dynamicClient.Resource(schema.GroupVersionResource{
+		Group:    "k8s.otterize.com",
+		Version:  "v1alpha3",
+		Resource: "clientintents",
+	})
+
+	s.PGServerConfClient = dynamicClient.Resource(schema.GroupVersionResource{
+		Group:    "k8s.otterize.com",
+		Version:  "v1alpha3",
+		Resource: "postgresqlserverconfigs",
+	})
 }

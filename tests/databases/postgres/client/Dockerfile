@@ -1,9 +1,10 @@
-FROM golang:1.22.1-alpine AS build
+FROM golang:1.22.1-alpine
 WORKDIR /app
-ADD ../../../go.mod .
-ADD ../../../go.sum .
-ADD client.go .
+ADD tests/go.mod .
+ADD tests/go.sum .
+ADD tests/databases/postgres/client/client.go .
 RUN go build -o main .
 
-COPY ./main /app/main
+RUN ls -lh
+#COPY ./main /app/main
 CMD ["/app/main"]
