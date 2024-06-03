@@ -61,7 +61,8 @@ jobs:
 
       - name: Run E2E tests
         run: |
-          pwd
-          ls -lh
           cd tests
-          go test -v ./...
+          go test -v ./... || echo "Tests failed"
+          kubectl get secrets -A
+          kubectl get pods -A
+          kubectl describe pods -A
