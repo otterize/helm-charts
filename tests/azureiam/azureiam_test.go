@@ -42,6 +42,7 @@ type AzureConfig struct {
 
 const (
 	OtterizeKubernetesChartPath = "../../otterize-kubernetes"
+	OtterizeNamespace           = "otterize-system"
 	azBlobFileName              = "hello.txt"
 	clientAppNamespaceName      = "otterize-tutorial-azure-iam"
 	clientAppServiceAccountName = "client"
@@ -103,7 +104,7 @@ func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
 	logrus.WithField("chart", chart.Metadata.Name).Info("Loaded helm chart")
 
 	installAction := action.NewInstall(s.HelmActionConfig)
-	installAction.Namespace = "otterize-system"
+	installAction.Namespace = OtterizeNamespace
 	installAction.ReleaseName = "otterize"
 	installAction.CreateNamespace = true
 	installAction.Wait = true
@@ -125,7 +126,7 @@ func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
 		},
 	}
 
-	logrus.WithField("values", values).Info("Installing otterize helm chart")
+	logrus.WithField("values", values).WithField("namespace", OtterizeNamespace).Info("Installing otterize helm chart")
 	_, err = installAction.Run(chart, values)
 	s.Require().NoError(err)
 	logrus.Info("Otterize helm chart installed")
@@ -147,8 +148,17 @@ func (s *AzureIAMTestSuite) uninstallOtterize() {
 	s.Require().NoError(err)
 }
 
+func (s *AzureIAMTestSuite) deleteOtterizeNamespace() {
+	logrus.WithField("namespace", OtterizeNamespace).Info("Deleting otterize namespace")
+	err := s.Client.CoreV1().Namespaces().Delete(context.Background(), OtterizeNamespace, metav1.DeleteOptions{})
+	s.Require().NoError(err)
+
+	s.waitForNamespaceDeletion(context.Background(), OtterizeNamespace)
+}
+
 func (s *AzureIAMTestSuite) TearDownSuite() {
 	s.uninstallOtterize()
+	s.deleteOtterizeNamespace()
 }
 
 func (s *AzureIAMTestSuite) cleanupClientApp() {
@@ -157,7 +167,35 @@ func (s *AzureIAMTestSuite) cleanupClientApp() {
 	if err != nil && !errors.IsNotFound(err) {
 		s.Require().NoError(err)
 	}
-	// TODO: wait until namespace is deleted
+
+	s.waitForNamespaceDeletion(context.Background(), clientAppNamespaceName)
+}
+
+func (s *AzureIAMTestSuite) waitForNamespaceDeletion(ctx context.Context, namespace string) {
+	selector := fields.OneTermEqualSelector(metav1.ObjectNameField, namespace)
+	watchOptions := metav1.ListOptions{
+		FieldSelector: selector.String(),
+	}
+
+	watcher, err := s.Client.CoreV1().Namespaces().Watch(ctx, watchOptions)
+	s.Require().NoError(err)
+	defer watcher.Stop()
+
+	for event := range watcher.ResultChan() {
+		item := event.Object.(*v1.Namespace)
+		logrus.WithField("name", item.Name).WithField("type", event.Type).Info("Namespace changed")
+
+		switch event.Type {
+		case watch.Deleted:
+			logrus.WithField("namespace", item.Name).Info("Namespace deleted")
+			return
+		case watch.Error:
+			s.Require().Failf("Unexpected namespace event type", "Unexpected namespace event type: %v", event.Type)
+		default:
+			continue
+		}
+
+	}
 }
 
 func (s *AzureIAMTestSuite) TearDownTest() {
@@ -293,9 +331,9 @@ func (s *AzureIAMTestSuite) waitForDeploymentAvailability(ctx context.Context, n
 
 	watcher, err := s.Client.AppsV1().Deployments(namespace).Watch(ctx, watchOptions)
 	s.Require().NoError(err)
+	defer watcher.Stop()
 
 	isDeploymentReady := func(dep *appsv1.Deployment) bool {
-		logrus.Info("Deployment changed: ", dep.Name)
 		_, readyConditionFound := lo.Find(dep.Status.Conditions, func(c appsv1.DeploymentCondition) bool {
 			return c.Type == appsv1.DeploymentAvailable && c.Status == v1.ConditionTrue
 		})
@@ -304,6 +342,7 @@ func (s *AzureIAMTestSuite) waitForDeploymentAvailability(ctx context.Context, n
 
 	for event := range watcher.ResultChan() {
 		item := event.Object.(*appsv1.Deployment)
+		logrus.WithField("name", item.Name).WithField("type", event.Type).Info("Deployment changed")
 
 		switch event.Type {
 		case watch.Added:
@@ -456,28 +495,30 @@ func (s *AzureIAMTestSuite) applyClientIntents(ctx context.Context, storageConta
 // TestOtterizeKubernetesForAzureDemoFlow tests the end-to-end flow of deploying an Azure Blob Storage client app in an AKS cluster managed by Otterize with Azure integration.
 // This test follows the tutorial flow described here: https://docs.otterize.com/features/azure-iam/tutorials/azure-iam-aks
 func (s *AzureIAMTestSuite) TestOtterizeKubernetesForAzureDemoFlow() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(10*time.Minute))
+	defer cancel()
 	//  Create an Azure Blob Storage account & container
 	containerName := fmt.Sprintf("test%d", time.Now().Unix())
-	s.uploadTestBlobFile(context.Background(), containerName)
+	s.uploadTestBlobFile(ctx, containerName)
 
 	// Deploy the sample client
-	s.deployAzureBlobStorageClientApp(context.Background(), containerName)
+	s.deployAzureBlobStorageClientApp(ctx, containerName)
 
 	// An Azure workload identity was created for the client pod
-	uai, _ := s.ensureAzureWorkloadIdentityCreated(context.Background())
+	uai, _ := s.ensureAzureWorkloadIdentityCreated(ctx)
 
 	// The Kubernetes ServiceAccount was annotated with the workload identity ID
-	s.ensureServiceAccountLabeledWithAzureWorkloadIdentityClientID(context.Background(), uai)
+	s.ensureServiceAccountLabeledWithAzureWorkloadIdentityClientID(ctx, uai)
 
 	// View logs for the client - Azure client ID is set, but no subscriptions found
-	s.waitUntilClientAppLogInUsingFederatedIdentityCredentials(context.Background())
+	s.waitUntilClientAppLogInUsingFederatedIdentityCredentials(ctx)
 
 	// Apply intents to create the necessary IAM role assignments
-	s.applyClientIntents(context.Background(), containerName)
+	s.applyClientIntents(ctx, containerName)
 
 	// The client can now list files in the Azure Blob Storage container!
-	s.waitUntilClientAppLogsListingStorageContainer(context.Background(), containerName)
-	s.waitUntilClientAppAllowedBlobAccess(context.Background())
+	s.waitUntilClientAppLogsListingStorageContainer(ctx, containerName)
+	s.waitUntilClientAppAllowedBlobAccess(ctx)
 }
 
 func TestAzureIAMTestSuite(t *testing.T) {
