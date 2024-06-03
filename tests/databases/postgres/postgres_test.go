@@ -103,6 +103,24 @@ func (s *PostgresTestSuite) SetupTest() {
 	if !errors.IsNotFound(err) {
 		s.Require().NoError(err) // Just fail
 	}
+	time.Sleep(time.Second * 5)
+
+	// Validate object was deleted
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	ticker := time.NewTicker(2 * time.Second)
+	for {
+		select {
+		case <-ticker.C:
+			logrus.Info("Waiting for intents resource to be fully deleted")
+			_, err = s.IntentsClient.Namespace(TestNamespace).Get(context.Background(), IntentsResourceName, metav1.GetOptions{})
+			if errors.IsNotFound(err) {
+				return // Object was fully deleted, we can move to the next text now
+			}
+		case <-ctx.Done():
+			s.FailNow("Timed out waiting for intents resource to be fully deleted")
+		}
+	}
 }
 
 func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
@@ -114,6 +132,18 @@ func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
 	s.applyIntents([]v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
 	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
 	s.matchSubStringsInLog(s.clientPodName, TestNamespace, []string{"Successfully INSERTED", "Successfully SELECTED"})
+}
+
+func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
+	s.applyIntents([]v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
+	logrus.Info("Validating client pod was granted INSERT permissions without SELECT")
+	s.matchSubStringsInLog(s.clientPodName, TestNamespace, []string{"Successfully INSERTED", "Unable to perform SELECT operation"})
+}
+
+func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
+	s.applyIntents([]v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
+	logrus.Info("Validating client pod was granted SELECT permissions without INSERT")
+	s.matchSubStringsInLog(s.clientPodName, TestNamespace, []string{"Successfully SELECTED", "Unable to perform INSERT operation"})
 }
 
 func (s *PostgresTestSuite) TearDownSuite() {
@@ -308,7 +338,7 @@ func (s *PostgresTestSuite) deployDatabaseClient() {
 }
 
 func (s *PostgresTestSuite) matchSubStringsInLog(podName, podNamespace string, stringsToMatch []string) {
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// The client is sampling DB access every 5 seconds, we do the same for the logs
@@ -428,7 +458,7 @@ func (s *PostgresTestSuite) runCreateTableJob() {
 }
 
 func (s *PostgresTestSuite) getPodLog(name string, namespace string) string {
-	linesToTail := int64(10)
+	linesToTail := int64(5)
 	req := s.Client.CoreV1().Pods(namespace).GetLogs(name, &corev1.PodLogOptions{
 		Follow:    true,
 		TailLines: &linesToTail,
@@ -436,7 +466,7 @@ func (s *PostgresTestSuite) getPodLog(name string, namespace string) string {
 	podLogs, err := req.Stream(context.Background())
 	s.Require().NoError(err)
 	defer podLogs.Close()
-	buf := make([]byte, 200)
+	buf := make([]byte, 500)
 	numBytes, err := podLogs.Read(buf)
 	s.Require().NoError(err)
 	if numBytes == 0 {
