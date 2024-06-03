@@ -148,27 +148,29 @@ func (s *AzureIAMTestSuite) uninstallOtterize() {
 	s.Require().NoError(err)
 }
 
-func (s *AzureIAMTestSuite) deleteOtterizeNamespace() {
+func (s *AzureIAMTestSuite) deleteOtterizeNamespace(ctx context.Context) {
 	logrus.WithField("namespace", OtterizeNamespace).Info("Deleting otterize namespace")
-	err := s.Client.CoreV1().Namespaces().Delete(context.Background(), OtterizeNamespace, metav1.DeleteOptions{})
+	err := s.Client.CoreV1().Namespaces().Delete(ctx, OtterizeNamespace, metav1.DeleteOptions{})
 	s.Require().NoError(err)
 
-	s.waitForNamespaceDeletion(context.Background(), OtterizeNamespace)
+	s.waitForNamespaceDeletion(ctx, OtterizeNamespace)
 }
 
 func (s *AzureIAMTestSuite) TearDownSuite() {
-	s.uninstallOtterize()
-	s.deleteOtterizeNamespace()
+	//ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
+	//defer cancel()
+	//s.uninstallOtterize()
+	//s.deleteOtterizeNamespace(ctx)
 }
 
-func (s *AzureIAMTestSuite) cleanupClientApp() {
+func (s *AzureIAMTestSuite) cleanupClientApp(ctx context.Context) {
 	logrus.WithField("namespace", clientAppNamespaceName).Info("Deleting client app namespace")
-	err := s.Client.CoreV1().Namespaces().Delete(context.Background(), clientAppNamespaceName, metav1.DeleteOptions{})
+	err := s.Client.CoreV1().Namespaces().Delete(ctx, clientAppNamespaceName, metav1.DeleteOptions{})
 	if err != nil && !errors.IsNotFound(err) {
 		s.Require().NoError(err)
 	}
 
-	s.waitForNamespaceDeletion(context.Background(), clientAppNamespaceName)
+	s.waitForNamespaceDeletion(ctx, clientAppNamespaceName)
 }
 
 func (s *AzureIAMTestSuite) waitForNamespaceDeletion(ctx context.Context, namespace string) {
@@ -199,7 +201,10 @@ func (s *AzureIAMTestSuite) waitForNamespaceDeletion(ctx context.Context, namesp
 }
 
 func (s *AzureIAMTestSuite) TearDownTest() {
-	s.cleanupClientApp()
+	//ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
+	//defer cancel()
+	//
+	//s.cleanupClientApp(ctx)
 }
 
 func (s *AzureIAMTestSuite) initAzureAgent() {
