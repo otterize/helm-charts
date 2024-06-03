@@ -100,6 +100,8 @@ func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
 	chart, err := loader.Load(OtterizeKubernetesChartPath)
 	s.Require().NoError(err)
 
+	logrus.WithField("chart", chart.Metadata.Name).Info("Loaded helm chart")
+
 	installAction := action.NewInstall(s.HelmActionConfig)
 	installAction.Namespace = "otterize-system"
 	installAction.ReleaseName = "otterize"
@@ -122,8 +124,11 @@ func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
 			},
 		},
 	}
+
+	logrus.WithField("values", values).Info("Installing otterize helm chart")
 	_, err = installAction.Run(chart, values)
 	s.Require().NoError(err)
+	logrus.Info("Otterize helm chart installed")
 }
 
 func (s *AzureIAMTestSuite) SetupSuite() {
@@ -136,6 +141,7 @@ func (s *AzureIAMTestSuite) SetupSuite() {
 }
 
 func (s *AzureIAMTestSuite) uninstallOtterize() {
+	logrus.Info("Uninstalling otterize helm chart")
 	uninstallAction := action.NewUninstall(s.HelmActionConfig)
 	_, err := uninstallAction.Run("otterize")
 	s.Require().NoError(err)
@@ -146,6 +152,7 @@ func (s *AzureIAMTestSuite) TearDownSuite() {
 }
 
 func (s *AzureIAMTestSuite) cleanupClientApp() {
+	logrus.WithField("namespace", clientAppNamespaceName).Info("Deleting client app namespace")
 	err := s.Client.CoreV1().Namespaces().Delete(context.Background(), clientAppNamespaceName, metav1.DeleteOptions{})
 	if err != nil && !errors.IsNotFound(err) {
 		s.Require().NoError(err)
@@ -180,16 +187,20 @@ func (s *AzureIAMTestSuite) initAzureAgent() {
 }
 
 func (s *AzureIAMTestSuite) uploadTestBlobFile(ctx context.Context, containerName string) {
+	logrus.WithField("container", containerName).Info("Creating Azure Blob Storage container")
 	_, err := s.azBlobClient.CreateContainer(ctx, containerName, nil)
 	s.Require().NoError(err)
 
 	blobName := azBlobFileName
 	data := []byte("Hello, Azure integration!")
+
+	logrus.WithField("blob", blobName).Info("Uploading test blob file")
 	_, err = s.azBlobClient.UploadBuffer(ctx, containerName, blobName, data, &azblob.UploadBufferOptions{})
 	s.Require().NoError(err)
 }
 
 func (s *AzureIAMTestSuite) createClientAppNamespace(ctx context.Context) {
+	logrus.WithField("namespace", clientAppNamespaceName).Info("Creating client app namespace")
 	namespace := &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: clientAppNamespaceName,
@@ -201,6 +212,7 @@ func (s *AzureIAMTestSuite) createClientAppNamespace(ctx context.Context) {
 }
 
 func (s *AzureIAMTestSuite) createClientAppServiceAccount(ctx context.Context) {
+	logrus.WithField("serviceAccount", clientAppServiceAccountName).Info("Creating client app service account")
 	serviceAccount := &v1.ServiceAccount{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      clientAppServiceAccountName,
@@ -213,6 +225,7 @@ func (s *AzureIAMTestSuite) createClientAppServiceAccount(ctx context.Context) {
 }
 
 func (s *AzureIAMTestSuite) createClientAppDeployment(ctx context.Context, storageAccountName string, storageContainerName string) {
+	logrus.WithField("deployment", clientAppDeploymentName).Info("Creating client app deployment")
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      clientAppDeploymentName,
@@ -262,11 +275,13 @@ func (s *AzureIAMTestSuite) createClientAppDeployment(ctx context.Context, stora
 }
 
 func (s *AzureIAMTestSuite) deployAzureBlobStorageClientApp(ctx context.Context, storageContainerName string) {
+	logrus.WithField("namespace", clientAppNamespaceName).Info("Deploying Azure Blob Storage client app")
 	s.createClientAppNamespace(ctx)
 	s.createClientAppServiceAccount(ctx)
 	s.createClientAppDeployment(ctx, s.conf.StorageAccountName, storageContainerName)
 
 	s.waitForDeploymentAvailability(ctx, clientAppNamespaceName, clientAppDeploymentName)
+	logrus.WithField("namespace", clientAppNamespaceName).Info("Client app deployment is ready")
 }
 
 func (s *AzureIAMTestSuite) waitForDeploymentAvailability(ctx context.Context, namespace string, deploymentName string) {
@@ -342,15 +357,9 @@ func (s *AzureIAMTestSuite) findClientAppPod(ctx context.Context) *v1.Pod {
 	return &pod
 }
 
-//func (s *AzureIAMTestSuite) waitUntilClientAppLogsAzureClientIDNotSet(ctx context.Context) {
-//	pod := s.findClientAppPod(ctx)
-//	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
-//		return strings.Contains(line, "Azure client ID not set")
-//	})
-//}
-
 func (s *AzureIAMTestSuite) waitUntilClientAppLogInUsingFederatedIdentityCredentials(ctx context.Context) {
 	pod := s.findClientAppPod(ctx)
+	logrus.WithField("pod", pod.Name).Info("Waiting for client app to log in using federated identity credentials")
 	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
 		return strings.Contains(line, "Logging in using federated identity credentials")
 	})
@@ -358,6 +367,7 @@ func (s *AzureIAMTestSuite) waitUntilClientAppLogInUsingFederatedIdentityCredent
 
 func (s *AzureIAMTestSuite) waitUntilClientAppLogsListingStorageContainer(ctx context.Context, storageContainerName string) {
 	pod := s.findClientAppPod(ctx)
+	logrus.WithField("pod", pod.Name).Info("Waiting for client app to list storage container")
 	expectedLine := fmt.Sprintf("Listing storage blob container %s in storage account %s", storageContainerName, s.conf.StorageAccountName)
 	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
 		return strings.Contains(line, expectedLine)
@@ -366,6 +376,7 @@ func (s *AzureIAMTestSuite) waitUntilClientAppLogsListingStorageContainer(ctx co
 
 func (s *AzureIAMTestSuite) waitUntilClientAppAllowedBlobAccess(ctx context.Context) {
 	pod := s.findClientAppPod(ctx)
+	logrus.WithField("pod", pod.Name).Info("Waiting for client app to successfully list blob container content")
 	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
 		return strings.Contains(line, azBlobFileName)
 	})
@@ -397,9 +408,12 @@ func (s *AzureIAMTestSuite) ensureServiceAccountLabeledWithAzureWorkloadIdentity
 	value, ok := serviceAccount.Annotations["azure.workload.identity/client-id"]
 	s.Require().True(ok, "Expected to find annotation azure.workload.identity/client-id on service account")
 	s.Require().Equal(*uai.Properties.ClientID, value, "Expected service account annotation azure.workload.identity/client-id to match user assigned identity client ID")
+
+	logrus.WithField("serviceAccount", serviceAccount.Name).Info("Service account annotated with Azure workload identity client ID")
 }
 
 func (s *AzureIAMTestSuite) applyClientIntents(ctx context.Context, storageContainerName string) {
+	logrus.Info("Applying client intents")
 	storageContainerScope := fmt.Sprintf("/providers/Microsoft.Storage/storageAccounts/%s/blobServices/default/containers/%s", s.conf.StorageAccountName, storageContainerName)
 
 	u := &unstructured.Unstructured{
