@@ -27,3 +27,15 @@ jobs:
           azcliversion: 2.0.72
           inlineScript: |
             az account show
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: 'otterizeGitHubActionsResourceGroup'
+          cluster-name: 'otterizeAzureIAME2EAKSCluster'
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Run kubectl
+        run: kubectl get pods -A
