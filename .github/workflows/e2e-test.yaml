@@ -63,4 +63,5 @@ jobs:
         run: |
           pwd
           ls -lh
-          go test ./...
+          cd tests
+          go test -v ./...
