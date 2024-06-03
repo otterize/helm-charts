@@ -8,6 +8,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/msi/armmsi"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+	"github.com/caarlos0/env/v6"
+	"github.com/joho/godotenv"
 	"github.com/otterize/intents-operator/src/shared/agentutils"
 	"github.com/samber/lo"
 	"github.com/sirupsen/logrus"
@@ -28,33 +30,19 @@ import (
 	"time"
 )
 
-// Setup:
-// export LOCATION="eastus"
-// export RESOURCE_GROUP="amitlichtResourceGroup"
-// export AKS_CLUSTER_NAME="otterizeAzureIAMTutorialAKSCluster"
-// export STORAGE_ACCOUNT_NAME=ottrazureiamtutorial
-// az group create --name $RESOURCE_GROUP --location $LOCATION
-// az aks create -g $RESOURCE_GROUP -n $AKS_CLUSTER_NAME --node-count 1 --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys
-// az storage account create \
-//  --name $STORAGE_ACCOUNT_NAME \
-//  --resource-group $RESOURCE_GROUP \
-//  --location $LOCATION
-// # Add the "storage blob data contributor" role assignment to the storage account
+type AzureConfig struct {
+	SubscriptionID     string `env:"AZURE_SUBSCRIPTION_ID"`
+	Location           string `env:"AZURE_LOCATION"`
+	ResourceGroup      string `env:"AZURE_RESOURCE_GROUP"`
+	AKSClusterName     string `env:"AZURE_AKS_CLUSTER_NAME"`
+	StorageAccountName string `env:"AZURE_STORAGE_ACCOUNT_NAME"`
+
+	OtterizeOperatorUserAssignedIdentityClientID string `env:"AZURE_OTTERIZE_OPERATOR_USER_ASSIGNED_IDENTITY_CLIENT_ID"`
+}
 
 const (
 	OtterizeKubernetesChartPath = "../../otterize-kubernetes"
-
-	azSubscriptionID     = "ef54c90c-5351-4c8f-a126-16a6d789104f" // "Otterize Dev"
-	azLocation           = "eastus"
-	azResourceGroup      = "amitlichtResourceGroup"
-	azAKSClusterName     = "otterizeAzureIAMTutorialAKSCluster"
-	azStorageAccountName = "ottrazureiamtutorial"
-
-	// TODO: install the user assigned identity as part of the test
-	azUserAssignedIdentityID = "db0a6738-2491-412d-8cb0-2edd2950949b" // ottr-k8s-operator-managed-identity
-
-	azBlobFileName = "hello.txt"
-
+	azBlobFileName              = "hello.txt"
 	clientAppNamespaceName      = "otterize-tutorial-azure-iam"
 	clientAppServiceAccountName = "client"
 	clientAppDeploymentName     = "client"
@@ -95,6 +83,7 @@ func generateFederatedIdentityCredentialsName(namespace string, accountName stri
 
 type AzureIAMTestSuite struct {
 	tests.BaseSuite
+	conf AzureConfig
 
 	// Azure clients
 	credentials                        *azidentity.DefaultAzureCredential
@@ -103,6 +92,7 @@ type AzureIAMTestSuite struct {
 	blobContainersClient               *armstorage.BlobContainersClient
 	userAssignedIdentitiesClient       *armmsi.UserAssignedIdentitiesClient
 	federatedIdentityCredentialsClient *armmsi.FederatedIdentityCredentialsClient
+	azBlobClient                       *azblob.Client
 }
 
 func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
@@ -122,10 +112,10 @@ func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
 		"global": map[string]any{
 			"azure": map[string]any{
 				"enabled":                true,
-				"subscriptionID":         azSubscriptionID,
-				"resourceGroup":          azResourceGroup,
-				"aksClusterName":         azAKSClusterName,
-				"userAssignedIdentityID": azUserAssignedIdentityID,
+				"subscriptionID":         s.conf.SubscriptionID,
+				"resourceGroup":          s.conf.ResourceGroup,
+				"aksClusterName":         s.conf.AKSClusterName,
+				"userAssignedIdentityID": s.conf.OtterizeOperatorUserAssignedIdentityClientID,
 			},
 			"deployment": map[string]any{
 				"networkMapper": false,
@@ -138,6 +128,8 @@ func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
 
 func (s *AzureIAMTestSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
+	s.Require().NoError(godotenv.Load("azure-account.env"))
+	s.Require().NoError(env.Parse(&s.conf))
 	s.initAzureAgent()
 
 	s.installOtterizeForAzureIAM()
@@ -158,6 +150,7 @@ func (s *AzureIAMTestSuite) cleanupClientApp() {
 	if err != nil && !errors.IsNotFound(err) {
 		s.Require().NoError(err)
 	}
+	// TODO: wait until namespace is deleted
 }
 
 func (s *AzureIAMTestSuite) TearDownTest() {
@@ -170,29 +163,29 @@ func (s *AzureIAMTestSuite) initAzureAgent() {
 	s.credentials, err = azidentity.NewDefaultAzureCredential(nil)
 	s.Require().NoError(err)
 
-	s.storageClientFactory, err = armstorage.NewClientFactory(azSubscriptionID, s.credentials, nil)
+	s.storageClientFactory, err = armstorage.NewClientFactory(s.conf.SubscriptionID, s.credentials, nil)
 	s.Require().NoError(err)
 
 	s.accountsClient = s.storageClientFactory.NewAccountsClient()
 	s.blobContainersClient = s.storageClientFactory.NewBlobContainersClient()
 
-	armmsiClientFactory, err := armmsi.NewClientFactory(azSubscriptionID, s.credentials, nil)
+	armmsiClientFactory, err := armmsi.NewClientFactory(s.conf.SubscriptionID, s.credentials, nil)
 	s.Require().NoError(err)
 	s.userAssignedIdentitiesClient = armmsiClientFactory.NewUserAssignedIdentitiesClient()
 	s.federatedIdentityCredentialsClient = armmsiClientFactory.NewFederatedIdentityCredentialsClient()
+
+	storageAccountURL := fmt.Sprintf("https://%s.blob.core.windows.net", s.conf.StorageAccountName)
+	s.azBlobClient, err = azblob.NewClient(storageAccountURL, s.credentials, nil)
+	s.Require().NoError(err)
 }
 
-func (s *AzureIAMTestSuite) uploadTestBlobFile(ctx context.Context, storageAccountName string, containerName string) {
-	storageAccountURL := fmt.Sprintf("https://%s.blob.core.windows.net", storageAccountName)
-	client, err := azblob.NewClient(storageAccountURL, s.credentials, nil)
-	s.Require().NoError(err)
-
-	_, err = client.CreateContainer(ctx, containerName, nil)
+func (s *AzureIAMTestSuite) uploadTestBlobFile(ctx context.Context, containerName string) {
+	_, err := s.azBlobClient.CreateContainer(ctx, containerName, nil)
 	s.Require().NoError(err)
 
 	blobName := azBlobFileName
 	data := []byte("Hello, Azure integration!")
-	_, err = client.UploadBuffer(ctx, containerName, blobName, data, &azblob.UploadBufferOptions{})
+	_, err = s.azBlobClient.UploadBuffer(ctx, containerName, blobName, data, &azblob.UploadBufferOptions{})
 	s.Require().NoError(err)
 }
 
@@ -268,10 +261,10 @@ func (s *AzureIAMTestSuite) createClientAppDeployment(ctx context.Context, stora
 	s.Require().NoError(err)
 }
 
-func (s *AzureIAMTestSuite) deployAzureBlobStorageClientApp(ctx context.Context, storageAccountName string, storageContainerName string) {
+func (s *AzureIAMTestSuite) deployAzureBlobStorageClientApp(ctx context.Context, storageContainerName string) {
 	s.createClientAppNamespace(ctx)
 	s.createClientAppServiceAccount(ctx)
-	s.createClientAppDeployment(ctx, storageAccountName, storageContainerName)
+	s.createClientAppDeployment(ctx, s.conf.StorageAccountName, storageContainerName)
 
 	s.waitForDeploymentAvailability(ctx, clientAppNamespaceName, clientAppDeploymentName)
 }
@@ -363,9 +356,9 @@ func (s *AzureIAMTestSuite) waitUntilClientAppLogInUsingFederatedIdentityCredent
 	})
 }
 
-func (s *AzureIAMTestSuite) waitUntilClientAppLogsListingStorageContainer(ctx context.Context, storageAccountName string, storageContainerName string) {
+func (s *AzureIAMTestSuite) waitUntilClientAppLogsListingStorageContainer(ctx context.Context, storageContainerName string) {
 	pod := s.findClientAppPod(ctx)
-	expectedLine := fmt.Sprintf("Listing storage blob container %s in storage account %s", storageContainerName, storageAccountName)
+	expectedLine := fmt.Sprintf("Listing storage blob container %s in storage account %s", storageContainerName, s.conf.StorageAccountName)
 	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
 		return strings.Contains(line, expectedLine)
 	})
@@ -379,15 +372,15 @@ func (s *AzureIAMTestSuite) waitUntilClientAppAllowedBlobAccess(ctx context.Cont
 }
 
 func (s *AzureIAMTestSuite) ensureAzureWorkloadIdentityCreated(ctx context.Context) (uai armmsi.Identity, fic armmsi.FederatedIdentityCredential) {
-	uaiName := generateUserAssignedIdentityName(clientAppNamespaceName, clientAppServiceAccountName, azAKSClusterName)
-	uaiResponse, err := s.userAssignedIdentitiesClient.Get(ctx, azResourceGroup, uaiName, nil)
+	uaiName := generateUserAssignedIdentityName(clientAppNamespaceName, clientAppServiceAccountName, s.conf.AKSClusterName)
+	uaiResponse, err := s.userAssignedIdentitiesClient.Get(ctx, s.conf.ResourceGroup, uaiName, nil)
 	s.Require().NoError(err)
 	uai = uaiResponse.Identity
 
 	logrus.WithField("userAssignedIdentity", uai.Name).Info("User assigned identity found")
 
-	ficName := generateFederatedIdentityCredentialsName(clientAppNamespaceName, clientAppServiceAccountName, azAKSClusterName)
-	ficResponse, err := s.federatedIdentityCredentialsClient.Get(ctx, azResourceGroup, uaiName, ficName, nil)
+	ficName := generateFederatedIdentityCredentialsName(clientAppNamespaceName, clientAppServiceAccountName, s.conf.AKSClusterName)
+	ficResponse, err := s.federatedIdentityCredentialsClient.Get(ctx, s.conf.ResourceGroup, uaiName, ficName, nil)
 	s.Require().NoError(err)
 
 	fic = ficResponse.FederatedIdentityCredential
@@ -406,8 +399,8 @@ func (s *AzureIAMTestSuite) ensureServiceAccountLabeledWithAzureWorkloadIdentity
 	s.Require().Equal(*uai.Properties.ClientID, value, "Expected service account annotation azure.workload.identity/client-id to match user assigned identity client ID")
 }
 
-func (s *AzureIAMTestSuite) applyClientIntents(ctx context.Context, storageAccountName string, storageContainerName string) {
-	storageContainerScope := fmt.Sprintf("/providers/Microsoft.Storage/storageAccounts/%s/blobServices/default/containers/%s", storageAccountName, storageContainerName)
+func (s *AzureIAMTestSuite) applyClientIntents(ctx context.Context, storageContainerName string) {
+	storageContainerScope := fmt.Sprintf("/providers/Microsoft.Storage/storageAccounts/%s/blobServices/default/containers/%s", s.conf.StorageAccountName, storageContainerName)
 
 	u := &unstructured.Unstructured{
 		Object: map[string]any{
@@ -451,10 +444,10 @@ func (s *AzureIAMTestSuite) applyClientIntents(ctx context.Context, storageAccou
 func (s *AzureIAMTestSuite) TestOtterizeKubernetesForAzureDemoFlow() {
 	//  Create an Azure Blob Storage account & container
 	containerName := fmt.Sprintf("test%d", time.Now().Unix())
-	s.uploadTestBlobFile(context.Background(), azStorageAccountName, containerName)
+	s.uploadTestBlobFile(context.Background(), containerName)
 
 	// Deploy the sample client
-	s.deployAzureBlobStorageClientApp(context.Background(), azStorageAccountName, containerName)
+	s.deployAzureBlobStorageClientApp(context.Background(), containerName)
 
 	// An Azure workload identity was created for the client pod
 	uai, _ := s.ensureAzureWorkloadIdentityCreated(context.Background())
@@ -466,10 +459,10 @@ func (s *AzureIAMTestSuite) TestOtterizeKubernetesForAzureDemoFlow() {
 	s.waitUntilClientAppLogInUsingFederatedIdentityCredentials(context.Background())
 
 	// Apply intents to create the necessary IAM role assignments
-	s.applyClientIntents(context.Background(), azStorageAccountName, containerName)
+	s.applyClientIntents(context.Background(), containerName)
 
 	// The client can now list files in the Azure Blob Storage container!
-	s.waitUntilClientAppLogsListingStorageContainer(context.Background(), azStorageAccountName, containerName)
+	s.waitUntilClientAppLogsListingStorageContainer(context.Background(), containerName)
 	s.waitUntilClientAppAllowedBlobAccess(context.Background())
 }
 
