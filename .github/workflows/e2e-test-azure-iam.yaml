@@ -44,8 +44,9 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: 1.22.1
+          cache-dependency-path: tests/go.sum
 
-      - name: run tests
+      - name: Run tests
         run: |
           cd tests
           go test -v ./azureiam/...
