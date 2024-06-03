@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
@@ -12,6 +11,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
+	"path"
 )
 
 type BaseSuite struct {
@@ -21,13 +21,26 @@ type BaseSuite struct {
 	HelmActionConfig *action.Configuration
 }
 
-func (s *BaseSuite) SetupSuite() {
+func (s *BaseSuite) GetKubeconfigPath() string {
+	envPath := os.Getenv("KUBECONFIG")
+	if envPath != "" {
+		return envPath
+	}
+
 	homeDir, err := os.UserHomeDir()
 	s.Require().NoError(err)
-	kubeConfig, err := clientcmd.BuildConfigFromFlags("", fmt.Sprintf("%s/%s", homeDir, viper.GetString(config.KubeConfigPath)))
+
+	return path.Join(homeDir, viper.GetString(config.KubeConfigPath))
+}
+
+func (s *BaseSuite) SetupSuite() {
+	kubeconfigPath := s.GetKubeconfigPath()
+	logrus.WithField("kubeconfig", kubeconfigPath).Info("Using kubeconfig")
+	s.Require().FileExists(kubeconfigPath)
+
+	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
 	s.Require().NoError(err)
 
-	//
 	client, err := kubernetes.NewForConfig(kubeConfig)
 	s.Require().NoError(err)
 	s.Client = client
