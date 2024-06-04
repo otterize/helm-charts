@@ -1,7 +1,6 @@
 package azureiam
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
@@ -10,21 +9,14 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
+	"github.com/otterize/intents-operator/src/operator/api/v1alpha3"
 	"github.com/otterize/intents-operator/src/shared/agentutils"
-	"github.com/samber/lo"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/suite"
-	"helm.sh/helm/v3/pkg/action"
-	"helm.sh/helm/v3/pkg/chart/loader"
+	"helm_tests"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/watch"
-	"strings"
 	"testing"
 	"time"
 )
@@ -40,8 +32,6 @@ type AzureConfig struct {
 }
 
 const (
-	OtterizeKubernetesChartPath = "../../otterize-kubernetes"
-	OtterizeNamespace           = "otterize-system"
 	azBlobFileName              = "hello.txt"
 	clientAppNamespaceName      = "otterize-tutorial-azure-iam"
 	clientAppServiceAccountName = "client"
@@ -82,7 +72,7 @@ func generateFederatedIdentityCredentialsName(namespace string, accountName stri
 }
 
 type AzureIAMTestSuite struct {
-	BaseSuite
+	helm_tests.BaseSuite
 	conf AzureConfig
 
 	// Azure clients
@@ -95,115 +85,25 @@ type AzureIAMTestSuite struct {
 	azBlobClient                       *azblob.Client
 }
 
-func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
-	// Load Chart.yaml
-	chart, err := loader.Load(OtterizeKubernetesChartPath)
-	s.Require().NoError(err)
-
-	logrus.WithField("chart", chart.Metadata.Name).Info("Loaded helm chart")
-
-	installAction := action.NewInstall(s.HelmActionConfig)
-	installAction.Namespace = OtterizeNamespace
-	installAction.ReleaseName = "otterize"
-	installAction.CreateNamespace = true
-	installAction.Wait = true
-	installAction.Timeout = 2 * time.Minute
-
-	// Run helm install command
-	values := map[string]any{
-		"global": map[string]any{
-			"azure": map[string]any{
-				"enabled":                true,
-				"subscriptionID":         s.conf.SubscriptionID,
-				"resourceGroup":          s.conf.ResourceGroup,
-				"aksClusterName":         s.conf.AKSClusterName,
-				"userAssignedIdentityID": s.conf.OtterizeOperatorUserAssignedIdentityClientID,
-			},
-			"deployment": map[string]any{
-				"networkMapper": false,
-			},
-		},
-	}
-
-	logrus.WithField("values", values).WithField("namespace", OtterizeNamespace).Info("Installing otterize helm chart")
-	_, err = installAction.Run(chart, values)
-	s.Require().NoError(err)
-	logrus.Info("Otterize helm chart installed")
-}
-
 func (s *AzureIAMTestSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
 	s.Require().NoError(godotenv.Load("azure-account.env"))
 	s.Require().NoError(env.Parse(&s.conf))
-	s.initAzureAgent()
-
 	s.installOtterizeForAzureIAM()
-}
-
-func (s *AzureIAMTestSuite) uninstallOtterize() {
-	logrus.Info("Uninstalling otterize helm chart")
-	uninstallAction := action.NewUninstall(s.HelmActionConfig)
-	_, err := uninstallAction.Run("otterize")
-	s.Require().NoError(err)
-}
-
-func (s *AzureIAMTestSuite) deleteOtterizeNamespace(ctx context.Context) {
-	logrus.WithField("namespace", OtterizeNamespace).Info("Deleting otterize namespace")
-	err := s.Client.CoreV1().Namespaces().Delete(ctx, OtterizeNamespace, metav1.DeleteOptions{})
-	s.Require().NoError(err)
-
-	s.waitForNamespaceDeletion(ctx, OtterizeNamespace)
+	s.initAzureAgent()
 }
 
 func (s *AzureIAMTestSuite) TearDownSuite() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
-	s.uninstallOtterize()
-	s.deleteOtterizeNamespace(ctx)
-}
-
-func (s *AzureIAMTestSuite) cleanupClientApp(ctx context.Context) {
-	logrus.WithField("namespace", clientAppNamespaceName).Info("Deleting client app namespace")
-	err := s.Client.CoreV1().Namespaces().Delete(ctx, clientAppNamespaceName, metav1.DeleteOptions{})
-	if err != nil && !errors.IsNotFound(err) {
-		s.Require().NoError(err)
-	}
-
-	s.waitForNamespaceDeletion(ctx, clientAppNamespaceName)
-}
-
-func (s *AzureIAMTestSuite) waitForNamespaceDeletion(ctx context.Context, namespace string) {
-	selector := fields.OneTermEqualSelector(metav1.ObjectNameField, namespace)
-	watchOptions := metav1.ListOptions{
-		FieldSelector: selector.String(),
-	}
-
-	watcher, err := s.Client.CoreV1().Namespaces().Watch(ctx, watchOptions)
-	s.Require().NoError(err)
-	defer watcher.Stop()
-
-	for event := range watcher.ResultChan() {
-		item := event.Object.(*v1.Namespace)
-		logrus.WithField("name", item.Name).WithField("type", event.Type).Info("Namespace changed")
-
-		switch event.Type {
-		case watch.Deleted:
-			logrus.WithField("namespace", item.Name).Info("Namespace deleted")
-			return
-		case watch.Error:
-			s.Require().Failf("Unexpected namespace event type", "Unexpected namespace event type: %v", event.Type)
-		default:
-			continue
-		}
-
-	}
+	s.UninstallOtterizeHelmChart(ctx)
 }
 
 func (s *AzureIAMTestSuite) TearDownTest() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
 
-	s.cleanupClientApp(ctx)
+	s.DeleteNamespace(ctx, clientAppNamespaceName)
 }
 
 func (s *AzureIAMTestSuite) initAzureAgent() {
@@ -228,6 +128,25 @@ func (s *AzureIAMTestSuite) initAzureAgent() {
 	s.Require().NoError(err)
 }
 
+func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
+	values := map[string]any{
+		"global": map[string]any{
+			"azure": map[string]any{
+				"enabled":                true,
+				"subscriptionID":         s.conf.SubscriptionID,
+				"resourceGroup":          s.conf.ResourceGroup,
+				"aksClusterName":         s.conf.AKSClusterName,
+				"userAssignedIdentityID": s.conf.OtterizeOperatorUserAssignedIdentityClientID,
+			},
+			"deployment": map[string]any{
+				"networkMapper": false,
+			},
+		},
+	}
+
+	s.InstallOtterizeHelmChart(values)
+}
+
 func (s *AzureIAMTestSuite) uploadTestBlobFile(ctx context.Context, containerName string) {
 	logrus.WithField("container", containerName).Info("Creating Azure Blob Storage container")
 	_, err := s.azBlobClient.CreateContainer(ctx, containerName, nil)
@@ -241,33 +160,7 @@ func (s *AzureIAMTestSuite) uploadTestBlobFile(ctx context.Context, containerNam
 	s.Require().NoError(err)
 }
 
-func (s *AzureIAMTestSuite) createClientAppNamespace(ctx context.Context) {
-	logrus.WithField("namespace", clientAppNamespaceName).Info("Creating client app namespace")
-	namespace := &v1.Namespace{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: clientAppNamespaceName,
-		},
-	}
-
-	_, err := s.Client.CoreV1().Namespaces().Create(ctx, namespace, metav1.CreateOptions{})
-	s.Require().NoError(err)
-}
-
-func (s *AzureIAMTestSuite) createClientAppServiceAccount(ctx context.Context) {
-	logrus.WithField("serviceAccount", clientAppServiceAccountName).Info("Creating client app service account")
-	serviceAccount := &v1.ServiceAccount{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      clientAppServiceAccountName,
-			Namespace: clientAppNamespaceName,
-		},
-	}
-
-	_, err := s.Client.CoreV1().ServiceAccounts(serviceAccount.Namespace).Create(ctx, serviceAccount, metav1.CreateOptions{})
-	s.Require().NoError(err)
-}
-
 func (s *AzureIAMTestSuite) createClientAppDeployment(ctx context.Context, storageAccountName string, storageContainerName string) {
-	logrus.WithField("deployment", clientAppDeploymentName).Info("Creating client app deployment")
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      clientAppDeploymentName,
@@ -312,117 +205,40 @@ func (s *AzureIAMTestSuite) createClientAppDeployment(ctx context.Context, stora
 		},
 	}
 
-	_, err := s.Client.AppsV1().Deployments(deployment.Namespace).Create(ctx, deployment, metav1.CreateOptions{})
-	s.Require().NoError(err)
+	s.CreateDeployment(ctx, deployment)
 }
 
 func (s *AzureIAMTestSuite) deployAzureBlobStorageClientApp(ctx context.Context, storageContainerName string) {
 	logrus.WithField("namespace", clientAppNamespaceName).Info("Deploying Azure Blob Storage client app")
-	s.createClientAppNamespace(ctx)
-	s.createClientAppServiceAccount(ctx)
+	s.CreateNamespace(ctx, clientAppNamespaceName)
+	s.CreateServiceAccount(ctx, clientAppNamespaceName, clientAppServiceAccountName)
 	s.createClientAppDeployment(ctx, s.conf.StorageAccountName, storageContainerName)
 
-	s.waitForDeploymentAvailability(ctx, clientAppNamespaceName, clientAppDeploymentName)
+	s.WaitForDeploymentAvailability(ctx, clientAppNamespaceName, clientAppDeploymentName)
 	logrus.WithField("namespace", clientAppNamespaceName).Info("Client app deployment is ready")
 }
 
-func (s *AzureIAMTestSuite) waitForDeploymentAvailability(ctx context.Context, namespace string, deploymentName string) {
-	selector := fields.OneTermEqualSelector(metav1.ObjectNameField, deploymentName)
-
-	watchOptions := metav1.ListOptions{
-		FieldSelector: selector.String(),
-	}
-
-	watcher, err := s.Client.AppsV1().Deployments(namespace).Watch(ctx, watchOptions)
-	s.Require().NoError(err)
-	defer watcher.Stop()
-
-	isDeploymentReady := func(dep *appsv1.Deployment) bool {
-		_, readyConditionFound := lo.Find(dep.Status.Conditions, func(c appsv1.DeploymentCondition) bool {
-			return c.Type == appsv1.DeploymentAvailable && c.Status == v1.ConditionTrue
-		})
-		return readyConditionFound
-	}
-
-	for event := range watcher.ResultChan() {
-		item := event.Object.(*appsv1.Deployment)
-		logrus.WithField("name", item.Name).WithField("type", event.Type).Info("Deployment changed")
-
-		switch event.Type {
-		case watch.Added:
-		case watch.Modified:
-			if isDeploymentReady(item) {
-				return
-			}
-		case watch.Bookmark:
-		case watch.Error:
-		case watch.Deleted:
-			s.Require().Failf("Unexpected deployment event type", "Unexpected deployment event type: %v", event.Type)
-		}
-	}
-}
-
-type LogLineMatcher func(line string) bool
-
-func (s *AzureIAMTestSuite) readPodLogsUntilLine(ctx context.Context, pod *v1.Pod, matchLine LogLineMatcher) {
-	req := s.Client.CoreV1().Pods(pod.Namespace).GetLogs(pod.Name, &v1.PodLogOptions{Follow: true})
-	logStream, err := req.Stream(ctx)
-	s.Require().NoError(err)
-
-	defer logStream.Close()
-
-	logger := logrus.WithField("pod", pod.Name).WithField("namespace", pod.Namespace)
-	reader := bufio.NewScanner(logStream)
-	var line string
-	for {
-		select {
-		case <-ctx.Done():
-			break
-		default:
-			for reader.Scan() {
-				line = reader.Text()
-				logger.Debug(line)
-				if matchLine(line) {
-					return
-				}
-			}
-		}
-	}
-}
-
 func (s *AzureIAMTestSuite) findClientAppPod(ctx context.Context) *v1.Pod {
-	pods, err := s.Client.CoreV1().Pods(clientAppNamespaceName).List(ctx, metav1.ListOptions{LabelSelector: "app=client"})
-	s.Require().NoError(err)
-
-	s.Require().Lenf(pods.Items, 1, "Expected to find a single pod with label app=client, found %d", len(pods.Items))
-
-	pod := pods.Items[0]
-	return &pod
+	return s.FindPodByLabel(ctx, clientAppNamespaceName, "app=client")
 }
 
 func (s *AzureIAMTestSuite) waitUntilClientAppLogInUsingFederatedIdentityCredentials(ctx context.Context) {
 	pod := s.findClientAppPod(ctx)
 	logrus.WithField("pod", pod.Name).Info("Waiting for client app to log in using federated identity credentials")
-	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
-		return strings.Contains(line, "Logging in using federated identity credentials")
-	})
+	s.ReadPodLogsUntilSubstring(ctx, pod, "Logging in using federated identity credentials")
 }
 
 func (s *AzureIAMTestSuite) waitUntilClientAppLogsListingStorageContainer(ctx context.Context, storageContainerName string) {
 	pod := s.findClientAppPod(ctx)
 	logrus.WithField("pod", pod.Name).Info("Waiting for client app to list storage container")
 	expectedLine := fmt.Sprintf("Listing storage blob container %s in storage account %s", storageContainerName, s.conf.StorageAccountName)
-	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
-		return strings.Contains(line, expectedLine)
-	})
+	s.ReadPodLogsUntilSubstring(ctx, pod, expectedLine)
 }
 
 func (s *AzureIAMTestSuite) waitUntilClientAppAllowedBlobAccess(ctx context.Context) {
 	pod := s.findClientAppPod(ctx)
 	logrus.WithField("pod", pod.Name).Info("Waiting for client app to successfully list blob container content")
-	s.readPodLogsUntilLine(ctx, pod, func(line string) bool {
-		return strings.Contains(line, azBlobFileName)
-	})
+	s.ReadPodLogsUntilSubstring(ctx, pod, azBlobFileName)
 }
 
 func (s *AzureIAMTestSuite) ensureAzureWorkloadIdentityCreated(ctx context.Context) (uai armmsi.Identity, fic armmsi.FederatedIdentityCredential) {
@@ -457,43 +273,35 @@ func (s *AzureIAMTestSuite) ensureServiceAccountLabeledWithAzureWorkloadIdentity
 
 func (s *AzureIAMTestSuite) applyClientIntents(ctx context.Context, storageContainerName string) {
 	logrus.Info("Applying client intents")
+
 	storageContainerScope := fmt.Sprintf("/providers/Microsoft.Storage/storageAccounts/%s/blobServices/default/containers/%s", s.conf.StorageAccountName, storageContainerName)
 
-	u := &unstructured.Unstructured{
-		Object: map[string]any{
-			"apiVersion": "k8s.otterize.com/v1alpha3",
-			"kind":       "ClientIntents",
-			"metadata": map[string]any{
-				"name":      "client",
-				"namespace": clientAppNamespaceName,
+	clientIntents := v1alpha3.ClientIntents{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: "k8s.otterize.com/v1alpha3",
+			Kind:       "ClientIntents",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "client",
+			Namespace: clientAppNamespaceName,
+		},
+		Spec: &v1alpha3.IntentsSpec{
+			Service: v1alpha3.Service{
+				Name: clientAppServiceAccountName,
 			},
-			"spec": map[string]any{
-				"service": map[string]any{
-					"name": clientAppServiceAccountName,
-				},
-				"calls": []map[string]any{
-					{
-						"type": "azure",
-						"name": storageContainerScope,
-						"azureRoles": []string{
-							"Storage Blob Data Contributor",
-						},
+			Calls: []v1alpha3.Intent{
+				{
+					Type: v1alpha3.IntentTypeAzure,
+					Name: storageContainerScope,
+					AzureRoles: []string{
+						"Storage Blob Data Contributor",
 					},
 				},
 			},
 		},
 	}
 
-	gvk := u.GroupVersionKind()
-
-	resource := schema.GroupVersionResource{
-		Group:    gvk.Group,
-		Version:  gvk.Version,
-		Resource: "clientintents",
-	}
-
-	_, err := s.DynamicClient.Resource(resource).Namespace(clientAppNamespaceName).Create(ctx, u, metav1.CreateOptions{})
-	s.Require().NoError(err)
+	s.ApplyClientIntents(ctx, clientIntents)
 }
 
 // TestOtterizeKubernetesForAzureDemoFlow tests the end-to-end flow of deploying an Azure Blob Storage client app in an AKS cluster managed by Otterize with Azure integration.

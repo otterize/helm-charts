@@ -2,168 +2,100 @@ package postgres
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/otterize/intents-operator/src/operator/api/v1alpha3"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/suite"
-	"helm.sh/helm/v3/pkg/action"
-	"helm.sh/helm/v3/pkg/chart/loader"
-	tests "helm_tests/databases"
-	"io"
+	"helm_tests"
 	"k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"strings"
+	"k8s.io/client-go/dynamic"
 	"testing"
 	"time"
 )
 
 const (
-	OtterizeKubernetesChartPath = "../../../otterize-kubernetes"
-	TestNamespace               = "postgres-integration-test"
-	PostgresRootPassword        = "integrationtestpassword11"
-	PostgresCredsSecretName     = "postgres-user-password"
-	PostgresSvcName             = "otterize-database"
-	PostgresDatabaseName        = "test-db"
-	PostgresInstanceName        = "otterize-postgres"
-	PostgresRootUser            = "otterize-admin"
-	IntentsResourceName         = "psql-client-intents"
-	PostgresConnectionString    = "postgres://%s:%s@%s:5432/%s"
+	TestNamespace            = "postgres-integration-test"
+	PostgresRootPassword     = "integrationtestpassword11"
+	PostgresCredsSecretName  = "postgres-user-password"
+	PostgresSvcName          = "otterize-database"
+	PostgresDatabaseName     = "test-db"
+	PostgresInstanceName     = "otterize-postgres"
+	PostgresRootUser         = "otterize-admin"
+	IntentsResourceName      = "psql-client-intents"
+	PostgresConnectionString = "postgres://%s:%s@%s:5432/%s"
 )
 
-var OtterizeValuesMapperDisabled = map[string]interface{}{
-	"global": map[string]interface{}{
-		"deployment": map[string]interface{}{
-			"networkMapper": false,
-		},
-	},
-}
-
 type PostgresTestSuite struct {
-	tests.BaseSuite
-	clientPodName string
+	helm_tests.BaseSuite
+	PGServerConfClient dynamic.NamespaceableResourceInterface
+	clientPod          *corev1.Pod
 }
 
 func (s *PostgresTestSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
-	logrus.Info("Setting up postgres test suite")
-	logrus.Info("Installing otterize-kubernetes helm chart")
-	// Load Chart.yaml
-	chart, err := loader.Load(OtterizeKubernetesChartPath)
-	s.Require().NoError(err)
-	//
-	installAction := action.NewInstall(s.HelmActionConfig)
-	installAction.Namespace = "otterize-system"
-	installAction.ReleaseName = "otterize"
-	installAction.CreateNamespace = true
-	installAction.Wait = true
-	installAction.Timeout = time.Second * 40
 
-	// Run helm install command
-	_, err = installAction.Run(chart, OtterizeValuesMapperDisabled)
+	s.installOtterizeNetworkMapperDisabled()
 
-	s.Require().NoError(err)
-	logrus.Info("otterize-kubernetes started successfully")
+	s.PGServerConfClient = s.DynamicClient.Resource(schema.GroupVersionResource{
+		Group:    "k8s.otterize.com",
+		Version:  "v1alpha3",
+		Resource: "postgresqlserverconfigs",
+	})
+}
 
-	// Create test namespace
-	logrus.Info("Creating test namespace")
-	_, err = s.Client.CoreV1().Namespaces().Create(context.Background(), &corev1.Namespace{
-		ObjectMeta: metav1.ObjectMeta{Name: TestNamespace},
-	}, metav1.CreateOptions{})
-	s.Require().NoError(err)
+func (s *PostgresTestSuite) TearDownSuite() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
+	defer cancel()
+	s.UninstallOtterizeHelmChart(ctx)
+}
 
-	// Deploy postgres pod & service
-	logrus.Info("Deploying PostgreSQL database pod & service")
-	s.deployAndConfigureDatabase()
-
-	// Deploy client pod
-	logrus.Info("Deploying psql client pod")
-	s.deployDatabaseClient()
-	s.waitForPodToStart("app=psql-client", 30) // Dependent on a secret to be created
-
-	// Get client pod name
-	res, err := s.Client.CoreV1().Pods(TestNamespace).List(context.Background(), metav1.ListOptions{LabelSelector: "app=psql-client"})
-	s.Require().NoError(err)
-	s.Require().Len(res.Items, 1)
-	s.clientPodName = res.Items[0].Name
-
-	s.applyPGServerConf()
-
-	logrus.Info("PostgreSQL Suite setup complete")
+func (s *PostgresTestSuite) installOtterizeNetworkMapperDisabled() {
+	values := map[string]interface{}{
+		"global": map[string]interface{}{
+			"deployment": map[string]interface{}{
+				"networkMapper": false,
+			},
+		},
+	}
+	s.InstallOtterizeHelmChart(values)
 }
 
 func (s *PostgresTestSuite) SetupTest() {
-	err := s.IntentsClient.Namespace(TestNamespace).Delete(context.Background(), IntentsResourceName, metav1.DeleteOptions{})
-	if !errors.IsNotFound(err) {
-		s.Require().NoError(err) // Just fail
-	}
-
-	// Validate object was deleted
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
-	ticker := time.NewTicker(2 * time.Second)
-	for {
-		select {
-		case <-ticker.C:
-			logrus.Info("Waiting for intents resource to be fully deleted")
-			_, err = s.IntentsClient.Namespace(TestNamespace).Get(context.Background(), IntentsResourceName, metav1.GetOptions{})
-			if errors.IsNotFound(err) {
-				return // Object was fully deleted, we can move to the next text now
-			}
-		case <-ctx.Done():
-			s.FailNow("Timed out waiting for intents resource to be fully deleted")
-		}
-	}
+
+	// Create test namespace
+	logrus.Info("Creating test namespace")
+	s.CreateNamespace(ctx, TestNamespace)
+
+	// Deploy postgres pod & service
+	logrus.Info("Deploying PostgreSQL database pod & service")
+	s.deployAndConfigureDatabase(ctx)
+
+	// Deploy client pod
+	logrus.Info("Deploying psql client pod")
+	s.deployDatabaseClient(ctx)
+
+	// Get client pod name
+	s.clientPod = s.FindPodByLabel(ctx, TestNamespace, "app=psql-client")
+
+	s.applyPGServerConf(ctx)
 }
 
-func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
-	logrus.Info("Validating client pod fails to access the database")
-	s.matchSubStringsInLog(s.clientPodName, TestNamespace, []string{"password authentication failed"})
+func (s *PostgresTestSuite) TearDownTest() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
+	defer cancel()
+	// ClientIntents have to be deleted before the namespace as properly deleting them requires the existence of the PGServerConf
+	s.DeleteClientIntents(ctx, TestNamespace, IntentsResourceName)
+	s.DeleteNamespace(ctx, TestNamespace)
 }
 
-func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
-	s.applyIntents([]v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
-	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
-	s.matchSubStringsInLog(s.clientPodName, TestNamespace, []string{"Successfully INSERTED", "Successfully SELECTED"})
-}
-
-// TODO: Uncomment this when bug for deleted & reapplied intents is solved
-//
-//func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
-//	s.applyIntents([]v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
-//	logrus.Info("Validating client pod was granted INSERT permissions without SELECT")
-//	s.matchSubStringsInLog(s.clientPodName, TestNamespace, []string{"Successfully INSERTED", "Unable to perform SELECT operation"})
-//}
-//
-//func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
-//	s.applyIntents([]v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
-//	logrus.Info("Validating client pod was granted SELECT permissions without INSERT")
-//	s.matchSubStringsInLog(s.clientPodName, TestNamespace, []string{"Successfully SELECTED", "Unable to perform INSERT operation"})
-//}
-
-func (s *PostgresTestSuite) TearDownSuite() {
-	err := s.IntentsClient.Namespace(TestNamespace).Delete(context.Background(), IntentsResourceName, metav1.DeleteOptions{})
-	if !errors.IsNotFound(err) {
-		s.Require().NoError(err) // Just fail
-	}
-
-	err = s.Client.CoreV1().Namespaces().Delete(context.Background(), TestNamespace, metav1.DeleteOptions{})
-	if !errors.IsNotFound(err) {
-		s.Require().NoError(err) // Just fail
-	}
-
-	uninstallAction := action.NewUninstall(s.HelmActionConfig)
-	_, err = uninstallAction.Run("otterize")
-	s.Require().NoError(err)
-}
-
-func (s *PostgresTestSuite) deployAndConfigureDatabase() {
+func (s *PostgresTestSuite) deployPostgresDatabase(ctx context.Context) {
 	postgresDeployment := &v1.Deployment{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
@@ -203,9 +135,11 @@ func (s *PostgresTestSuite) deployAndConfigureDatabase() {
 			},
 		},
 	}
-	_, err := s.Client.AppsV1().Deployments(TestNamespace).Create(context.Background(), postgresDeployment, metav1.CreateOptions{})
-	s.Require().NoError(err)
+	s.CreateDeployment(ctx, postgresDeployment)
+	s.WaitForDeploymentAvailability(ctx, postgresDeployment.Namespace, postgresDeployment.Name)
+}
 
+func (s *PostgresTestSuite) createPostgresService(ctx context.Context) {
 	postgresService := corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      PostgresSvcName,
@@ -225,16 +159,19 @@ func (s *PostgresTestSuite) deployAndConfigureDatabase() {
 			Type:     corev1.ServiceTypeClusterIP,
 		},
 	}
-	_, err = s.Client.CoreV1().Services(TestNamespace).Create(context.Background(), &postgresService, metav1.CreateOptions{})
-	s.Require().NoError(err)
 
-	s.waitForPodToStart("app=database", 10)
-
-	logrus.Info("Spawning job to create a test table in the database")
-	s.runCreateTableJob()
+	s.CreateService(ctx, &postgresService)
 }
 
-func (s *PostgresTestSuite) applyIntents(operations []v1alpha3.DatabaseOperation) {
+func (s *PostgresTestSuite) deployAndConfigureDatabase(ctx context.Context) {
+	s.deployPostgresDatabase(ctx)
+	s.createPostgresService(ctx)
+
+	logrus.Info("Spawning job to create a test table in the database")
+	s.runCreateTableJob(ctx)
+}
+
+func (s *PostgresTestSuite) applyIntents(ctx context.Context, operations []v1alpha3.DatabaseOperation) {
 	clientIntents := v1alpha3.ClientIntents{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "ClientIntents",
@@ -263,17 +200,11 @@ func (s *PostgresTestSuite) applyIntents(operations []v1alpha3.DatabaseOperation
 		},
 		Status: v1alpha3.IntentsStatus{},
 	}
-	u := s.getUnstructuredObject(clientIntents)
-	u.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "k8s.otterize.com",
-		Version: "v1alpha3",
-		Kind:    "ClientIntents",
-	})
-	_, err := s.IntentsClient.Namespace(TestNamespace).Create(context.Background(), u, metav1.CreateOptions{})
-	s.Require().NoError(err)
+
+	s.ApplyClientIntents(ctx, clientIntents)
 }
 
-func (s *PostgresTestSuite) deployDatabaseClient() {
+func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 	clientDeployment := &v1.Deployment{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
@@ -334,63 +265,12 @@ func (s *PostgresTestSuite) deployDatabaseClient() {
 			},
 		},
 	}
-	_, err := s.Client.AppsV1().Deployments(TestNamespace).Create(context.Background(), clientDeployment, metav1.CreateOptions{})
-	s.Require().NoError(err)
+
+	s.CreateDeployment(ctx, clientDeployment)
+	s.WaitForDeploymentAvailability(ctx, clientDeployment.Namespace, clientDeployment.Name)
 }
 
-func (s *PostgresTestSuite) matchSubStringsInLog(podName, podNamespace string, stringsToMatch []string) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	// The client is sampling DB access every 5 seconds, we do the same for the logs
-	ticker := time.NewTicker(time.Second * 5)
-	for {
-		select {
-		case <-ticker.C:
-			logrus.Infof("Trying to match %v in pod logs", stringsToMatch)
-			logMessage := s.getPodLog(podName, podNamespace)
-			if logMessage != "" {
-				var matched = true
-				for _, stringToMatch := range stringsToMatch {
-					if !strings.Contains(logMessage, stringToMatch) {
-						matched = false
-					}
-				}
-				if matched {
-					return
-				}
-			}
-		case <-ctx.Done():
-			s.FailNowf("Could not match all strings in log", "Failed matching: %v in psql-client logs", stringsToMatch)
-		}
-	}
-}
-
-func (s *PostgresTestSuite) waitForPodToStart(podLabelSelector string, duration time.Duration) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*duration)
-	defer cancel()
-	ticker := time.NewTicker(time.Second * 2)
-	for {
-		select {
-		case <-ticker.C:
-			res, err := s.Client.CoreV1().Pods(TestNamespace).List(context.Background(), metav1.ListOptions{LabelSelector: podLabelSelector})
-			s.Require().NoError(err)
-			if len(res.Items) == 0 {
-				continue
-			}
-			pod := res.Items[0]
-			logrus.Infof("%s is in phase %s", pod.Name, pod.Status.Phase)
-			if pod.Status.Phase == corev1.PodRunning {
-				return
-			}
-
-		case <-ctx.Done():
-			s.FailNowf("Pods in namespace were not ready", "Pods were not running after %d seconds", duration)
-		}
-	}
-}
-
-func (s *PostgresTestSuite) applyPGServerConf() {
+func (s *PostgresTestSuite) applyPGServerConf(ctx context.Context) {
 	pgServerConf := v1alpha3.PostgreSQLServerConfig{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "PostgreSQLServerConfig",
@@ -408,31 +288,14 @@ func (s *PostgresTestSuite) applyPGServerConf() {
 		},
 	}
 
-	u := s.getUnstructuredObject(pgServerConf)
-	u.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "k8s.otterize.com",
-		Version: "v1alpha3",
-		Kind:    "PostgreSQLServerConfig",
-	})
-
-	_, err := s.PGServerConfClient.Namespace(TestNamespace).Create(context.Background(), u, metav1.CreateOptions{})
+	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
+	_, err := s.PGServerConfClient.Namespace(TestNamespace).Create(ctx, u, metav1.CreateOptions{})
 	s.Require().NoError(err)
 }
 
-func (s *PostgresTestSuite) getUnstructuredObject(resource any) *unstructured.Unstructured {
-	body, err := json.Marshal(resource)
-	s.Require().NoError(err)
-
-	u := unstructured.Unstructured{}
-	err = u.UnmarshalJSON(body)
-	s.Require().NoError(err)
-
-	return &u
-}
-
-func (s *PostgresTestSuite) runCreateTableJob() {
+func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 	connectionString := fmt.Sprintf(PostgresConnectionString, PostgresRootUser, PostgresRootPassword, PostgresSvcName, PostgresDatabaseName)
-	res, err := s.Client.BatchV1().Jobs(TestNamespace).Create(context.Background(), &batchv1.Job{
+	res, err := s.Client.BatchV1().Jobs(TestNamespace).Create(ctx, &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "create-table-job",
 			Namespace: TestNamespace,
@@ -458,26 +321,55 @@ func (s *PostgresTestSuite) runCreateTableJob() {
 	s.Require().NotEmpty(res)
 }
 
-func (s *PostgresTestSuite) getPodLog(name string, namespace string) string {
-	linesToTail := int64(5)
-	req := s.Client.CoreV1().Pods(namespace).GetLogs(name, &corev1.PodLogOptions{
-		Follow:    true,
-		TailLines: &linesToTail,
-	})
-	podLogs, err := req.Stream(context.Background())
-	s.Require().NoError(err)
-	defer podLogs.Close()
-	buf := make([]byte, 500)
-	numBytes, err := podLogs.Read(buf)
-	s.Require().NoError(err)
-	if numBytes == 0 {
-		return ""
-	}
-	if err == io.EOF {
-		return ""
-	}
-	return string(buf[:numBytes])
+func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+	defer cancel()
+
+	logrus.Info("Validating client pod fails to access the database")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 }
+
+func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+	defer cancel()
+
+	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
+	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
+}
+
+// TODO: Uncomment this when bug for deleted & reapplied intents is solved
+//
+//func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
+//	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+//	defer cancel()
+//
+//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
+//	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
+//
+//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
+//	logrus.Info("Validating client pod was granted INSERT permissions without SELECT")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform SELECT operation")
+//}
+//
+//func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
+//	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+//	defer cancel()
+//
+//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
+//	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
+//
+//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
+//	logrus.Info("Validating client pod was granted SELECT permissions without INSERT")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform INSERT operation")
+//}
 
 func TestPostgresEnforcementTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
