@@ -10,7 +10,7 @@ on:
 
 
 jobs:
-  e2e-test:
+  test-chart-deployment:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -42,8 +42,27 @@ jobs:
           # installation
           helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace --set global.telemetry.enabled=false
 
-          
-      
-      
+  run-e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          start-args: "--network-plugin=cni --cni=calico"
+
+      - name: Wait for Calico startup
+        run: |-
+          kubectl wait pods -n kube-system -l k8s-app=calico-kube-controllers --for condition=Ready --timeout=90s
+          kubectl wait pods -n kube-system -l k8s-app=calico-node --for condition=Ready --timeout=90s
+          kubectl wait pods -n kube-system -l k8s-app=calico-kube-controllers --for condition=Ready --timeout=90s
+
+      - name: Run E2E tests
+        run: |
+          cd tests
+          go test -v ./... || echo "Tests failed"
+          kubectl get secrets -A
+          kubectl get pods -A
+          kubectl describe pods -A

@@ -2,24 +2,25 @@ package main
 
 import (
 	"context"
-	"database/sql"
+	_ "database/sql"
 	"fmt"
+	"github.com/jackc/pgx/v5"
+	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-	"log"
+	"net/url"
 	"os"
 	"time"
 )
 
 const (
 	DatabaseHost     = "DATABASE_HOST"
-	DatabasePort     = "DATABASE_PORT"
-	DatabaseNAME     = "DATABASE_NAME"
+	DatabaseName     = "DATABASE_NAME"
 	DatabaseUser     = "DATABASE_USER"
 	DatabasePassword = "DATABASE_PASSWORD"
 )
 
 func main() {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Second*15)
+	ctx, cancelFunc := context.WithCancel(context.Background())
 	defer cancelFunc()
 
 	ticker := time.NewTicker(time.Second * 5)
@@ -27,7 +28,7 @@ func main() {
 		select {
 		case <-ticker.C:
 			go func() {
-				err := checkDatabaseAccess()
+				err := checkDatabaseAccess(ctx)
 				if err != nil {
 					logrus.WithError(err).Error("Database query loop failed")
 				}
@@ -38,45 +39,48 @@ func main() {
 	}
 }
 
-func checkDatabaseAccess() error {
-	psqlInfo := getConnectionInfo()
-
-	db, err := sql.Open("postgres", psqlInfo)
+func checkDatabaseAccess(ctx context.Context) error {
+	connectionString := buildConnectionString()
+	conn, err := pgx.Connect(ctx, connectionString)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
-	defer db.Close()
 
+	logrus.Info("Successfully connected to database")
+	defer conn.Close(ctx)
 	// Test INSERT permissions
-	insertStatement := `INSERT INTO example (upload_time) VALUES ($1)`
+	insertStatement := `INSERT INTO example (entry_time) VALUES ($1)`
 	now := time.Now()
-	_, err = db.Exec(insertStatement, now.UnixNano())
+	_, err = conn.Exec(ctx, insertStatement, now.UnixNano())
 	if err != nil {
-		fmt.Println("Unable to perform INSERT operation")
+		logrus.Info("Unable to perform INSERT operation")
 	} else {
-		fmt.Println("Successfully INSERTED into our table")
+		logrus.Info("Successfully INSERTED into our table")
 	}
 
 	// Test SELECT permissions
-	selectStatement := `SELECT COUNT(*), MAX(upload_time) FROM example limit 3;`
-	row := db.QueryRow(selectStatement)
+	selectStatement := `SELECT COUNT(*), MAX(entry_time) FROM example limit 3;`
+	row := conn.QueryRow(ctx, selectStatement)
 
 	var count int
 	var maxTimestamp int64
 
 	err = row.Scan(&count, &maxTimestamp)
 	if err != nil {
-		fmt.Println("Unable to perform SELECT operation")
+		logrus.Info("Unable to perform SELECT operation")
 	} else {
 		mostRecentDate := time.Unix(0, maxTimestamp).Format(time.RFC3339)
-		fmt.Println("Successfully SELECTED, most recent value: ", mostRecentDate)
+		logrus.Info("Successfully SELECTED, most recent value: ", mostRecentDate)
 	}
 
 	return nil
 }
 
-func getConnectionInfo() string {
-	return fmt.Sprintf("host=%s port=%s user=%s, password=%s dbname=%s sslmode=disable",
-		os.Getenv(DatabaseHost), os.Getenv(DatabasePort), os.Getenv(DatabaseUser), os.Getenv(DatabasePassword), os.Getenv(DatabaseNAME))
+func buildConnectionString() string {
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s/%s",
+		os.Getenv(DatabaseUser),
+		url.QueryEscape(os.Getenv(DatabasePassword)),
+		os.Getenv(DatabaseHost),
+		os.Getenv(DatabaseName))
 }
