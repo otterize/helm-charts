@@ -26,14 +26,16 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 	"time"
 )
 
+var OtterizeKubernetesChartPath string
+
 const (
-	OtterizeKubernetesChartPath = "../otterize-kubernetes"
-	OtterizeNamespace           = "otterize-system"
-	OtterizeHelmReleaseName     = "otterize"
+	OtterizeNamespace       = "otterize-system"
+	OtterizeHelmReleaseName = "otterize"
 )
 
 type BaseSuite struct {
@@ -58,6 +60,7 @@ func (s *BaseSuite) GetKubeconfigPath() string {
 }
 
 func (s *BaseSuite) SetupSuite() {
+	logrus.SetLevel(logrus.DebugLevel)
 	kubeconfigPath := s.GetKubeconfigPath()
 	logrus.WithField("kubeconfig", kubeconfigPath).Info("Using kubeconfig")
 	s.Require().FileExists(kubeconfigPath)
@@ -324,4 +327,12 @@ func (s *BaseSuite) ApplyClientIntents(ctx context.Context, clientIntents v1alph
 	u := s.GetUnstructuredObject(clientIntents, clientIntents.GroupVersionKind())
 	_, err := s.IntentsClient.Namespace(clientIntents.Namespace).Create(ctx, u, metav1.CreateOptions{})
 	s.Require().NoError(err)
+}
+
+func init() {
+	_, filename, _, _ := runtime.Caller(0)
+	OtterizeKubernetesChartPath = path.Join(path.Dir(filename), "..", "otterize-kubernetes")
+	if _, err := os.Stat(OtterizeKubernetesChartPath); err != nil {
+		panic(err)
+	}
 }
