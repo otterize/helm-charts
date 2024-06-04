@@ -16,7 +16,6 @@ import (
 	"github.com/stretchr/testify/suite"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"
-	tests "helm_tests"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -83,7 +82,7 @@ func generateFederatedIdentityCredentialsName(namespace string, accountName stri
 }
 
 type AzureIAMTestSuite struct {
-	tests.BaseSuite
+	BaseSuite
 	conf AzureConfig
 
 	// Azure clients

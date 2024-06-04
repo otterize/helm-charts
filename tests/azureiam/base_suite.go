@@ -1,4 +1,4 @@
-package tests
+package azureiam
 
 import (
 	"github.com/sirupsen/logrus"
