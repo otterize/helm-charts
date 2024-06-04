@@ -37,9 +37,6 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
 
-      - name: Run kubectl
-        run: kubectl get pods -A
-
       - name: Set up Helm
         uses: azure/setup-helm@v3
 
@@ -51,6 +48,11 @@ jobs:
 
       - name: Helm dependency update
         run: helm dep up ./otterize-kubernetes
+
+      - name: Cleanup test namespaces
+        run: |
+          kubectl delete namespace otterize-tutorial-azure-iam --ignore-not-found=true --wait
+          kubectl delete namespace otterize-system --ignore-not-found=true --wait
 
       - name: Run tests
         run: |
