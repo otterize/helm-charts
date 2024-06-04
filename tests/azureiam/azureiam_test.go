@@ -157,10 +157,10 @@ func (s *AzureIAMTestSuite) deleteOtterizeNamespace(ctx context.Context) {
 }
 
 func (s *AzureIAMTestSuite) TearDownSuite() {
-	//ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
-	//defer cancel()
-	//s.uninstallOtterize()
-	//s.deleteOtterizeNamespace(ctx)
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
+	defer cancel()
+	s.uninstallOtterize()
+	s.deleteOtterizeNamespace(ctx)
 }
 
 func (s *AzureIAMTestSuite) cleanupClientApp(ctx context.Context) {
@@ -201,10 +201,10 @@ func (s *AzureIAMTestSuite) waitForNamespaceDeletion(ctx context.Context, namesp
 }
 
 func (s *AzureIAMTestSuite) TearDownTest() {
-	//ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
-	//defer cancel()
-	//
-	//s.cleanupClientApp(ctx)
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
+	defer cancel()
+
+	s.cleanupClientApp(ctx)
 }
 
 func (s *AzureIAMTestSuite) initAzureAgent() {
