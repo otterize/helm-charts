@@ -57,4 +57,4 @@ jobs:
       - name: Run tests
         run: |
           cd tests
-          go test -v ./azureiam/... | tee gotest.log | gotestfmt
+          go test -v -json ./azureiam/... | tee gotest.log | gotestfmt
