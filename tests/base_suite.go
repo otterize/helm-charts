@@ -239,7 +239,6 @@ func (s *BaseSuite) ReadPodLogsUntilLine(ctx context.Context, pod *corev1.Pod, m
 
 	defer logStream.Close()
 
-	logger := logrus.WithField("pod", pod.Name).WithField("namespace", pod.Namespace)
 	reader := bufio.NewScanner(logStream)
 	var line string
 	for {
@@ -249,7 +248,6 @@ func (s *BaseSuite) ReadPodLogsUntilLine(ctx context.Context, pod *corev1.Pod, m
 		default:
 			for reader.Scan() {
 				line = reader.Text()
-				logger.Debug(line)
 				if matchLine(line) {
 					return
 				}
