@@ -27,4 +27,4 @@ jobs:
       - name: Run E2E tests
         run: |
           cd tests
-          go test -v ./databases/...
+          go test -v ./databases/... | tee gotest.log | gotestfmt
