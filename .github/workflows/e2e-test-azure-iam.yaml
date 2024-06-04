@@ -46,6 +46,9 @@ jobs:
           go-version: 1.22.1
           cache-dependency-path: tests/go.sum
 
+      - name: Set up gotestfmt
+        uses: GoTestTools/gotestfmt-action@v2
+
       - name: Helm dependency update
         run: helm dep up ./otterize-kubernetes
 
