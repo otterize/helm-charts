@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }} # do not allow concurrent runs of this workflow
+  cancel-in-progress: false
+
 jobs:
   run-e2e-tests:
     timeout-minutes: 5
