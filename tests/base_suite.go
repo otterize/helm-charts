@@ -143,7 +143,7 @@ func (s *BaseSuite) WaitForNamespaceDeletion(ctx context.Context, namespaceName 
 	defer watcher.Stop()
 
 	for event := range watcher.ResultChan() {
-		logger.WithField("type", event.Type).Info("Namespace changed")
+		logger.WithField("type", event.Type).Debug("Namespace changed")
 
 		switch event.Type {
 		case watch.Deleted:
@@ -214,7 +214,7 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 
 	for event := range watcher.ResultChan() {
 		item := event.Object.(*appsv1.Deployment)
-		logrus.WithField("name", item.Name).WithField("type", event.Type).Info("Deployment changed")
+		logrus.WithField("name", item.Name).WithField("type", event.Type).Debug("Deployment changed")
 
 		switch event.Type {
 		case watch.Added:
@@ -294,7 +294,7 @@ func (s *BaseSuite) WaitForClientIntentsDeletion(ctx context.Context, namespaceN
 	defer watcher.Stop()
 
 	for event := range watcher.ResultChan() {
-		logger.WithField("type", event.Type).Info("ClientIntents changed")
+		logger.WithField("type", event.Type).Debug("ClientIntents changed")
 
 		switch event.Type {
 		case watch.Deleted:
