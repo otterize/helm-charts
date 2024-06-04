@@ -1,9 +1,12 @@
-
+# Azure IAM integration tests
 
 ## Setup instructions
 
+This test suite requires an Azure subscription and an Azure Kubernetes Service (AKS) cluster. 
+The following steps will guide you through setting up the required resources:
+
 ```shell
-export SUBSCRIPTION_ID=ef54c90c-5351-4c8f-a126-16a6d789104f
+export SUBSCRIPTION_ID=ef54c90c-5351-4c8f-a126-16a6d789104f # Otterize Dev Subscription
 export LOCATION="eastus"
 export RESOURCE_GROUP="otterizeGitHubActionsResourceGroup"
 export AKS_CLUSTER_NAME="otterizeAzureIAME2EAKSCluster"
@@ -34,6 +37,7 @@ az role assignment create --role "Storage Blob Data Contributor" \
 	--assignee $GITHUB_APP_SP_ID
 
 # [Optional] Add the "storage blob data contributor" role assignment to the storage account for the signed in user
+# This is useful for running the tests locally
 export SIGNED_IN_USER_NAME=$(az ad signed-in-user show --query 'userPrincipalName' -o tsv)
 az role assignment create --role "Storage Blob Data Contributor" \
 	--scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT_NAME \
