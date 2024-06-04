@@ -339,37 +339,25 @@ func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 }
 
-// TODO: Uncomment this when bug for deleted & reapplied intents is solved
-//
-//func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
-//	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
-//	defer cancel()
-//
-//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
-//	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
-//
-//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
-//	logrus.Info("Validating client pod was granted INSERT permissions without SELECT")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform SELECT operation")
-//}
-//
-//func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
-//	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
-//	defer cancel()
-//
-//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
-//	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
-//
-//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
-//	logrus.Info("Validating client pod was granted SELECT permissions without INSERT")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
-//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform INSERT operation")
-//}
+func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+	defer cancel()
+
+	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
+	logrus.Info("Validating client pod was granted INSERT permissions without SELECT")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform SELECT operation")
+}
+
+func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+	defer cancel()
+
+	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
+	logrus.Info("Validating client pod was granted SELECT permissions without INSERT")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform INSERT operation")
+}
 
 func TestPostgresEnforcementTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
