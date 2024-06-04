@@ -4,6 +4,9 @@ on:
     types:
       - opened
       - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
   push:
     branches:
       - main
@@ -14,6 +17,7 @@ concurrency:
 
 jobs:
   run-e2e-tests:
+    if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
