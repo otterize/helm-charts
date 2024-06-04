@@ -1,4 +1,4 @@
-name: golangci-lint
+name: lint
 on:
   push:
     tags:
@@ -18,11 +18,14 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup go
+        uses: actions/setup-go@v4
         with:
           go-version: 1.22.1
-
-      - uses: actions/checkout@v3
+          cache-dependency-path: tests/go.sum
 
       - name: go vet
         run: go vet ./...

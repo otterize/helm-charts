@@ -244,7 +244,7 @@ func (s *BaseSuite) ReadPodLogsUntilLine(ctx context.Context, pod *corev1.Pod, m
 	for {
 		select {
 		case <-ctx.Done():
-			break
+			return
 		default:
 			for reader.Scan() {
 				line = reader.Text()
