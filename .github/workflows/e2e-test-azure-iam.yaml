@@ -1,4 +1,4 @@
-name: E2E Test with Azure IAM
+name: E2E Tests for Azure IAM Integration
 on:
   pull_request:
     types:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  e2e-test:
+  run-e2e-tests:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
