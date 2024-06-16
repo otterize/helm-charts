@@ -53,7 +53,7 @@ func checkDatabaseAccess(ctx context.Context) error {
 	now := time.Now()
 	_, err = conn.Exec(ctx, insertStatement, now.UnixNano())
 	if err != nil {
-		logrus.Info("Unable to perform INSERT operation")
+		logrus.WithError(err).Error("Unable to perform INSERT operation")
 	} else {
 		logrus.Info("Successfully INSERTED into our table")
 	}
@@ -63,13 +63,17 @@ func checkDatabaseAccess(ctx context.Context) error {
 	row := conn.QueryRow(ctx, selectStatement)
 
 	var count int
-	var maxTimestamp int64
+	var maxTimestamp *int64
 
 	err = row.Scan(&count, &maxTimestamp)
 	if err != nil {
-		logrus.Info("Unable to perform SELECT operation")
+		logrus.WithError(err).Error("Unable to perform SELECT operation")
 	} else {
-		mostRecentDate := time.Unix(0, maxTimestamp).Format(time.RFC3339)
+		mostRecentDate := "unknown"
+		if maxTimestamp != nil {
+			mostRecentDate = time.Unix(0, *maxTimestamp).Format(time.RFC3339)
+		}
+
 		logrus.Info("Successfully SELECTED, most recent value: ", mostRecentDate)
 	}
 

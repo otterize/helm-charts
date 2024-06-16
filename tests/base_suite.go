@@ -232,10 +232,13 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 
 type LogLineMatcher func(line string) bool
 
-func (s *BaseSuite) ReadPodLogsUntilLine(ctx context.Context, pod *corev1.Pod, matchLine LogLineMatcher) {
+func (s *BaseSuite) ReadPodLogsUntilSubstring(ctx context.Context, pod *corev1.Pod, substring string) {
 	req := s.Client.CoreV1().Pods(pod.Namespace).GetLogs(pod.Name, &corev1.PodLogOptions{Follow: true})
 	logStream, err := req.Stream(ctx)
 	s.Require().NoError(err)
+
+	logger := logrus.WithField("pod", pod.Name).WithField("namespace", pod.Namespace)
+	logger.Debugf("Reading pod logs searching for substring %s", substring)
 
 	defer logStream.Close()
 
@@ -244,22 +247,18 @@ func (s *BaseSuite) ReadPodLogsUntilLine(ctx context.Context, pod *corev1.Pod, m
 	for {
 		select {
 		case <-ctx.Done():
+			logger.Errorf("Failed to match log substring: %s", substring)
 			return
 		default:
 			for reader.Scan() {
 				line = reader.Text()
-				if matchLine(line) {
+				if strings.Contains(line, substring) {
+					logger.Infof("Matched log line: %s", line)
 					return
 				}
 			}
 		}
 	}
-}
-
-func (s *BaseSuite) ReadPodLogsUntilSubstring(ctx context.Context, pod *corev1.Pod, substring string) {
-	s.ReadPodLogsUntilLine(ctx, pod, func(line string) bool {
-		return strings.Contains(line, substring)
-	})
 }
 
 func (s *BaseSuite) FindPodByLabel(ctx context.Context, namespace string, labelSelector string) *corev1.Pod {

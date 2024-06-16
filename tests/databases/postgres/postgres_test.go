@@ -19,7 +19,6 @@ import (
 )
 
 const (
-	TestNamespace            = "postgres-integration-test"
 	PostgresRootPassword     = "integrationtestpassword11"
 	PostgresCredsSecretName  = "postgres-user-password"
 	PostgresSvcName          = "otterize-database"
@@ -34,6 +33,7 @@ type PostgresTestSuite struct {
 	helm_tests.BaseSuite
 	PGServerConfClient dynamic.NamespaceableResourceInterface
 	clientPod          *corev1.Pod
+	testNamespaceName  string
 }
 
 func (s *PostgresTestSuite) SetupSuite() {
@@ -70,8 +70,9 @@ func (s *PostgresTestSuite) SetupTest() {
 	defer cancel()
 
 	// Create test namespace
+	s.testNamespaceName = fmt.Sprintf("postgres-integration-test-%d", time.Now().Unix())
 	logrus.Info("Creating test namespace")
-	s.CreateNamespace(ctx, TestNamespace)
+	s.CreateNamespace(ctx, s.testNamespaceName)
 
 	// Deploy postgres pod & service
 	logrus.Info("Deploying PostgreSQL database pod & service")
@@ -82,7 +83,7 @@ func (s *PostgresTestSuite) SetupTest() {
 	s.deployDatabaseClient(ctx)
 
 	// Get client pod name
-	s.clientPod = s.FindPodByLabel(ctx, TestNamespace, "app=psql-client")
+	s.clientPod = s.FindPodByLabel(ctx, s.testNamespaceName, "app=psql-client")
 
 	s.applyPGServerConf(ctx)
 }
@@ -91,8 +92,8 @@ func (s *PostgresTestSuite) TearDownTest() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
 	// ClientIntents have to be deleted before the namespace as properly deleting them requires the existence of the PGServerConf
-	s.DeleteClientIntents(ctx, TestNamespace, IntentsResourceName)
-	s.DeleteNamespace(ctx, TestNamespace)
+	s.DeleteClientIntents(ctx, s.testNamespaceName, IntentsResourceName)
+	s.DeleteNamespace(ctx, s.testNamespaceName)
 }
 
 func (s *PostgresTestSuite) deployPostgresDatabase(ctx context.Context) {
@@ -100,7 +101,7 @@ func (s *PostgresTestSuite) deployPostgresDatabase(ctx context.Context) {
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      PostgresInstanceName,
-			Namespace: TestNamespace,
+			Namespace: s.testNamespaceName,
 		},
 		Spec: v1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{
@@ -143,7 +144,7 @@ func (s *PostgresTestSuite) createPostgresService(ctx context.Context) {
 	postgresService := corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      PostgresSvcName,
-			Namespace: TestNamespace,
+			Namespace: s.testNamespaceName,
 			Labels: map[string]string{
 				"app": "database-svc",
 			},
@@ -179,7 +180,7 @@ func (s *PostgresTestSuite) applyIntents(ctx context.Context, operations []v1alp
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      IntentsResourceName,
-			Namespace: TestNamespace,
+			Namespace: s.testNamespaceName,
 		},
 		Spec: &v1alpha3.IntentsSpec{
 			Service: v1alpha3.Service{
@@ -209,7 +210,7 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "psql-client",
-			Namespace: TestNamespace,
+			Namespace: s.testNamespaceName,
 		},
 		Spec: v1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{
@@ -280,7 +281,7 @@ func (s *PostgresTestSuite) applyPGServerConf(ctx context.Context) {
 			Name: PostgresInstanceName,
 		},
 		Spec: v1alpha3.PostgreSQLServerConfigSpec{
-			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, TestNamespace),
+			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
 			Credentials: v1alpha3.DatabaseCredentials{
 				Username: PostgresRootUser,
 				Password: PostgresRootPassword,
@@ -289,16 +290,16 @@ func (s *PostgresTestSuite) applyPGServerConf(ctx context.Context) {
 	}
 
 	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
-	_, err := s.PGServerConfClient.Namespace(TestNamespace).Create(ctx, u, metav1.CreateOptions{})
+	_, err := s.PGServerConfClient.Namespace(s.testNamespaceName).Create(ctx, u, metav1.CreateOptions{})
 	s.Require().NoError(err)
 }
 
 func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 	connectionString := fmt.Sprintf(PostgresConnectionString, PostgresRootUser, PostgresRootPassword, PostgresSvcName, PostgresDatabaseName)
-	res, err := s.Client.BatchV1().Jobs(TestNamespace).Create(ctx, &batchv1.Job{
+	res, err := s.Client.BatchV1().Jobs(s.testNamespaceName).Create(ctx, &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "create-table-job",
-			Namespace: TestNamespace,
+			Namespace: s.testNamespaceName,
 		},
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
@@ -333,8 +334,11 @@ func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
 	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully connected to database")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 }
@@ -343,8 +347,11 @@ func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
 	logrus.Info("Validating client pod was granted INSERT permissions without SELECT")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully connected to database")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform SELECT operation")
 }
@@ -353,8 +360,11 @@ func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
 	logrus.Info("Validating client pod was granted SELECT permissions without INSERT")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully connected to database")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform INSERT operation")
 }
