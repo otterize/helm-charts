@@ -8,14 +8,13 @@ on:
     branches:
       - main
 
-
 jobs:
-  e2e-test:
+  test-chart-deployment:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Helm
         uses: azure/setup-helm@v3
@@ -41,9 +40,3 @@ jobs:
           
           # installation
           helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace --set global.telemetry.enabled=false
-
-          
-      
-      
-
-      

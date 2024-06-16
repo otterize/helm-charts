@@ -215,6 +215,10 @@ spec:
           {{- if .Values.operator.extraEnvVars -}}
           {{- toYaml .Values.operator.extraEnvVars | nindent 10 -}}
           {{- end }}
+          {{- if eq true .Values.debug }}
+          - name: OTTERIZE_DEBUG
+            value: "true"
+          {{- end }}
         volumeMounts:
 {{- if .Values.global.aws.rolesAnywhere.enabled }}
         - mountPath: /aws-config

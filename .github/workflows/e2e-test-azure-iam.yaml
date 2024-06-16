@@ -1,0 +1,71 @@
+name: E2E Tests for Azure IAM Integration
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }} # do not allow concurrent runs of this workflow
+  cancel-in-progress: false
+
+jobs:
+  run-e2e-tests:
+    if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in with Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az account show
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: 'otterizeGitHubActionsResourceGroup'
+          cluster-name: 'otterizeAzureIAME2EAKSCluster'
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+
+      - name: Setup go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.22.1
+          cache-dependency-path: tests/go.sum
+
+      - name: Set up gotestfmt
+        uses: GoTestTools/gotestfmt-action@v2
+
+      - name: Helm dependency update
+        run: helm dep up ./otterize-kubernetes
+
+      - name: Cleanup test namespaces
+        run: |
+          kubectl delete namespace otterize-tutorial-azure-iam --ignore-not-found=true --wait
+          kubectl delete namespace otterize-system --ignore-not-found=true --wait
+
+      - name: Run tests
+        run: |
+          cd tests
+          go test -v -json ./azureiam/... | tee gotest.log | gotestfmt
