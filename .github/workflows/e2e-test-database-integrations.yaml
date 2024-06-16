@@ -23,6 +23,9 @@ jobs:
 
       - name: Set up gotestfmt
         uses: GoTestTools/gotestfmt-action@v2
+        with:
+          # Optional: pass GITHUB_TOKEN to avoid rate limiting.
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Helm dependency update
         run: helm dep up ./otterize-kubernetes
