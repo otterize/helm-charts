@@ -75,7 +75,7 @@ jobs:
           go test -v -json ./databases/... | tee gotest.log | gotestfmt
 
   test-azure-integration:
-    if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')))
     timeout-minutes: 5
     runs-on: ubuntu-latest
     concurrency:
