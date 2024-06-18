@@ -8,7 +8,7 @@ jobs:
   bump-chart-versions:
     name: Bump chart versions
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'nobump')"
+    if: "!contains(github.event.head_commit.message, '[nobump]')"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,6 +28,7 @@ jobs:
         run: echo '${{ steps.changed-files.outputs.all_changed_files }}'
 
       - name: Bump operators helm chart versions
+        id: bump-versions
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
@@ -54,6 +55,7 @@ jobs:
             patch_version=$((${BASH_REMATCH[3]} + 1))
             new_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${patch_version}"
             sed -i "s#^version:.*#version: ${new_version}#g" "${chart_path}"
+            echo "otterize-kubernetes-version=${new_version}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Setup git config
@@ -66,3 +68,9 @@ jobs:
           git add .
           git commit -m 'Bump chart versions [nobump]'
           git push origin
+
+      - name: Tag version
+        run: |
+          tag="v${{ steps.bump-versions.outputs.otterize-kubernetes-version }}"
+          git tag -a ${tag}
+          git push origin ${tag}

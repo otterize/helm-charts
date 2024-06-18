@@ -60,6 +60,9 @@ func (s *PostgresTestSuite) installOtterizeNetworkMapperDisabled() {
 			"deployment": map[string]interface{}{
 				"networkMapper": false,
 			},
+			"telemetry": map[string]interface{}{
+				"enabled": false,
+			},
 		},
 	}
 	s.InstallOtterizeHelmChart(values)

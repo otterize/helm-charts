@@ -141,6 +141,9 @@ func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
 			"deployment": map[string]any{
 				"networkMapper": false,
 			},
+			"telemetry": map[string]interface{}{
+				"enabled": false,
+			},
 		},
 	}
 
