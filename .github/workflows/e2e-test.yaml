@@ -79,7 +79,7 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }} # do not allow concurrent runs of this job
+      group: azure-e2e-tests # do not allow concurrent runs of this job
       cancel-in-progress: false
     steps:
       - name: Checkout repository
