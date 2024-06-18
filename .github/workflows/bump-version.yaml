@@ -72,5 +72,5 @@ jobs:
       - name: Tag version
         run: |
           tag="v${{ steps.bump-versions.outputs.otterize-kubernetes-version }}"
-          git tag -a ${tag}
+          git tag -a ${tag} -m "${tag}"
           git push origin ${tag}
