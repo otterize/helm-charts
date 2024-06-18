@@ -6,7 +6,7 @@ on:
 
 jobs:
   e2e-tests:
-    uses: ./.github/workflows/e2e-tests.yaml
+    uses: ./.github/workflows/e2e-test.yaml
     name: Trigger e2e tests
 
   release:
