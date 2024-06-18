@@ -7,9 +7,6 @@ on:
       - reopened
       - ready_for_review
       - labeled
-  push:
-    branches:
-      - main
   workflow_call:
     secrets:
       AZURE_CREDENTIALS:
