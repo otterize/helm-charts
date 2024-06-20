@@ -68,6 +68,7 @@ Deployed only when `aws.visibility.enabled` is set to `true`.
 | `iamlive.tag`                      | IAMLive image tag.                   | (pinned to latest version as of this Helm chart version's publish) |
 | `iamlive.pullPolicy`               | IAMLive pull policy.                 | `(none)`                                                           |
 | `iamlive.pullSecrets`              | IAMLive pull secrets.                | `(none)`                                                           |
+| `iamlive.resources`                | Resources override.                  | `(none)`                                                           |
 
 ## DNS visibility parameters
 Deployed only when `aws.visibility.enabled` is set to `true`.
@@ -81,7 +82,7 @@ Deployed only when `aws.visibility.enabled` is set to `true`.
 | `visibilitydns.tag`                      | Image tag.                           | `latest`                |
 | `visibilitydns.pullPolicy`               | Pull policy.                         | `(none)`                |
 | `visibilitydns.pullSecrets`              | Pull secrets.                        | `(none)`                |
-
+| `visibilitydns.resources`                | Resources override.                  | `(none)`                |
 
 ## Cloud parameters
 | Key                                                        | Description                                                                                                                                                                                  | Default  |

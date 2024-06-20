@@ -125,6 +125,7 @@ iamlive:
       drop:
         - "ALL"
   pullSecrets:
+  resources: { } # see comment under mapper.resources
 
 visibilitydns:
   repository: coredns
@@ -134,6 +135,7 @@ visibilitydns:
   podSecurityContext:
   containerSecurityContext:
   pullSecrets:
+  resources: { } # see comment under mapper.resources
 
 aws:
   visibility:
