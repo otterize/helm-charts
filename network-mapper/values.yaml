@@ -6,6 +6,9 @@ enableInternetFacingTrafficReporting: true
 dnsClientIntentsUpdateEnabled: true
 enableIstioCollection: true
 
+serviceMonitor:
+  enabled: false
+
 mapper:
   repository: otterize
   image: network-mapper
