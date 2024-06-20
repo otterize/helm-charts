@@ -205,3 +205,12 @@ jobs:
         run: |
           cd tests
           go test -v -json ./azureiam/... | tee gotest.log | gotestfmt
+
+  e2e-test:
+    needs:
+      - test-chart-deployment
+      - test-database-integrations
+    runs-on: ubuntu-latest
+    steps:
+      - run: |-
+          echo Success! This step is only here to depend on the tests.
