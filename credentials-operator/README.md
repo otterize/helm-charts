@@ -80,3 +80,9 @@
 | `global.azure.subscriptionID`         | ID of the Azure subscription in which the AKS cluster is deployed.     | `(none)` |
 | `global.azure.resoureceGroup`         | Name of the Azure resource group in which the AKS cluster is deployed. | `(none)` |
 | `global.azure.aksClusterName`         | Name of the AKS cluster in which the operator is deployed.             | `(none)` |
+
+
+## Credentials operator parameters
+| Key                              | Description                                                                                                                   | Default |
+|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|---------|
+| `databaseSecretRotationInterval` | Interval in which secrets created by the credentials operator will be rotated. Valid time units are "ns", "ms", "s", "m", "h" | `8h`    |
