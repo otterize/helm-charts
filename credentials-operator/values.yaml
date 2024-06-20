@@ -70,6 +70,7 @@ global:
   gcp:
     enabled: false
 
+
   # Specify an annotation name that by setting it, one can override otterize's service name resolution.
   serviceNameOverrideAnnotationName: intents.otterize.com/service-name
 
@@ -112,3 +113,4 @@ global:
 # If that Deployment is owned by a custom resource, the operator will not be able to resolve it.
 # For this resolving to be successful, the operator needs to be able to `get` all resources.
 allowGetAllResources: true
+databaseSecretRotationIntervalNanoseconds: ""
