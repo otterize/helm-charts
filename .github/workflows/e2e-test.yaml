@@ -8,9 +8,21 @@ on:
       - ready_for_review
       - labeled
   workflow_call:
+    inputs:
+      gcr-registry:
+        required: false
+        type: string
+      intents-operator-tag:
+        required: false
+        type: string
+      credentials-operator-tag:
+        required: false
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
+      B64_GCLOUD_SERVICE_ACCOUNT_JSON:
+        required: false
 
 jobs:
   test-chart-deployment:
@@ -34,16 +46,45 @@ jobs:
           kubectl wait pods -n kube-system -l k8s-app=calico-node --for condition=Ready --timeout=90s
           kubectl wait pods -n kube-system -l k8s-app=calico-kube-controllers --for condition=Ready --timeout=90s
 
+      - name: Login to GCR
+        if: "${{ inputs.gcr-registry != '' }}"
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.gcr-registry }}
+          username: _json_key_base64
+          password: ${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON}}
+
+      - name: Load intents-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.intents-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+
+      - name: Load credentials-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
+
       - name: Deploy Otterize
         run: |-
           helm dep up ./otterize-kubernetes
           # schema validation using kubectl dry run
+          OPERATOR_FLAGS=""
+          if [ -n "${{ inputs.intents-operator-tag }}" ]; then
+            OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string intentsOperator.operator.repository=${{ inputs.gcp-registry }} --set-string intentsOperator.operator.image=intents-operator --set-string intentsOperator.operator.tag=${{ inputs.intents-operator-tag }} --set-string intentsOperator.operator.pullPolicy=Never"
+          fi
+          if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
+              OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string credentialsOperator.operator.repository=${{ inputs.gcp-registry }} --set-string credentialsOperator.operator.image=credentials-operator --set-string credentialsOperator.operator.tag=${{ inputs.credentials-operator-tag }} --set-string credentialsOperator.operator.pullPolicy=Never"
+          fi
+          TELEMETRY_FLAG="--set global.telemetry.enabled=false"
+          
           kubectl create namespace otterize-system # required for dry-run
-          helm template otterize ./otterize-kubernetes -n otterize-system --set global.telemetry.enabled=false | kubectl apply --dry-run=server -f -
+          helm template otterize ./otterize-kubernetes -n otterize-system $OPERATOR_FLAGS $TELEMETRY_FLAG | kubectl apply --dry-run=server -f -
           kubectl delete namespace otterize-system # clean up
           
           # installation
-          helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace --set global.telemetry.enabled=false
+          helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace $OPERATOR_FLAGS $TELEMETRY_FLAG
 
   test-database-integrations:
     runs-on: ubuntu-latest
@@ -66,6 +107,26 @@ jobs:
       - name: Helm dependency update
         run: helm dep up ./otterize-kubernetes
 
+      - name: Login to GCR
+        if: "${{ inputs.gcr-registry != '' }}"
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.gcr-registry }}
+          username: _json_key_base64
+          password: ${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON}}
+
+      - name: Load intents-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.intents-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+
+      - name: Load credentials-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
+
       - name: Run E2E tests - database integrations
         run: |
           cd tests
@@ -79,6 +140,12 @@ jobs:
       group: azure-e2e-tests # do not allow concurrent runs of this job
       cancel-in-progress: false
     steps:
+      - name: Fail on custom registry
+        if: "${{ inputs.gcr-registry != '' }}"
+        run: |
+          echo "This job does not support custom docker registry"
+          exit 1
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
