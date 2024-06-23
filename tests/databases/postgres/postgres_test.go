@@ -259,14 +259,18 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 	s.WaitForDeploymentAvailability(ctx, clientDeployment.Namespace, clientDeployment.Name)
 }
 
+func (s *PostgresTestSuite) CreatePostgreSQLServerConf(ctx context.Context, pgServerConf *v1alpha3.PostgreSQLServerConfig) {
+	logrus.WithField("namespace", pgServerConf.Namespace).WithField("name", pgServerConf.Name).Info("Creating PostgreSQLServerConfig")
+	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
+	_, err := s.PGServerConfClient.Namespace(pgServerConf.Namespace).Create(ctx, u, metav1.CreateOptions{})
+	s.Require().NoError(err)
+}
+
 func (s *PostgresTestSuite) applyPGServerConfWithInlinePassword(ctx context.Context) {
 	pgServerConf := v1alpha3.PostgreSQLServerConfig{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "PostgreSQLServerConfig",
-			APIVersion: "k8s.otterize.com/v1alpha3",
-		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: PostgresInstanceName,
+			Name:      PostgresInstanceName,
+			Namespace: s.testNamespaceName,
 		},
 		Spec: v1alpha3.PostgreSQLServerConfigSpec{
 			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
@@ -277,30 +281,23 @@ func (s *PostgresTestSuite) applyPGServerConfWithInlinePassword(ctx context.Cont
 		},
 	}
 
-	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
-	_, err := s.PGServerConfClient.Namespace(s.testNamespaceName).Create(ctx, u, metav1.CreateOptions{})
-	s.Require().NoError(err)
+	s.CreatePostgreSQLServerConf(ctx, &pgServerConf)
 }
 
 func (s *PostgresTestSuite) applyPGServerConfWithSecretRef(ctx context.Context) {
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: PostgresRootCredentialsSecretName,
+			Name:      PostgresRootCredentialsSecretName,
+			Namespace: s.testNamespaceName,
 		},
 		StringData: map[string]string{
 			"username": PostgresRootUser,
 			"password": PostgresRootPassword,
 		},
 	}
-
-	_, err := s.Client.CoreV1().Secrets(s.testNamespaceName).Create(ctx, secret, metav1.CreateOptions{})
-	s.Require().NoError(err)
+	s.CreateSecret(ctx, secret)
 
 	pgServerConf := v1alpha3.PostgreSQLServerConfig{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "PostgreSQLServerConfig",
-			APIVersion: "k8s.otterize.com/v1alpha3",
-		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name: PostgresInstanceName,
 		},
@@ -313,10 +310,7 @@ func (s *PostgresTestSuite) applyPGServerConfWithSecretRef(ctx context.Context) 
 			},
 		},
 	}
-
-	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
-	_, err = s.PGServerConfClient.Namespace(s.testNamespaceName).Create(ctx, u, metav1.CreateOptions{})
-	s.Require().NoError(err)
+	s.CreatePostgreSQLServerConf(ctx, &pgServerConf)
 }
 
 func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
