@@ -90,14 +90,6 @@ func (s *BaseSuite) SetupSuite() {
 }
 
 func (s *BaseSuite) GetDefaultHelmChartValues() map[string]any {
-	os.Setenv("INTENTS_OPERATOR_REPOSITORY", "us-central1-docker.pkg.dev/main-383408/otterize")
-	os.Setenv("INTENTS_OPERATOR_IMAGE", "intents-operator")
-	os.Setenv("INTENTS_OPERATOR_TAG", "f4896b254699a47093b12e319430d1cb7d1310e9")
-	os.Setenv("CREDENTIALS_OPERATOR_REPOSITORY", "us-central1-docker.pkg.dev/main-383408/otterize")
-	os.Setenv("CREDENTIALS_OPERATOR_IMAGE", "credentials-operator")
-	os.Setenv("CREDENTIALS_OPERATOR_TAG", "828fddd65bdba4995dc740052acfd443278f8a2d")
-	logrus.WithField("environment", os.Environ()).Info("Environment variables")
-
 	defaultValues := map[string]any{
 		"global": map[string]any{
 			"deployment": map[string]any{
