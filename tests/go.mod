@@ -13,7 +13,7 @@ require (
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
-	github.com/otterize/intents-operator/src v0.0.0-20240623153715-3086fe975a9f
+	github.com/otterize/intents-operator/src v0.0.0-20240623163818-27d9ebb4f4eb
 	github.com/samber/lo v1.39.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.16.0
