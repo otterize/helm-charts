@@ -58,4 +58,6 @@ spec:
           securityContext:
             {{- toYaml .Values.iamlive.containerSecurityContext | nindent 12 }}
           {{- end }}
+          resources:
+            {{- toYaml .Values.iamlive.resources | nindent 12 }}
 {{ end }}
