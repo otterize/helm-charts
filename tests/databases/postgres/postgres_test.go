@@ -19,15 +19,14 @@ import (
 )
 
 const (
-	PostgresRootCredentialsSecretName = "postgres-root-credentials"
-	PostgresRootPassword              = "integrationtestpassword11"
-	PostgresCredsSecretName           = "postgres-user-password"
-	PostgresSvcName                   = "otterize-database"
-	PostgresDatabaseName              = "test-db"
-	PostgresInstanceName              = "otterize-postgres"
-	PostgresRootUser                  = "otterize-admin"
-	IntentsResourceName               = "psql-client-intents"
-	PostgresConnectionString          = "postgres://%s:%s@%s:5432/%s"
+	PostgresRootPassword     = "integrationtestpassword11"
+	PostgresCredsSecretName  = "postgres-user-password"
+	PostgresSvcName          = "otterize-database"
+	PostgresDatabaseName     = "test-db"
+	PostgresInstanceName     = "otterize-postgres"
+	PostgresRootUser         = "otterize-admin"
+	IntentsResourceName      = "psql-client-intents"
+	PostgresConnectionString = "postgres://%s:%s@%s:5432/%s"
 )
 
 type PostgresTestSuite struct {
