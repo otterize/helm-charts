@@ -39,7 +39,7 @@ type PostgresTestSuite struct {
 func (s *PostgresTestSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
 
-	s.installOtterizeNetworkMapperDisabled()
+	s.InstallOtterizeHelmChart(s.GetDefaultHelmChartValues())
 
 	s.PGServerConfClient = s.DynamicClient.Resource(schema.GroupVersionResource{
 		Group:    "k8s.otterize.com",
@@ -52,20 +52,6 @@ func (s *PostgresTestSuite) TearDownSuite() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
 	s.UninstallOtterizeHelmChart(ctx)
-}
-
-func (s *PostgresTestSuite) installOtterizeNetworkMapperDisabled() {
-	values := map[string]interface{}{
-		"global": map[string]interface{}{
-			"deployment": map[string]interface{}{
-				"networkMapper": false,
-			},
-			"telemetry": map[string]interface{}{
-				"enabled": false,
-			},
-		},
-	}
-	s.InstallOtterizeHelmChart(values)
 }
 
 func (s *PostgresTestSuite) SetupTest() {

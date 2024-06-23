@@ -133,8 +133,21 @@ jobs:
           docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
           minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
 
+      - name: Set intents operator image env vars
+        if: "${{ inputs.gcr-registry != '' && inputs.intents-operator-tag != ''}}"
+        run: |
+          echo "INTENTS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}" >> $GITHUB_ENV
+          echo "INTENTS_OPERATOR_IMAGE=intents-operator" >> $GITHUB_ENV
+          echo "INTENTS_OPERATOR_TAG=${{ inputs.intents-operator-tag }}" >> $GITHUB_ENV
+
+      - name: Set credentials operator image env vars
+        if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
+        run: |
+          echo "CREDENTIALS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}" >> $GITHUB_ENV
+          echo "CREDENTIALS_OPERATOR_IMAGE=credentials-operator" >> $GITHUB_ENV
+          echo "CREDENTIALS_OPERATOR_TAG=${{ inputs.credentials-operator-tag }}" >> $GITHUB_ENV
+
       - name: Run E2E tests - database integrations
-        # TODO: provide registry & image tags as arguments
         run: |
           cd tests
           go test -v -json ./databases/... | tee gotest.log | gotestfmt

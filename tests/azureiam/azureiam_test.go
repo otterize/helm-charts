@@ -129,22 +129,16 @@ func (s *AzureIAMTestSuite) initAzureAgent() {
 }
 
 func (s *AzureIAMTestSuite) installOtterizeForAzureIAM() {
-	values := map[string]any{
-		"global": map[string]any{
-			"azure": map[string]any{
-				"enabled":                true,
-				"subscriptionID":         s.conf.SubscriptionID,
-				"resourceGroup":          s.conf.ResourceGroup,
-				"aksClusterName":         s.conf.AKSClusterName,
-				"userAssignedIdentityID": s.conf.OtterizeOperatorUserAssignedIdentityClientID,
-			},
-			"deployment": map[string]any{
-				"networkMapper": false,
-			},
-			"telemetry": map[string]interface{}{
-				"enabled": false,
-			},
-		},
+	values := s.GetDefaultHelmChartValues()
+	if _, ok := values["global"]; !ok {
+		values["global"] = map[string]any{}
+	}
+	values["global"].(map[string]any)["azure"] = map[string]any{
+		"enabled":                true,
+		"subscriptionID":         s.conf.SubscriptionID,
+		"resourceGroup":          s.conf.ResourceGroup,
+		"aksClusterName":         s.conf.AKSClusterName,
+		"userAssignedIdentityID": s.conf.OtterizeOperatorUserAssignedIdentityClientID,
 	}
 
 	s.InstallOtterizeHelmChart(values)
