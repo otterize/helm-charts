@@ -133,23 +133,19 @@ jobs:
           docker pull ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
           minikube image load ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
 
-      - name: Set intents operator image env vars
-        if: "${{ inputs.gcr-registry != '' && inputs.intents-operator-tag != ''}}"
-        run: |
-          echo "INTENTS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}" >> $GITHUB_ENV
-          echo "INTENTS_OPERATOR_IMAGE=intents-operator" >> $GITHUB_ENV
-          echo "INTENTS_OPERATOR_TAG=${{ inputs.intents-operator-tag }}" >> $GITHUB_ENV
-
-      - name: Set credentials operator image env vars
-        if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
-        run: |
-          echo "CREDENTIALS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}" >> $GITHUB_ENV
-          echo "CREDENTIALS_OPERATOR_IMAGE=credentials-operator" >> $GITHUB_ENV
-          echo "CREDENTIALS_OPERATOR_TAG=${{ inputs.credentials-operator-tag }}" >> $GITHUB_ENV
-
       - name: Run E2E tests - database integrations
         run: |
           cd tests
+          if [ -n "${{ inputs.intents-operator-tag }}" ]; then
+            export INTENTS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}
+            export INTENTS_OPERATOR_TAG=${{ inputs.intents-operator-tag }}
+            export INTENTS_OPERATOR_IMAGE=intents-operator
+          fi
+          if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
+            export CREDENTIALS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}
+            export CREDENTIALS_OPERATOR_TAG=${{ inputs.credentials-operator-tag }}
+            export CREDENTIALS_OPERATOR_IMAGE=credentials-operator
+          fi
           go test -v -json ./databases/... | tee gotest.log | gotestfmt
 
   test-azure-integration:
