@@ -66,8 +66,8 @@ jobs:
       - name: Load credentials-operator docker image from GCR
         if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
         run: |-
-          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
-          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
+          docker pull ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
 
       - name: Deploy Otterize
         run: |-
@@ -130,8 +130,8 @@ jobs:
       - name: Load credentials-operator docker image from GCR
         if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
         run: |-
-          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
-          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
+          docker pull ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
 
       - name: Set intents operator image env vars
         if: "${{ inputs.gcr-registry != '' && inputs.intents-operator-tag != ''}}"
