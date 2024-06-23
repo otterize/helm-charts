@@ -19,14 +19,15 @@ import (
 )
 
 const (
-	PostgresRootPassword     = "integrationtestpassword11"
-	PostgresCredsSecretName  = "postgres-user-password"
-	PostgresSvcName          = "otterize-database"
-	PostgresDatabaseName     = "test-db"
-	PostgresInstanceName     = "otterize-postgres"
-	PostgresRootUser         = "otterize-admin"
-	IntentsResourceName      = "psql-client-intents"
-	PostgresConnectionString = "postgres://%s:%s@%s:5432/%s"
+	PostgresRootCredentialsSecretName = "postgres-root-credentials"
+	PostgresRootPassword              = "integrationtestpassword11"
+	PostgresCredsSecretName           = "postgres-user-password"
+	PostgresSvcName                   = "otterize-database"
+	PostgresDatabaseName              = "test-db"
+	PostgresInstanceName              = "otterize-postgres"
+	PostgresRootUser                  = "otterize-admin"
+	IntentsResourceName               = "psql-client-intents"
+	PostgresConnectionString          = "postgres://%s:%s@%s:5432/%s"
 )
 
 type PostgresTestSuite struct {
@@ -73,8 +74,6 @@ func (s *PostgresTestSuite) SetupTest() {
 
 	// Get client pod name
 	s.clientPod = s.FindPodByLabel(ctx, s.testNamespaceName, "app=psql-client")
-
-	s.applyPGServerConf(ctx)
 }
 
 func (s *PostgresTestSuite) TearDownTest() {
@@ -260,7 +259,7 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 	s.WaitForDeploymentAvailability(ctx, clientDeployment.Namespace, clientDeployment.Name)
 }
 
-func (s *PostgresTestSuite) applyPGServerConf(ctx context.Context) {
+func (s *PostgresTestSuite) applyPGServerConfWithInlinePassword(ctx context.Context) {
 	pgServerConf := v1alpha3.PostgreSQLServerConfig{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "PostgreSQLServerConfig",
@@ -280,6 +279,43 @@ func (s *PostgresTestSuite) applyPGServerConf(ctx context.Context) {
 
 	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
 	_, err := s.PGServerConfClient.Namespace(s.testNamespaceName).Create(ctx, u, metav1.CreateOptions{})
+	s.Require().NoError(err)
+}
+
+func (s *PostgresTestSuite) applyPGServerConfWithSecretRef(ctx context.Context) {
+	secret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: PostgresRootCredentialsSecretName,
+		},
+		StringData: map[string]string{
+			"username": PostgresRootUser,
+			"password": PostgresRootPassword,
+		},
+	}
+
+	_, err := s.Client.CoreV1().Secrets(s.testNamespaceName).Create(ctx, secret, metav1.CreateOptions{})
+	s.Require().NoError(err)
+
+	pgServerConf := v1alpha3.PostgreSQLServerConfig{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "PostgreSQLServerConfig",
+			APIVersion: "k8s.otterize.com/v1alpha3",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: PostgresInstanceName,
+		},
+		Spec: v1alpha3.PostgreSQLServerConfigSpec{
+			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
+			Credentials: v1alpha3.DatabaseCredentials{
+				SecretRef: &v1alpha3.DatabaseCredentialsSecretRef{
+					Name: PostgresRootCredentialsSecretName,
+				},
+			},
+		},
+	}
+
+	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
+	_, err = s.PGServerConfClient.Namespace(s.testNamespaceName).Create(ctx, u, metav1.CreateOptions{})
 	s.Require().NoError(err)
 }
 
@@ -315,6 +351,8 @@ func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.applyPGServerConfWithInlinePassword(ctx)
+
 	logrus.Info("Validating client pod fails to access the database")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 }
@@ -322,6 +360,8 @@ func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
 func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
+
+	s.applyPGServerConfWithInlinePassword(ctx)
 
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 
@@ -336,6 +376,8 @@ func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.applyPGServerConfWithInlinePassword(ctx)
+
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
@@ -349,6 +391,8 @@ func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.applyPGServerConfWithInlinePassword(ctx)
+
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
@@ -357,6 +401,21 @@ func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform INSERT operation")
 }
+
+//func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsWithSecretRefPermissions() {
+//	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+//	defer cancel()
+//
+//	s.applyPGServerConfWithSecretRef(ctx)
+//
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+//
+//	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
+//	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully connected to database")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
+//	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
+//}
 
 func TestPostgresEnforcementTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
