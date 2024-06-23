@@ -9,6 +9,9 @@ on:
       - labeled
   workflow_call:
     inputs:
+      github_ref:
+        required: false
+        type: string
       gcr-registry:
         required: false
         type: string
@@ -34,6 +37,7 @@ jobs:
         with:
           # explicitly checkout helm-charts repository since this is a reusable workflow that's called from other repositories
           repository: 'otterize/helm-charts'
+          ref: ${{ inputs.github_ref }}
 
       - name: Set up Helm
         uses: azure/setup-helm@v4.2.0
@@ -97,6 +101,7 @@ jobs:
         with:
           # explicitly checkout helm-charts repository since this is a reusable workflow that's called from other repositories
           repository: 'otterize/helm-charts'
+          ref: ${{ inputs.github_ref }}
 
       - name: Start minikube
         uses: medyagh/setup-minikube@master
@@ -173,6 +178,7 @@ jobs:
         with:
           # explicitly checkout helm-charts repository since this is a reusable workflow that's called from other repositories
           repository: 'otterize/helm-charts'
+          ref: ${{ inputs.github_ref }}
 
       - name: Log in with Azure
         uses: azure/login@v2
