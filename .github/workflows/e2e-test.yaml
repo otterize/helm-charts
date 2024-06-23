@@ -8,9 +8,24 @@ on:
       - ready_for_review
       - labeled
   workflow_call:
+    inputs:
+      github_ref:
+        required: false
+        type: string
+      gcr-registry:
+        required: false
+        type: string
+      intents-operator-tag:
+        required: false
+        type: string
+      credentials-operator-tag:
+        required: false
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
+      B64_GCLOUD_SERVICE_ACCOUNT_JSON:
+        required: false
 
 jobs:
   test-chart-deployment:
@@ -19,6 +34,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # explicitly checkout helm-charts repository since this is a reusable workflow that's called from other repositories
+          repository: 'otterize/helm-charts'
+          ref: ${{ inputs.github_ref }}
 
       - name: Set up Helm
         uses: azure/setup-helm@v4.2.0
@@ -34,28 +53,67 @@ jobs:
           kubectl wait pods -n kube-system -l k8s-app=calico-node --for condition=Ready --timeout=90s
           kubectl wait pods -n kube-system -l k8s-app=calico-kube-controllers --for condition=Ready --timeout=90s
 
+      - name: Login to GCR
+        if: "${{ inputs.gcr-registry != '' }}"
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.gcr-registry }}
+          username: _json_key_base64
+          password: ${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON}}
+
+      - name: Load intents-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.intents-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+
+      - name: Load credentials-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
+
       - name: Deploy Otterize
         run: |-
           helm dep up ./otterize-kubernetes
           # schema validation using kubectl dry run
+          OPERATOR_FLAGS=""
+          if [ -n "${{ inputs.intents-operator-tag }}" ]; then
+            OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string intentsOperator.operator.repository=${{ inputs.gcr-registry }} --set-string intentsOperator.operator.image=intents-operator --set-string intentsOperator.operator.tag=${{ inputs.intents-operator-tag }} --set-string intentsOperator.operator.pullPolicy=Never"
+          fi
+          if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
+              OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string credentialsOperator.operator.repository=${{ inputs.gcr-registry }} --set-string credentialsOperator.operator.image=credentials-operator --set-string credentialsOperator.operator.tag=${{ inputs.credentials-operator-tag }} --set-string credentialsOperator.operator.pullPolicy=Never"
+          fi
+          TELEMETRY_FLAG="--set global.telemetry.enabled=false"
+          
           kubectl create namespace otterize-system # required for dry-run
-          helm template otterize ./otterize-kubernetes -n otterize-system --set global.telemetry.enabled=false | kubectl apply --dry-run=server -f -
+          helm template otterize ./otterize-kubernetes -n otterize-system $OPERATOR_FLAGS $TELEMETRY_FLAG | kubectl apply --dry-run=server -f -
           kubectl delete namespace otterize-system # clean up
           
           # installation
-          helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace --set global.telemetry.enabled=false
+          helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace $OPERATOR_FLAGS $TELEMETRY_FLAG
 
   test-database-integrations:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # explicitly checkout helm-charts repository since this is a reusable workflow that's called from other repositories
+          repository: 'otterize/helm-charts'
+          ref: ${{ inputs.github_ref }}
 
       - name: Start minikube
         uses: medyagh/setup-minikube@master
 
       - name: Set up Helm
         uses: azure/setup-helm@v4.2.0
+
+      - name: Setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.1
+          cache-dependency-path: tests/go.sum
 
       - name: Set up gotestfmt
         uses: GoTestTools/gotestfmt-action@v2
@@ -66,21 +124,61 @@ jobs:
       - name: Helm dependency update
         run: helm dep up ./otterize-kubernetes
 
+      - name: Login to GCR
+        if: "${{ inputs.gcr-registry != '' }}"
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.gcr-registry }}
+          username: _json_key_base64
+          password: ${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON}}
+
+      - name: Load intents-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.intents-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+
+      - name: Load credentials-operator docker image from GCR
+        if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
+        run: |-
+          docker pull ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
+
       - name: Run E2E tests - database integrations
         run: |
           cd tests
+          if [ -n "${{ inputs.intents-operator-tag }}" ]; then
+            export INTENTS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}
+            export INTENTS_OPERATOR_TAG=${{ inputs.intents-operator-tag }}
+            export INTENTS_OPERATOR_IMAGE=intents-operator
+          fi
+          if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
+            export CREDENTIALS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}
+            export CREDENTIALS_OPERATOR_TAG=${{ inputs.credentials-operator-tag }}
+            export CREDENTIALS_OPERATOR_IMAGE=credentials-operator
+          fi
           go test -v -json ./databases/... | tee gotest.log | gotestfmt
 
   test-azure-integration:
-    if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')))
+    if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && github.repository == 'otterize/helm-charts' && startsWith(github.ref, 'refs/tags/'))
     timeout-minutes: 5
     runs-on: ubuntu-latest
     concurrency:
       group: azure-e2e-tests # do not allow concurrent runs of this job
       cancel-in-progress: false
     steps:
+      - name: Fail on custom registry
+        if: "${{ inputs.gcr-registry != '' }}"
+        run: |
+          echo "This job does not support custom docker registry"
+          exit 1
+
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # explicitly checkout helm-charts repository since this is a reusable workflow that's called from other repositories
+          repository: 'otterize/helm-charts'
+          ref: ${{ inputs.github_ref }}
 
       - name: Log in with Azure
         uses: azure/login@v2
@@ -129,3 +227,12 @@ jobs:
         run: |
           cd tests
           go test -v -json ./azureiam/... | tee gotest.log | gotestfmt
+
+  e2e-test:
+    needs:
+      - test-chart-deployment
+      - test-database-integrations
+    runs-on: ubuntu-latest
+    steps:
+      - run: |-
+          echo Success! This step is only here to depend on the tests.

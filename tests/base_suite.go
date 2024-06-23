@@ -89,6 +89,59 @@ func (s *BaseSuite) SetupSuite() {
 	})
 }
 
+func (s *BaseSuite) GetDefaultHelmChartValues() map[string]any {
+	defaultValues := map[string]any{
+		"global": map[string]any{
+			"deployment": map[string]any{
+				"networkMapper": false,
+			},
+			"telemetry": map[string]any{
+				"enabled": false,
+			},
+		},
+		"intentsOperator": map[string]any{
+			"debug": true,
+		},
+		"credentialsOperator": map[string]any{
+			"debug": true,
+		},
+	}
+
+	intentsOperatorRepository := os.Getenv("INTENTS_OPERATOR_REPOSITORY")
+	intentsOperatorImage := os.Getenv("INTENTS_OPERATOR_IMAGE")
+	intentsOperatorTag := os.Getenv("INTENTS_OPERATOR_TAG")
+
+	if intentsOperatorTag != "" {
+		if _, ok := defaultValues["intentsOperator"]; !ok {
+			defaultValues["intentsOperator"] = map[string]any{}
+		}
+		defaultValues["intentsOperator"].(map[string]any)["operator"] = map[string]any{
+			"tag":        intentsOperatorTag,
+			"image":      intentsOperatorImage,
+			"repository": intentsOperatorRepository,
+			"pullPolicy": "Never",
+		}
+	}
+
+	credentialsOperatorRepository := os.Getenv("CREDENTIALS_OPERATOR_REPOSITORY")
+	credentialsOperatorImage := os.Getenv("CREDENTIALS_OPERATOR_IMAGE")
+	credentialsOperatorTag := os.Getenv("CREDENTIALS_OPERATOR_TAG")
+
+	if credentialsOperatorTag != "" {
+		if _, ok := defaultValues["credentialsOperator"]; !ok {
+			defaultValues["credentialsOperator"] = map[string]any{}
+		}
+		defaultValues["credentialsOperator"].(map[string]any)["operator"] = map[string]any{
+			"tag":        credentialsOperatorTag,
+			"image":      credentialsOperatorImage,
+			"repository": credentialsOperatorRepository,
+			"pullPolicy": "Never",
+		}
+	}
+
+	return defaultValues
+}
+
 func (s *BaseSuite) InstallOtterizeHelmChart(values map[string]any) {
 	// Load Chart.yaml
 	chart, err := loader.Load(OtterizeKubernetesChartPath)

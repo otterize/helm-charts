@@ -39,7 +39,7 @@ type PostgresTestSuite struct {
 func (s *PostgresTestSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
 
-	s.installOtterizeNetworkMapperDisabled()
+	s.InstallOtterizeHelmChart(s.GetDefaultHelmChartValues())
 
 	s.PGServerConfClient = s.DynamicClient.Resource(schema.GroupVersionResource{
 		Group:    "k8s.otterize.com",
@@ -52,20 +52,6 @@ func (s *PostgresTestSuite) TearDownSuite() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
 	s.UninstallOtterizeHelmChart(ctx)
-}
-
-func (s *PostgresTestSuite) installOtterizeNetworkMapperDisabled() {
-	values := map[string]interface{}{
-		"global": map[string]interface{}{
-			"deployment": map[string]interface{}{
-				"networkMapper": false,
-			},
-			"telemetry": map[string]interface{}{
-				"enabled": false,
-			},
-		},
-	}
-	s.InstallOtterizeHelmChart(values)
 }
 
 func (s *PostgresTestSuite) SetupTest() {
@@ -87,8 +73,6 @@ func (s *PostgresTestSuite) SetupTest() {
 
 	// Get client pod name
 	s.clientPod = s.FindPodByLabel(ctx, s.testNamespaceName, "app=psql-client")
-
-	s.applyPGServerConf(ctx)
 }
 
 func (s *PostgresTestSuite) TearDownTest() {
@@ -274,7 +258,7 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 	s.WaitForDeploymentAvailability(ctx, clientDeployment.Namespace, clientDeployment.Name)
 }
 
-func (s *PostgresTestSuite) applyPGServerConf(ctx context.Context) {
+func (s *PostgresTestSuite) applyPGServerConfWithInlinePassword(ctx context.Context) {
 	pgServerConf := v1alpha3.PostgreSQLServerConfig{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "PostgreSQLServerConfig",
@@ -329,6 +313,8 @@ func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.applyPGServerConfWithInlinePassword(ctx)
+
 	logrus.Info("Validating client pod fails to access the database")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 }
@@ -336,6 +322,8 @@ func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
 func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
+
+	s.applyPGServerConfWithInlinePassword(ctx)
 
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 
@@ -350,6 +338,8 @@ func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
+	s.applyPGServerConfWithInlinePassword(ctx)
+
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
@@ -362,6 +352,8 @@ func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
 func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
+
+	s.applyPGServerConfWithInlinePassword(ctx)
 
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
 
