@@ -75,10 +75,10 @@ jobs:
           # schema validation using kubectl dry run
           OPERATOR_FLAGS=""
           if [ -n "${{ inputs.intents-operator-tag }}" ]; then
-            OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string intentsOperator.operator.repository=${{ inputs.gcp-registry }} --set-string intentsOperator.operator.image=intents-operator --set-string intentsOperator.operator.tag=${{ inputs.intents-operator-tag }} --set-string intentsOperator.operator.pullPolicy=Never"
+            OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string intentsOperator.operator.repository=${{ inputs.gcr-registry }} --set-string intentsOperator.operator.image=intents-operator --set-string intentsOperator.operator.tag=${{ inputs.intents-operator-tag }} --set-string intentsOperator.operator.pullPolicy=Never"
           fi
           if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
-              OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string credentialsOperator.operator.repository=${{ inputs.gcp-registry }} --set-string credentialsOperator.operator.image=credentials-operator --set-string credentialsOperator.operator.tag=${{ inputs.credentials-operator-tag }} --set-string credentialsOperator.operator.pullPolicy=Never"
+              OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string credentialsOperator.operator.repository=${{ inputs.gcr-registry }} --set-string credentialsOperator.operator.image=credentials-operator --set-string credentialsOperator.operator.tag=${{ inputs.credentials-operator-tag }} --set-string credentialsOperator.operator.pullPolicy=Never"
           fi
           TELEMETRY_FLAG="--set global.telemetry.enabled=false"
           
@@ -134,6 +134,7 @@ jobs:
           minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.credentials-operator-tag }}
 
       - name: Run E2E tests - database integrations
+        # TODO: provide registry & image tags as arguments
         run: |
           cd tests
           go test -v -json ./databases/... | tee gotest.log | gotestfmt
