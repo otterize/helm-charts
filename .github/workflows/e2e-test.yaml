@@ -7,6 +7,17 @@ on:
       - reopened
       - ready_for_review
       - labeled
+  workflow_dispatch:
+    inputs:
+      gcr-registry:
+        required: false
+        type: string
+      intents-operator-tag:
+        required: false
+        type: string
+      credentials-operator-tag:
+        required: false
+        type: string
   workflow_call:
     inputs:
       github_ref:
