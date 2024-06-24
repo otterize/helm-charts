@@ -261,6 +261,10 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 
 func (s *PostgresTestSuite) CreatePostgreSQLServerConf(ctx context.Context, pgServerConf *v1alpha3.PostgreSQLServerConfig) {
 	logrus.WithField("namespace", pgServerConf.Namespace).WithField("name", pgServerConf.Name).Info("Creating PostgreSQLServerConfig")
+	pgServerConf.TypeMeta = metav1.TypeMeta{
+		Kind:       "PostgreSQLServerConfig",
+		APIVersion: "k8s.otterize.com/v1alpha3",
+	}
 	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
 	_, err := s.PGServerConfClient.Namespace(pgServerConf.Namespace).Create(ctx, u, metav1.CreateOptions{})
 	s.Require().NoError(err)
