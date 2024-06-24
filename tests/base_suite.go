@@ -247,6 +247,12 @@ func (s *BaseSuite) CreateService(ctx context.Context, service *corev1.Service) 
 	s.Require().NoError(err)
 }
 
+func (s *BaseSuite) CreateSecret(ctx context.Context, secret *corev1.Secret) {
+	logrus.WithField("namespace", secret.Namespace).WithField("secret", secret.Name).Info("Creating secret")
+	_, err := s.Client.CoreV1().Secrets(secret.Namespace).Create(ctx, secret, metav1.CreateOptions{})
+	s.Require().NoError(err)
+}
+
 func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace string, deploymentName string) {
 	selector := fields.OneTermEqualSelector(metav1.ObjectNameField, deploymentName)
 

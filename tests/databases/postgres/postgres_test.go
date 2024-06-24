@@ -19,14 +19,15 @@ import (
 )
 
 const (
-	PostgresRootPassword     = "integrationtestpassword11"
-	PostgresCredsSecretName  = "postgres-user-password"
-	PostgresSvcName          = "otterize-database"
-	PostgresDatabaseName     = "test-db"
-	PostgresInstanceName     = "otterize-postgres"
-	PostgresRootUser         = "otterize-admin"
-	IntentsResourceName      = "psql-client-intents"
-	PostgresConnectionString = "postgres://%s:%s@%s:5432/%s"
+	PostgresRootCredentialsSecretName = "postgres-root-credentials"
+	PostgresRootPassword              = "integrationtestpassword11"
+	PostgresCredsSecretName           = "postgres-user-password"
+	PostgresSvcName                   = "otterize-database"
+	PostgresDatabaseName              = "test-db"
+	PostgresInstanceName              = "otterize-postgres"
+	PostgresRootUser                  = "otterize-admin"
+	IntentsResourceName               = "psql-client-intents"
+	PostgresConnectionString          = "postgres://%s:%s@%s:5432/%s"
 )
 
 type PostgresTestSuite struct {
@@ -258,14 +259,22 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 	s.WaitForDeploymentAvailability(ctx, clientDeployment.Namespace, clientDeployment.Name)
 }
 
+func (s *PostgresTestSuite) CreatePostgreSQLServerConf(ctx context.Context, pgServerConf *v1alpha3.PostgreSQLServerConfig) {
+	logrus.WithField("namespace", pgServerConf.Namespace).WithField("name", pgServerConf.Name).Info("Creating PostgreSQLServerConfig")
+	pgServerConf.TypeMeta = metav1.TypeMeta{
+		Kind:       "PostgreSQLServerConfig",
+		APIVersion: "k8s.otterize.com/v1alpha3",
+	}
+	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
+	_, err := s.PGServerConfClient.Namespace(pgServerConf.Namespace).Create(ctx, u, metav1.CreateOptions{})
+	s.Require().NoError(err)
+}
+
 func (s *PostgresTestSuite) applyPGServerConfWithInlinePassword(ctx context.Context) {
 	pgServerConf := v1alpha3.PostgreSQLServerConfig{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "PostgreSQLServerConfig",
-			APIVersion: "k8s.otterize.com/v1alpha3",
-		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: PostgresInstanceName,
+			Name:      PostgresInstanceName,
+			Namespace: s.testNamespaceName,
 		},
 		Spec: v1alpha3.PostgreSQLServerConfigSpec{
 			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
@@ -276,9 +285,37 @@ func (s *PostgresTestSuite) applyPGServerConfWithInlinePassword(ctx context.Cont
 		},
 	}
 
-	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
-	_, err := s.PGServerConfClient.Namespace(s.testNamespaceName).Create(ctx, u, metav1.CreateOptions{})
-	s.Require().NoError(err)
+	s.CreatePostgreSQLServerConf(ctx, &pgServerConf)
+}
+
+func (s *PostgresTestSuite) applyPGServerConfWithSecretRef(ctx context.Context) {
+	secret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      PostgresRootCredentialsSecretName,
+			Namespace: s.testNamespaceName,
+		},
+		StringData: map[string]string{
+			"username": PostgresRootUser,
+			"password": PostgresRootPassword,
+		},
+	}
+	s.CreateSecret(ctx, secret)
+
+	pgServerConf := v1alpha3.PostgreSQLServerConfig{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      PostgresInstanceName,
+			Namespace: s.testNamespaceName,
+		},
+		Spec: v1alpha3.PostgreSQLServerConfigSpec{
+			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
+			Credentials: v1alpha3.DatabaseCredentials{
+				SecretRef: &v1alpha3.DatabaseCredentialsSecretRef{
+					Name: PostgresRootCredentialsSecretName,
+				},
+			},
+		},
+	}
+	s.CreatePostgreSQLServerConf(ctx, &pgServerConf)
 }
 
 func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
@@ -362,6 +399,21 @@ func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully connected to database")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform INSERT operation")
+}
+
+func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsWithSecretRefPermissions() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
+	defer cancel()
+
+	s.applyPGServerConfWithSecretRef(ctx)
+
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+
+	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
+	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully connected to database")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully INSERTED")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 }
 
 func TestPostgresEnforcementTestSuite(t *testing.T) {
