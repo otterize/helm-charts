@@ -303,7 +303,8 @@ func (s *PostgresTestSuite) applyPGServerConfWithSecretRef(ctx context.Context) 
 
 	pgServerConf := v1alpha3.PostgreSQLServerConfig{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: PostgresInstanceName,
+			Name:      PostgresInstanceName,
+			Namespace: s.testNamespaceName,
 		},
 		Spec: v1alpha3.PostgreSQLServerConfigSpec{
 			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
