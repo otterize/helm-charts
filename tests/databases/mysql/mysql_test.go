@@ -1,4 +1,4 @@
-package postgres
+package mysql
 
 import (
 	"context"
@@ -19,76 +19,75 @@ import (
 )
 
 const (
-	PostgresRootCredentialsSecretName = "postgres-root-credentials"
-	PostgresRootPassword              = "integrationtestpassword11"
-	PostgresCredsSecretName           = "postgres-user-password"
-	PostgresSvcName                   = "otterize-database"
-	PostgresDatabaseName              = "test-db"
-	PostgresInstanceName              = "otterize-postgres"
-	PostgresRootUser                  = "otterize-admin"
-	IntentsResourceName               = "psql-client-intents"
-	PostgresConnectionString          = "postgres://%s:%s@%s:5432/%s"
+	MySQLRootCredentialsSecretName = "mysql-root-credentials"
+	MySQLRootPassword              = "password"
+	MySQLRootUser                  = "root"
+	MySQLCredsSecretName           = "mysql-user-password"
+	MySQLSvcName                   = "otterize-database"
+	MySQLDatabaseName              = "testdb"
+	MySQLInstanceName              = "otterize-mysql"
+	IntentsResourceName            = "mysql-client-intents"
 )
 
-type PostgresTestSuite struct {
+type MySQLTestSuite struct {
 	helm_tests.BaseSuite
-	PGServerConfClient dynamic.NamespaceableResourceInterface
-	clientPod          *corev1.Pod
-	testNamespaceName  string
+	MySQLServerConfClient dynamic.NamespaceableResourceInterface
+	clientPod             *corev1.Pod
+	testNamespaceName     string
 }
 
-func (s *PostgresTestSuite) SetupSuite() {
+func (s *MySQLTestSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
 
 	s.InstallOtterizeHelmChart(s.GetDefaultHelmChartValues())
 
-	s.PGServerConfClient = s.DynamicClient.Resource(schema.GroupVersionResource{
+	s.MySQLServerConfClient = s.DynamicClient.Resource(schema.GroupVersionResource{
 		Group:    "k8s.otterize.com",
 		Version:  "v1alpha3",
-		Resource: "postgresqlserverconfigs",
+		Resource: "mysqlserverconfigs",
 	})
 }
 
-func (s *PostgresTestSuite) TearDownSuite() {
+func (s *MySQLTestSuite) TearDownSuite() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
 	s.UninstallOtterizeHelmChart(ctx)
 }
 
-func (s *PostgresTestSuite) SetupTest() {
+func (s *MySQLTestSuite) SetupTest() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
 
 	// Create test namespace
-	s.testNamespaceName = fmt.Sprintf("postgres-integration-test-%d", time.Now().Unix())
+	s.testNamespaceName = fmt.Sprintf("mysql-integration-test-%d", time.Now().Unix())
 	logrus.Info("Creating test namespace")
 	s.CreateNamespace(ctx, s.testNamespaceName)
 
-	// Deploy postgres pod & service
-	logrus.Info("Deploying PostgreSQL database pod & service")
+	// Deploy mysql pod & service
+	logrus.Info("Deploying MySQL database pod & service")
 	s.deployAndConfigureDatabase(ctx)
 
 	// Deploy client pod
-	logrus.Info("Deploying psql client pod")
+	logrus.Info("Deploying mysql client pod")
 	s.deployDatabaseClient(ctx)
 
 	// Get client pod name
-	s.clientPod = s.FindPodByLabel(ctx, s.testNamespaceName, "app=psql-client")
+	s.clientPod = s.FindPodByLabel(ctx, s.testNamespaceName, "app=mysql-client")
 }
 
-func (s *PostgresTestSuite) TearDownTest() {
+func (s *MySQLTestSuite) TearDownTest() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
 	defer cancel()
-	// ClientIntents have to be deleted before the namespace as properly deleting them requires the existence of the PGServerConf
+	// ClientIntents have to be deleted before the namespace as properly deleting them requires the existence of the MySQLServerConf
 	s.DeleteClientIntents(ctx, s.testNamespaceName, IntentsResourceName)
 	s.DeleteNamespace(ctx, s.testNamespaceName)
 }
 
-func (s *PostgresTestSuite) deployPostgresDatabase(ctx context.Context) {
-	postgresDeployment := &v1.Deployment{
+func (s *MySQLTestSuite) deployMySQLDatabase(ctx context.Context) {
+	mysqlDeployment := &v1.Deployment{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      PostgresInstanceName,
+			Name:      MySQLInstanceName,
 			Namespace: s.testNamespaceName,
 		},
 		Spec: v1.DeploymentSpec{
@@ -104,34 +103,59 @@ func (s *PostgresTestSuite) deployPostgresDatabase(ctx context.Context) {
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
 						Name:  "database",
-						Image: "postgres:latest",
+						Image: "mysql:latest",
 						Env: []corev1.EnvVar{
 							{
-								Name:  "POSTGRES_DB",
-								Value: PostgresDatabaseName,
+								Name:  "MYSQL_ROOT_PASSWORD",
+								Value: MySQLRootPassword,
 							},
 							{
-								Name:  "POSTGRES_USER",
-								Value: PostgresRootUser,
+								Name:  "MYSQL_ROOT_HOST",
+								Value: "%",
 							},
 							{
-								Name:  "POSTGRES_PASSWORD",
-								Value: PostgresRootPassword,
+								Name:  "MYSQL_DATABASE",
+								Value: MySQLDatabaseName,
 							},
+						},
+						Ports: []corev1.ContainerPort{{
+							ContainerPort: 3306,
+							Name:          "mysql",
+						}},
+
+						LivenessProbe: &corev1.Probe{
+							ProbeHandler: corev1.ProbeHandler{
+								Exec: &corev1.ExecAction{
+									Command: []string{"mysqladmin", "ping", "-h", "localhost"},
+								},
+							},
+							InitialDelaySeconds: 5,
+							PeriodSeconds:       1,
+							TimeoutSeconds:      1,
+						},
+						ReadinessProbe: &corev1.Probe{
+							ProbeHandler: corev1.ProbeHandler{
+								Exec: &corev1.ExecAction{
+									Command: []string{"mysqladmin", "ping", "-h", "localhost"},
+								},
+							},
+							InitialDelaySeconds: 5,
+							PeriodSeconds:       1,
+							TimeoutSeconds:      1,
 						},
 					}},
 				},
 			},
 		},
 	}
-	s.CreateDeployment(ctx, postgresDeployment)
-	s.WaitForDeploymentAvailability(ctx, postgresDeployment.Namespace, postgresDeployment.Name)
+	s.CreateDeployment(ctx, mysqlDeployment)
+	s.WaitForDeploymentAvailability(ctx, mysqlDeployment.Namespace, mysqlDeployment.Name)
 }
 
-func (s *PostgresTestSuite) createPostgresService(ctx context.Context) {
-	postgresService := corev1.Service{
+func (s *MySQLTestSuite) createMySQLService(ctx context.Context) {
+	mySQLService := corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      PostgresSvcName,
+			Name:      MySQLSvcName,
 			Namespace: s.testNamespaceName,
 			Labels: map[string]string{
 				"app": "database-svc",
@@ -140,8 +164,8 @@ func (s *PostgresTestSuite) createPostgresService(ctx context.Context) {
 		Spec: corev1.ServiceSpec{
 			Ports: []corev1.ServicePort{
 				{
-					Port:       5432,
-					TargetPort: intstr.IntOrString{IntVal: 5432},
+					Port:       3306,
+					TargetPort: intstr.IntOrString{IntVal: 3306},
 				},
 			},
 			Selector: map[string]string{"app": "database"},
@@ -149,18 +173,18 @@ func (s *PostgresTestSuite) createPostgresService(ctx context.Context) {
 		},
 	}
 
-	s.CreateService(ctx, &postgresService)
+	s.CreateService(ctx, &mySQLService)
 }
 
-func (s *PostgresTestSuite) deployAndConfigureDatabase(ctx context.Context) {
-	s.deployPostgresDatabase(ctx)
-	s.createPostgresService(ctx)
+func (s *MySQLTestSuite) deployAndConfigureDatabase(ctx context.Context) {
+	s.deployMySQLDatabase(ctx)
+	s.createMySQLService(ctx)
 
 	logrus.Info("Spawning job to create a test table in the database")
 	s.runCreateTableJob(ctx)
 }
 
-func (s *PostgresTestSuite) applyIntents(ctx context.Context, operations []v1alpha3.DatabaseOperation) {
+func (s *MySQLTestSuite) applyIntents(ctx context.Context, operations []v1alpha3.DatabaseOperation) {
 	clientIntents := v1alpha3.ClientIntents{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "ClientIntents",
@@ -172,15 +196,15 @@ func (s *PostgresTestSuite) applyIntents(ctx context.Context, operations []v1alp
 		},
 		Spec: &v1alpha3.IntentsSpec{
 			Service: v1alpha3.Service{
-				Name: "psql-client",
+				Name: "mysql-client",
 			},
 			Calls: []v1alpha3.Intent{
 				{
-					Name: PostgresInstanceName,
+					Name: MySQLInstanceName,
 					Type: v1alpha3.IntentTypeDatabase,
 					DatabaseResources: []v1alpha3.DatabaseResource{
 						{
-							DatabaseName: PostgresDatabaseName,
+							DatabaseName: MySQLDatabaseName,
 							Operations:   operations,
 						},
 					},
@@ -193,37 +217,37 @@ func (s *PostgresTestSuite) applyIntents(ctx context.Context, operations []v1alp
 	s.ApplyClientIntents(ctx, clientIntents)
 }
 
-func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
+func (s *MySQLTestSuite) deployDatabaseClient(ctx context.Context) {
 	clientDeployment := &v1.Deployment{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "psql-client",
+			Name:      "mysql-client",
 			Namespace: s.testNamespaceName,
 		},
 		Spec: v1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"app": "psql-client",
+					"app": "mysql-client",
 				},
 			},
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						"credentials-operator.otterize.com/user-password-secret-name": PostgresCredsSecretName,
+						"credentials-operator.otterize.com/user-password-secret-name": MySQLCredsSecretName,
 					},
-					Labels: map[string]string{"app": "psql-client"},
+					Labels: map[string]string{"app": "mysql-client"},
 				},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
 						Name:  "client",
-						Image: "otterize/postgres-integration-test-client:latest",
+						Image: "otterize/mysql-integration-test-client:latest",
 						Env: []corev1.EnvVar{
 							{
 								Name: "DATABASE_USER",
 								ValueFrom: &corev1.EnvVarSource{
 									SecretKeyRef: &corev1.SecretKeySelector{
 										LocalObjectReference: corev1.LocalObjectReference{
-											Name: PostgresCredsSecretName,
+											Name: MySQLCredsSecretName,
 										},
 										Key: "username",
 									},
@@ -234,7 +258,7 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 								ValueFrom: &corev1.EnvVarSource{
 									SecretKeyRef: &corev1.SecretKeySelector{
 										LocalObjectReference: corev1.LocalObjectReference{
-											Name: PostgresCredsSecretName,
+											Name: MySQLCredsSecretName,
 										},
 										Key: "password",
 									},
@@ -242,11 +266,11 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 							},
 							{
 								Name:  "DATABASE_HOST",
-								Value: PostgresSvcName,
+								Value: MySQLSvcName,
 							},
 							{
 								Name:  "DATABASE_NAME",
-								Value: PostgresDatabaseName,
+								Value: MySQLDatabaseName,
 							},
 						},
 					}},
@@ -259,67 +283,66 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 	s.WaitForDeploymentAvailability(ctx, clientDeployment.Namespace, clientDeployment.Name)
 }
 
-func (s *PostgresTestSuite) CreatePostgreSQLServerConf(ctx context.Context, pgServerConf *v1alpha3.PostgreSQLServerConfig) {
-	logrus.WithField("namespace", pgServerConf.Namespace).WithField("name", pgServerConf.Name).Info("Creating PostgreSQLServerConfig")
-	pgServerConf.TypeMeta = metav1.TypeMeta{
-		Kind:       "PostgreSQLServerConfig",
+func (s *MySQLTestSuite) CreateMySQLServerConf(ctx context.Context, mySQLServerConf *v1alpha3.MySQLServerConfig) {
+	logrus.WithField("namespace", mySQLServerConf.Namespace).WithField("name", mySQLServerConf.Name).Info("Creating MySQLServerConfig")
+	mySQLServerConf.TypeMeta = metav1.TypeMeta{
+		Kind:       "MySQLServerConfig",
 		APIVersion: "k8s.otterize.com/v1alpha3",
 	}
-	u := s.GetUnstructuredObject(pgServerConf, pgServerConf.GroupVersionKind())
-	_, err := s.PGServerConfClient.Namespace(pgServerConf.Namespace).Create(ctx, u, metav1.CreateOptions{})
+	u := s.GetUnstructuredObject(mySQLServerConf, mySQLServerConf.GroupVersionKind())
+	_, err := s.MySQLServerConfClient.Namespace(mySQLServerConf.Namespace).Create(ctx, u, metav1.CreateOptions{})
 	s.Require().NoError(err)
 }
 
-func (s *PostgresTestSuite) applyPGServerConfWithInlinePassword(ctx context.Context) {
-	pgServerConf := v1alpha3.PostgreSQLServerConfig{
+func (s *MySQLTestSuite) applyMySQLServerConfWithInlinePassword(ctx context.Context) {
+	mySQLServerConf := v1alpha3.MySQLServerConfig{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      PostgresInstanceName,
+			Name:      MySQLInstanceName,
 			Namespace: s.testNamespaceName,
 		},
-		Spec: v1alpha3.PostgreSQLServerConfigSpec{
-			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
+		Spec: v1alpha3.MySQLServerConfigSpec{
+			Address: fmt.Sprintf("%s.%s.svc.cluster.local:3306", MySQLSvcName, s.testNamespaceName),
 			Credentials: v1alpha3.DatabaseCredentials{
-				Username: PostgresRootUser,
-				Password: PostgresRootPassword,
+				Username: MySQLRootUser,
+				Password: MySQLRootPassword,
 			},
 		},
 	}
 
-	s.CreatePostgreSQLServerConf(ctx, &pgServerConf)
+	s.CreateMySQLServerConf(ctx, &mySQLServerConf)
 }
 
-func (s *PostgresTestSuite) applyPGServerConfWithSecretRef(ctx context.Context) {
+func (s *MySQLTestSuite) applyMySQLServerConfWithSecretRef(ctx context.Context) {
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      PostgresRootCredentialsSecretName,
+			Name:      MySQLRootCredentialsSecretName,
 			Namespace: s.testNamespaceName,
 		},
 		StringData: map[string]string{
-			"username": PostgresRootUser,
-			"password": PostgresRootPassword,
+			"username": MySQLRootUser,
+			"password": MySQLRootPassword,
 		},
 	}
 	s.CreateSecret(ctx, secret)
 
-	pgServerConf := v1alpha3.PostgreSQLServerConfig{
+	mySQLServerConf := v1alpha3.MySQLServerConfig{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      PostgresInstanceName,
+			Name:      MySQLInstanceName,
 			Namespace: s.testNamespaceName,
 		},
-		Spec: v1alpha3.PostgreSQLServerConfigSpec{
-			Address: fmt.Sprintf("%s.%s.svc.cluster.local:5432", PostgresSvcName, s.testNamespaceName),
+		Spec: v1alpha3.MySQLServerConfigSpec{
+			Address: fmt.Sprintf("%s.%s.svc.cluster.local:3306", MySQLSvcName, s.testNamespaceName),
 			Credentials: v1alpha3.DatabaseCredentials{
 				SecretRef: &v1alpha3.DatabaseCredentialsSecretRef{
-					Name: PostgresRootCredentialsSecretName,
+					Name: MySQLRootCredentialsSecretName,
 				},
 			},
 		},
 	}
-	s.CreatePostgreSQLServerConf(ctx, &pgServerConf)
+	s.CreateMySQLServerConf(ctx, &mySQLServerConf)
 }
 
-func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
-	connectionString := fmt.Sprintf(PostgresConnectionString, PostgresRootUser, PostgresRootPassword, PostgresSvcName, PostgresDatabaseName)
+func (s *MySQLTestSuite) runCreateTableJob(ctx context.Context) {
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "create-table-job",
@@ -332,9 +355,15 @@ func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 					Containers: []corev1.Container{
 						{
 							Name:    "create-table",
-							Image:   "postgres:latest",
-							Command: []string{"psql"},
-							Args:    []string{connectionString, "-c", "CREATE TABLE IF NOT EXISTS example ( entry_time BIGINT );"},
+							Image:   "mysql:latest",
+							Command: []string{"mysql"},
+							Args:    []string{"-h", MySQLSvcName, "-u", MySQLRootUser, "--database", MySQLDatabaseName, "-e", "CREATE TABLE IF NOT EXISTS example ( entry_time BIGINT );"},
+							Env: []corev1.EnvVar{
+								{
+									Name:  "MYSQL_PWD",
+									Value: MySQLRootPassword,
+								},
+							},
 						},
 					},
 				},
@@ -346,23 +375,23 @@ func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 	s.WaitForJobCompletion(ctx, job.Namespace, job.Name)
 }
 
-func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
+func (s *MySQLTestSuite) TestWorkloadFailsToAccessDatabase() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
-	s.applyPGServerConfWithInlinePassword(ctx)
+	s.applyMySQLServerConfWithInlinePassword(ctx)
 
 	logrus.Info("Validating client pod fails to access the database")
-	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Access denied for user")
 }
 
-func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
+func (s *MySQLTestSuite) TestAddSelectAndInsertPermissionsForDB() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
-	s.applyPGServerConfWithInlinePassword(ctx)
+	s.applyMySQLServerConfWithInlinePassword(ctx)
 
-	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Access denied for user")
 
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
 	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
@@ -371,13 +400,13 @@ func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsForDB() {
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 }
 
-func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
+func (s *MySQLTestSuite) TestInsertPermissionWithoutSelect() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
-	s.applyPGServerConfWithInlinePassword(ctx)
+	s.applyMySQLServerConfWithInlinePassword(ctx)
 
-	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Access denied for user")
 
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert})
 	logrus.Info("Validating client pod was granted INSERT permissions without SELECT")
@@ -386,13 +415,13 @@ func (s *PostgresTestSuite) TestInsertPermissionWithoutSelect() {
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform SELECT operation")
 }
 
-func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
+func (s *MySQLTestSuite) TestSelectPermissionWithoutInsert() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
-	s.applyPGServerConfWithInlinePassword(ctx)
+	s.applyMySQLServerConfWithInlinePassword(ctx)
 
-	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Access denied for user")
 
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationSelect})
 	logrus.Info("Validating client pod was granted SELECT permissions without INSERT")
@@ -401,13 +430,13 @@ func (s *PostgresTestSuite) TestSelectPermissionWithoutInsert() {
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Unable to perform INSERT operation")
 }
 
-func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsWithSecretRefPermissions() {
+func (s *MySQLTestSuite) TestAddSelectAndInsertPermissionsWithSecretRefPermissions() {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Minute))
 	defer cancel()
 
-	s.applyPGServerConfWithSecretRef(ctx)
+	s.applyMySQLServerConfWithSecretRef(ctx)
 
-	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "password authentication failed")
+	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Access denied for user")
 
 	s.applyIntents(ctx, []v1alpha3.DatabaseOperation{v1alpha3.DatabaseOperationInsert, v1alpha3.DatabaseOperationSelect})
 	logrus.Info("Validating client pod was granted SELECT & INSERT permissions")
@@ -416,6 +445,6 @@ func (s *PostgresTestSuite) TestAddSelectAndInsertPermissionsWithSecretRefPermis
 	s.ReadPodLogsUntilSubstring(ctx, s.clientPod, "Successfully SELECTED")
 }
 
-func TestPostgresEnforcementTestSuite(t *testing.T) {
-	suite.Run(t, new(PostgresTestSuite))
+func TestMySQLEnforcementTestSuite(t *testing.T) {
+	suite.Run(t, new(MySQLTestSuite))
 }
