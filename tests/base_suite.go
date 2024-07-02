@@ -299,6 +299,13 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 	}
 
 	logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).Error("Deployment is not ready and wait time exceeded")
+
+	deployment, err := s.Client.AppsV1().Deployments(namespace).Get(ctx, deploymentName, metav1.GetOptions{})
+	s.Require().NoError(err)
+
+	for _, cond := range deployment.Status.Conditions {
+		logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).WithField("condition", cond).Info("deployment condition")
+	}
 }
 
 func (s *BaseSuite) WaitForJobCompletion(ctx context.Context, namespace string, jobName string) {
