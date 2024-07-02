@@ -208,8 +208,9 @@ func (s *BaseSuite) WaitForNamespaceDeletion(ctx context.Context, namespaceName 
 		default:
 			continue
 		}
-
 	}
+
+	logrus.WithField("namespace", namespaceName).Error("Namespace is not deleted and wait time exceeded")
 }
 
 func (s *BaseSuite) CreateNamespace(ctx context.Context, namespaceName string) {
@@ -248,7 +249,6 @@ func (s *BaseSuite) CreateService(ctx context.Context, service *corev1.Service) 
 	s.Require().NoError(err)
 }
 
-
 func (s *BaseSuite) CreateSecret(ctx context.Context, secret *corev1.Secret) {
 	logrus.WithField("namespace", secret.Namespace).WithField("secret", secret.Name).Info("Creating secret")
 	_, err := s.Client.CoreV1().Secrets(secret.Namespace).Create(ctx, secret, metav1.CreateOptions{})
@@ -260,7 +260,6 @@ func (s *BaseSuite) CreateJob(ctx context.Context, job *batchv1.Job) {
 	_, err := s.Client.BatchV1().Jobs(job.Namespace).Create(ctx, job, metav1.CreateOptions{})
 	s.Require().NoError(err)
 }
-
 
 func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace string, deploymentName string) {
 	logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).Info("Waiting for deployment availability")
@@ -298,6 +297,8 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 			s.Require().Failf("Unexpected deployment event type", "Unexpected deployment event type: %v", event.Type)
 		}
 	}
+
+	logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).Error("Deployment is not ready and wait time exceeded")
 }
 
 func (s *BaseSuite) WaitForJobCompletion(ctx context.Context, namespace string, jobName string) {
@@ -336,6 +337,8 @@ func (s *BaseSuite) WaitForJobCompletion(ctx context.Context, namespace string, 
 			s.Require().Failf("Unexpected job event type", "Unexpected job event type: %v", event.Type)
 		}
 	}
+
+	logrus.WithField("namespace", namespace).WithField("job", jobName).Error("Job is not completed and wait time exceeded")
 }
 
 type LogLineMatcher func(line string) bool
@@ -413,8 +416,9 @@ func (s *BaseSuite) WaitForClientIntentsDeletion(ctx context.Context, namespaceN
 		default:
 			continue
 		}
-
 	}
+
+	logrus.WithField("namespace", namespaceName).Error("ClientIntents is not deleted and wait time exceeded")
 }
 
 func (s *BaseSuite) GetUnstructuredObject(resource any, gkv schema.GroupVersionKind) *unstructured.Unstructured {
