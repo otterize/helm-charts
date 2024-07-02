@@ -360,6 +360,7 @@ func (s *BaseSuite) ReadPodLogsUntilSubstring(ctx context.Context, pod *corev1.P
 		default:
 			for reader.Scan() {
 				line = reader.Text()
+				logger.Debugf(line)
 				if strings.Contains(line, substring) {
 					logger.Infof("Matched log line: %s", line)
 					return
