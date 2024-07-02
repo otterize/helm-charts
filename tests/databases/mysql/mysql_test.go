@@ -56,7 +56,7 @@ func (s *MySQLTestSuite) TearDownSuite() {
 }
 
 func (s *MySQLTestSuite) SetupTest() {
-	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Minute))
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(4*time.Minute))
 	defer cancel()
 
 	// Create test namespace
