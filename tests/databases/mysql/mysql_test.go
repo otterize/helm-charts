@@ -103,7 +103,7 @@ func (s *MySQLTestSuite) deployMySQLDatabase(ctx context.Context) {
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
 						Name:  "database",
-						Image: "mysql:latest",
+						Image: "mysql:8.4.0",
 						Env: []corev1.EnvVar{
 							{
 								Name:  "MYSQL_ROOT_PASSWORD",
@@ -355,7 +355,7 @@ func (s *MySQLTestSuite) runCreateTableJob(ctx context.Context) {
 					Containers: []corev1.Container{
 						{
 							Name:    "create-table",
-							Image:   "mysql:latest",
+							Image:   "mysql:8.4.0",
 							Command: []string{"mysql"},
 							Args:    []string{"-h", MySQLSvcName, "-u", MySQLRootUser, "--database", MySQLDatabaseName, "-e", "CREATE TABLE IF NOT EXISTS example ( entry_time BIGINT );"},
 							Env: []corev1.EnvVar{

@@ -221,6 +221,11 @@ jobs:
           docker pull ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
           minikube image load ${{ inputs.gcr-registry }}/credentials-operator:${{ inputs.credentials-operator-tag }}
 
+      - name: Preload MySQL docker image
+        run: |
+          docker pull mysql:8.4.0
+          minikube image load mysql:8.4.0
+
       - name: Run E2E tests - MySQL integrations
         run: |
           cd tests
