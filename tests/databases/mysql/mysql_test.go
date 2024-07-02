@@ -27,6 +27,7 @@ const (
 	MySQLDatabaseName              = "testdb"
 	MySQLInstanceName              = "otterize-mysql"
 	IntentsResourceName            = "mysql-client-intents"
+	MySQLImage                     = "mysql:8.4.0"
 )
 
 type MySQLTestSuite struct {
@@ -103,7 +104,7 @@ func (s *MySQLTestSuite) deployMySQLDatabase(ctx context.Context) {
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
 						Name:  "database",
-						Image: "mysql:8.4.0",
+						Image: MySQLImage,
 						Env: []corev1.EnvVar{
 							{
 								Name:  "MYSQL_ROOT_PASSWORD",
@@ -355,7 +356,7 @@ func (s *MySQLTestSuite) runCreateTableJob(ctx context.Context) {
 					Containers: []corev1.Container{
 						{
 							Name:    "create-table",
-							Image:   "mysql:8.4.0",
+							Image:   MySQLImage,
 							Command: []string{"mysql"},
 							Args:    []string{"-h", MySQLSvcName, "-u", MySQLRootUser, "--database", MySQLDatabaseName, "-e", "CREATE TABLE IF NOT EXISTS example ( entry_time BIGINT );"},
 							Env: []corev1.EnvVar{

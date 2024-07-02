@@ -28,6 +28,7 @@ const (
 	PostgresRootUser                  = "otterize-admin"
 	IntentsResourceName               = "psql-client-intents"
 	PostgresConnectionString          = "postgres://%s:%s@%s:5432/%s"
+	PostgresImage                     = "postgres:16.3"
 )
 
 type PostgresTestSuite struct {
@@ -104,7 +105,7 @@ func (s *PostgresTestSuite) deployPostgresDatabase(ctx context.Context) {
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
 						Name:  "database",
-						Image: "postgres:latest",
+						Image: PostgresImage,
 						Env: []corev1.EnvVar{
 							{
 								Name:  "POSTGRES_DB",
@@ -332,7 +333,7 @@ func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 					Containers: []corev1.Container{
 						{
 							Name:    "create-table",
-							Image:   "postgres:latest",
+							Image:   PostgresImage,
 							Command: []string{"psql"},
 							Args:    []string{connectionString, "-c", "CREATE TABLE IF NOT EXISTS example ( entry_time BIGINT );"},
 						},
