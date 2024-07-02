@@ -1,4 +1,4 @@
-package postgres
+package postgresql
 
 import (
 	"context"
@@ -28,6 +28,7 @@ const (
 	PostgresRootUser                  = "otterize-admin"
 	IntentsResourceName               = "psql-client-intents"
 	PostgresConnectionString          = "postgres://%s:%s@%s:5432/%s"
+	PostgresImage                     = "postgres:16.3"
 )
 
 type PostgresTestSuite struct {
@@ -104,7 +105,7 @@ func (s *PostgresTestSuite) deployPostgresDatabase(ctx context.Context) {
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
 						Name:  "database",
-						Image: "postgres:latest",
+						Image: PostgresImage,
 						Env: []corev1.EnvVar{
 							{
 								Name:  "POSTGRES_DB",
@@ -216,7 +217,7 @@ func (s *PostgresTestSuite) deployDatabaseClient(ctx context.Context) {
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
 						Name:  "client",
-						Image: "otterize/postgres-integration-test-client",
+						Image: "otterize/postgres-integration-test-client:latest",
 						Env: []corev1.EnvVar{
 							{
 								Name: "DATABASE_USER",
@@ -320,7 +321,7 @@ func (s *PostgresTestSuite) applyPGServerConfWithSecretRef(ctx context.Context) 
 
 func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 	connectionString := fmt.Sprintf(PostgresConnectionString, PostgresRootUser, PostgresRootPassword, PostgresSvcName, PostgresDatabaseName)
-	res, err := s.Client.BatchV1().Jobs(s.testNamespaceName).Create(ctx, &batchv1.Job{
+	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "create-table-job",
 			Namespace: s.testNamespaceName,
@@ -332,7 +333,7 @@ func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 					Containers: []corev1.Container{
 						{
 							Name:    "create-table",
-							Image:   "postgres:latest",
+							Image:   PostgresImage,
 							Command: []string{"psql"},
 							Args:    []string{connectionString, "-c", "CREATE TABLE IF NOT EXISTS example ( entry_time BIGINT );"},
 						},
@@ -341,9 +342,9 @@ func (s *PostgresTestSuite) runCreateTableJob(ctx context.Context) {
 			},
 		},
 		Status: batchv1.JobStatus{},
-	}, metav1.CreateOptions{})
-	s.Require().NoError(err)
-	s.Require().NotEmpty(res)
+	}
+	s.CreateJob(ctx, job)
+	s.WaitForJobCompletion(ctx, job.Namespace, job.Name)
 }
 
 func (s *PostgresTestSuite) TestWorkloadFailsToAccessDatabase() {
