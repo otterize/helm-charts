@@ -211,6 +211,7 @@ func (s *BaseSuite) WaitForNamespaceDeletion(ctx context.Context, namespaceName 
 	}
 
 	logrus.WithField("namespace", namespaceName).Error("Namespace is not deleted and wait time exceeded")
+	s.Require().Fail("Namespace is not deleted and wait time exceeded")
 }
 
 func (s *BaseSuite) CreateNamespace(ctx context.Context, namespaceName string) {
@@ -303,6 +304,7 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 	}
 
 	logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).Error("Deployment is not ready and wait time exceeded")
+	s.Require().Fail("Deployment is not ready and wait time exceeded")
 }
 
 func (s *BaseSuite) WaitForJobCompletion(ctx context.Context, namespace string, jobName string) {
@@ -347,6 +349,7 @@ func (s *BaseSuite) WaitForJobCompletion(ctx context.Context, namespace string, 
 	}
 
 	logrus.WithField("namespace", namespace).WithField("job", jobName).Error("Job is not completed and wait time exceeded")
+	s.Require().Fail("Job is not completed and wait time exceeded")
 }
 
 type LogLineMatcher func(line string) bool
@@ -427,6 +430,7 @@ func (s *BaseSuite) WaitForClientIntentsDeletion(ctx context.Context, namespaceN
 	}
 
 	logrus.WithField("namespace", namespaceName).Error("ClientIntents is not deleted and wait time exceeded")
+	s.Require().Fail("ClientIntents is not deleted and wait time exceeded")
 }
 
 func (s *BaseSuite) GetUnstructuredObject(resource any, gkv schema.GroupVersionKind) *unstructured.Unstructured {
