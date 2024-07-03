@@ -27,7 +27,7 @@ const (
 	MySQLDatabaseName              = "testdb"
 	MySQLInstanceName              = "otterize-mysql"
 	IntentsResourceName            = "mysql-client-intents"
-	MySQLImage                     = "mysql:8.4.0"
+	MySQLImage                     = "mysql:8.0"
 )
 
 type MySQLTestSuite struct {
