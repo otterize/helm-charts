@@ -126,6 +126,9 @@ jobs:
           go-version: 1.22.1
           cache-dependency-path: tests/go.sum
 
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
+
       - name: Set up gotestfmt
         uses: GoTestTools/gotestfmt-action@v2
         with:
@@ -168,7 +171,29 @@ jobs:
             export CREDENTIALS_OPERATOR_TAG=${{ inputs.credentials-operator-tag }}
             export CREDENTIALS_OPERATOR_IMAGE=credentials-operator
           fi
-          go test -v -json ./databases/postgresql/... | tee gotest.log | gotestfmt
+          go test -v -json ./databases/postgresql/... | tee /tmp/gotest.log | gotestfmt
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-postgresql
+          path: /tmp/gotest.log
+          if-no-files-found: error
+        if: always()
+
+      - name: Generate JUnit report
+        run: go-junit-report -parser gojson -in /tmp/gotest.log -out /tmp/test_report.xml
+        if: always()
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test report - PostgreSQL integrations
+          path: /tmp/test_report.xml
+          reporter: java-junit
+          fail-on-error: false
+          badge-title: 'PostgreSQL tests'
+        if: always() && github.event.pull_request.user.login != 'dependabot[bot]'
 
   test-mysql-integration:
     runs-on: ubuntu-latest
@@ -191,6 +216,9 @@ jobs:
         with:
           go-version: 1.22.1
           cache-dependency-path: tests/go.sum
+
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
 
       - name: Set up gotestfmt
         uses: GoTestTools/gotestfmt-action@v2
@@ -234,7 +262,29 @@ jobs:
             export CREDENTIALS_OPERATOR_TAG=${{ inputs.credentials-operator-tag }}
             export CREDENTIALS_OPERATOR_IMAGE=credentials-operator
           fi
-          go test -v -json ./databases/mysql/... | tee gotest.log | gotestfmt
+          go test -v -json ./databases/mysql/... | tee /tmp/gotest.log | gotestfmt
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-mysql
+          path: /tmp/gotest.log
+          if-no-files-found: error
+        if: always()
+
+      - name: Generate JUnit report
+        run: go-junit-report -parser gojson -in /tmp/gotest.log -out /tmp/test_report.xml
+        if: always()
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test report - MySQL integrations
+          path: /tmp/test_report.xml
+          reporter: java-junit
+          fail-on-error: false
+          badge-title: 'MySQL tests'
+        if: always() && github.event.pull_request.user.login != 'dependabot[bot]'
 
   test-azure-integration:
     if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && github.repository == 'otterize/helm-charts' && startsWith(github.ref, 'refs/tags/'))
@@ -303,7 +353,29 @@ jobs:
       - name: Run E2E tests - Azure integrations
         run: |
           cd tests
-          go test -v -json ./azureiam/... | tee gotest.log | gotestfmt
+          go test -v -json ./azureiam/... | tee /tmp/gotest.log | gotestfmt
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-azure
+          path: /tmp/gotest.log
+          if-no-files-found: error
+        if: always()
+          
+      - name: Generate JUnit report
+        run: go-junit-report -parser gojson -in /tmp/gotest.log -out /tmp/test_report.xml
+        if: always()
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test report - Azure integrations
+          path: /tmp/test_report.xml
+          reporter: java-junit
+          fail-on-error: false
+          badge-title: 'Azure tests'
+        if: always() && github.event.pull_request.user.login != 'dependabot[bot]'
 
   e2e-test:
     needs:
