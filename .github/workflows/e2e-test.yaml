@@ -233,6 +233,11 @@ jobs:
         run: |
           docker pull mysql:8.0
           minikube image load mysql:8.0
+          
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
 
       - name: Run E2E tests - MySQL integrations
         run: |
