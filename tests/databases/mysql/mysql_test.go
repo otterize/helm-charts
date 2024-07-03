@@ -127,7 +127,7 @@ func (s *MySQLTestSuite) deployMySQLDatabase(ctx context.Context) {
 						LivenessProbe: &corev1.Probe{
 							ProbeHandler: corev1.ProbeHandler{
 								Exec: &corev1.ExecAction{
-									Command: []string{"mysqladmin", "ping", "-h", "localhost"},
+									Command: []string{"mysqladmin", "ping", "-h", "localhost", "--protocol=tcp"},
 								},
 							},
 							InitialDelaySeconds: 5,
@@ -137,7 +137,7 @@ func (s *MySQLTestSuite) deployMySQLDatabase(ctx context.Context) {
 						ReadinessProbe: &corev1.Probe{
 							ProbeHandler: corev1.ProbeHandler{
 								Exec: &corev1.ExecAction{
-									Command: []string{"mysqladmin", "ping", "-h", "localhost"},
+									Command: []string{"mysqladmin", "ping", "-h", "localhost", "--protocol=tcp"},
 								},
 							},
 							InitialDelaySeconds: 5,
