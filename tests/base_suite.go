@@ -275,10 +275,6 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 	defer watcher.Stop()
 
 	isDeploymentReady := func(dep *appsv1.Deployment) bool {
-		for _, cond := range dep.Status.Conditions {
-			logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).WithField("condition", cond).Info("deployment condition")
-		}
-
 		_, readyConditionFound := lo.Find(dep.Status.Conditions, func(c appsv1.DeploymentCondition) bool {
 			return c.Type == appsv1.DeploymentAvailable && c.Status == corev1.ConditionTrue
 		})
@@ -320,10 +316,6 @@ func (s *BaseSuite) WaitForJobCompletion(ctx context.Context, namespace string, 
 	defer watcher.Stop()
 
 	isJobCompleted := func(job *batchv1.Job) bool {
-		for _, cond := range job.Status.Conditions {
-			logrus.WithField("namespace", namespace).WithField("job", jobName).WithField("condition", cond).Info("job condition")
-		}
-
 		_, readyConditionFound := lo.Find(job.Status.Conditions, func(c batchv1.JobCondition) bool {
 			return c.Type == batchv1.JobComplete && c.Status == corev1.ConditionTrue
 		})
