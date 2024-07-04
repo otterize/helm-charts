@@ -336,6 +336,9 @@ jobs:
           go-version: 1.22.1
           cache-dependency-path: tests/go.sum
 
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
+
       - name: Set up gotestfmt
         uses: GoTestTools/gotestfmt-action@v2
         with:
