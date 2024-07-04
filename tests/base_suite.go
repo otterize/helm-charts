@@ -14,6 +14,7 @@ import (
 	"helm.sh/helm/v3/pkg/cli"
 	"helm_tests/config"
 	appsv1 "k8s.io/api/apps/v1"
+	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -207,8 +208,10 @@ func (s *BaseSuite) WaitForNamespaceDeletion(ctx context.Context, namespaceName 
 		default:
 			continue
 		}
-
 	}
+
+	logrus.WithField("namespace", namespaceName).Error("Namespace is not deleted and wait time exceeded")
+	s.Require().Fail("Namespace is not deleted and wait time exceeded")
 }
 
 func (s *BaseSuite) CreateNamespace(ctx context.Context, namespaceName string) {
@@ -253,7 +256,14 @@ func (s *BaseSuite) CreateSecret(ctx context.Context, secret *corev1.Secret) {
 	s.Require().NoError(err)
 }
 
+func (s *BaseSuite) CreateJob(ctx context.Context, job *batchv1.Job) {
+	logrus.WithField("namespace", job.Namespace).WithField("job", job.Name).Info("Creating job")
+	_, err := s.Client.BatchV1().Jobs(job.Namespace).Create(ctx, job, metav1.CreateOptions{})
+	s.Require().NoError(err)
+}
+
 func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace string, deploymentName string) {
+	logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).Info("Waiting for deployment availability")
 	selector := fields.OneTermEqualSelector(metav1.ObjectNameField, deploymentName)
 
 	watchOptions := metav1.ListOptions{
@@ -279,6 +289,7 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 		case watch.Added:
 		case watch.Modified:
 			if isDeploymentReady(item) {
+				logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).Info("Deployment is ready")
 				return
 			}
 		case watch.Bookmark:
@@ -287,6 +298,50 @@ func (s *BaseSuite) WaitForDeploymentAvailability(ctx context.Context, namespace
 			s.Require().Failf("Unexpected deployment event type", "Unexpected deployment event type: %v", event.Type)
 		}
 	}
+
+	logrus.WithField("namespace", namespace).WithField("deployment", deploymentName).Error("Deployment is not ready and wait time exceeded")
+	s.Require().Fail("Deployment is not ready and wait time exceeded")
+}
+
+func (s *BaseSuite) WaitForJobCompletion(ctx context.Context, namespace string, jobName string) {
+	logrus.WithField("namespace", namespace).WithField("job", jobName).Info("Waiting for job completion")
+	selector := fields.OneTermEqualSelector(metav1.ObjectNameField, jobName)
+
+	watchOptions := metav1.ListOptions{
+		FieldSelector: selector.String(),
+	}
+
+	watcher, err := s.Client.BatchV1().Jobs(namespace).Watch(ctx, watchOptions)
+	s.Require().NoError(err)
+	defer watcher.Stop()
+
+	isJobCompleted := func(job *batchv1.Job) bool {
+		_, readyConditionFound := lo.Find(job.Status.Conditions, func(c batchv1.JobCondition) bool {
+			return c.Type == batchv1.JobComplete && c.Status == corev1.ConditionTrue
+		})
+		return readyConditionFound
+	}
+
+	for event := range watcher.ResultChan() {
+		item := event.Object.(*batchv1.Job)
+		logrus.WithField("name", item.Name).WithField("type", event.Type).Debug("Job changed")
+
+		switch event.Type {
+		case watch.Added:
+		case watch.Modified:
+			if isJobCompleted(item) {
+				logrus.WithField("namespace", namespace).WithField("job", jobName).Info("Job is completed")
+				return
+			}
+		case watch.Bookmark:
+		case watch.Error:
+		case watch.Deleted:
+			s.Require().Failf("Unexpected job event type", "Unexpected job event type: %v", event.Type)
+		}
+	}
+
+	logrus.WithField("namespace", namespace).WithField("job", jobName).Error("Job is not completed and wait time exceeded")
+	s.Require().Fail("Job is not completed and wait time exceeded")
 }
 
 type LogLineMatcher func(line string) bool
@@ -297,7 +352,7 @@ func (s *BaseSuite) ReadPodLogsUntilSubstring(ctx context.Context, pod *corev1.P
 	s.Require().NoError(err)
 
 	logger := logrus.WithField("pod", pod.Name).WithField("namespace", pod.Namespace)
-	logger.Debugf("Reading pod logs searching for substring %s", substring)
+	logger.Debugf("Reading pod logs searching for substring '%s'", substring)
 
 	defer logStream.Close()
 
@@ -306,11 +361,12 @@ func (s *BaseSuite) ReadPodLogsUntilSubstring(ctx context.Context, pod *corev1.P
 	for {
 		select {
 		case <-ctx.Done():
-			logger.Errorf("Failed to match log substring: %s", substring)
+			s.Fail("Failed to match log substring", "failed looking for substring '%s' in log", substring)
 			return
 		default:
 			for reader.Scan() {
 				line = reader.Text()
+				logger.Debugf(line)
 				if strings.Contains(line, substring) {
 					logger.Infof("Matched log line: %s", line)
 					return
@@ -363,8 +419,10 @@ func (s *BaseSuite) WaitForClientIntentsDeletion(ctx context.Context, namespaceN
 		default:
 			continue
 		}
-
 	}
+
+	logrus.WithField("namespace", namespaceName).Error("ClientIntents is not deleted and wait time exceeded")
+	s.Require().Fail("ClientIntents is not deleted and wait time exceeded")
 }
 
 func (s *BaseSuite) GetUnstructuredObject(resource any, gkv schema.GroupVersionKind) *unstructured.Unstructured {

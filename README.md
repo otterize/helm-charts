@@ -1,6 +1,7 @@
 # Otterize Helm Charts
 
 ![build](https://github.com/otterize/helm-charts/actions/workflows/release.yaml/badge.svg)
+![test](https://github.com/otterize/helm-charts/actions/workflows/e2e-test.yaml/badge.svg)
 [![community](https://img.shields.io/badge/slack-Otterize_Slack-purple.svg?logo=slack)](https://joinslack.otterize.com)
 
 This repository contains the official Helm charts for configuring and installing Otterize OSS components on Kubernetes: the intents operator, the network mapper, and the Credentials operator. These charts support multiple use cases depending on the values provided.
