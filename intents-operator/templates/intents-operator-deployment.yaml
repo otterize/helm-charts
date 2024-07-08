@@ -224,6 +224,8 @@ spec:
         - mountPath: /aws-config
           name: spiffe
           readOnly: true
+{{- end }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
         - name: extended-config
           mountPath: /etc/otterize
           readOnly: true
@@ -295,6 +297,8 @@ spec:
             aws.spiffe.csi.cert-manager.io/role: {{ (index .Values.global.aws.rolesAnywhere.accounts 0).intentsOperator.roleARN | quote }}
             aws.spiffe.csi.cert-manager.io/enable: "true"
             spiffe.csi.cert-manager.io/fs-group: "65532"
+{{- end }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
       - name: extended-config
         configMap:
           name: intents-operator-config
