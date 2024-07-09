@@ -32,6 +32,11 @@ operator:
   autoCreateNetworkPoliciesForExternalTraffic: # deprecated, use allowExternalTraffic instead
   # **Deprecated, use allowExternalTraffic instead**
   autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: # deprecated, use allowExternalTraffic instead
+  ingressControllerConfigs: # ingressControllerConfigs determines whether network policies created by allowExternalTraffic will be limited to just these pods, or all pods in the namespace
+#    - name: ingress-nginx-controller
+#      namespace: ingress-nginx
+#      kind: Deployment
+
 
   # `allowExternalTraffic` controls whether the intents-operator will automatically create network policies for services
   # that are accessible to external traffic.

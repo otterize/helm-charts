@@ -12,6 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     app.kubernetes.io/version: {{ .Chart.Version }}
+    checksum/config: {{ include (print $.Template.BasePath "/extended-config-configmap.yaml") . | sha256sum }}
   name: intents-operator-controller-manager
   namespace: {{ .Release.Namespace }}
 spec:
@@ -224,6 +225,8 @@ spec:
         - mountPath: /aws-config
           name: spiffe
           readOnly: true
+{{- end }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
         - name: extended-config
           mountPath: /etc/otterize
           readOnly: true
@@ -295,6 +298,8 @@ spec:
             aws.spiffe.csi.cert-manager.io/role: {{ (index .Values.global.aws.rolesAnywhere.accounts 0).intentsOperator.roleARN | quote }}
             aws.spiffe.csi.cert-manager.io/enable: "true"
             spiffe.csi.cert-manager.io/fs-group: "65532"
+{{- end }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
       - name: extended-config
         configMap:
           name: intents-operator-config
