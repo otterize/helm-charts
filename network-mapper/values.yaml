@@ -39,14 +39,24 @@ mapper:
   #   cpu: 100m
   #   memory: 128Mi
 
+agent:
+  enable: true
+  image:
+    repository: otterize
+    image: node-agent
+    tag: latest
+    pullPolicy:
+  tolerations: []
+  podSecurityContext:
+    runAsNonRoot: false
+  pullSecrets:
+  priorityClassName: ""
 
 sniffer:
   enable: true # enable/disable entire installation of the network sniffer
   repository: otterize
   image: network-mapper-sniffer
   pullPolicy:
-  podSecurityContext:
-    runAsNonRoot: false
   containerSecurityContext:
     privileged: false
     allowPrivilegeEscalation: false
@@ -55,12 +65,9 @@ sniffer:
       add:
         - SYS_PTRACE
         - NET_RAW
-  pullSecrets:
-  tolerations: []
   #The options to add tolerations
   # tolerations:
   # - operator: Exists
-  priorityClassName: ""  
   resources: { }
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -136,6 +143,15 @@ visibilitydns:
   containerSecurityContext:
   pullSecrets:
   resources: { } # see comment under mapper.resources
+
+ebpf:
+  enable: true
+  image:
+    repository: quay.io/bpfman
+    image: bpfman
+    tag: latest
+    pullPolicy:
+  logLevel: debug
 
 aws:
   visibility:
