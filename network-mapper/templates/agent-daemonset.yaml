@@ -1,0 +1,215 @@
+{{ if .Values.agent.enable }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: otterize-node-agent
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+spec:
+  selector:
+    matchLabels:
+      app: otterize-node-agent
+  template:
+    metadata:
+      labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app: otterize-node-agent
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+    spec:
+      serviceAccountName: {{ template "otterize.sniffer.fullName" . }}
+    {{- if .Values.agent.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.agent.podSecurityContext | nindent 8 }}
+    {{- end }}
+      {{ if .Values.agent.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.agent.pullSecrets }}
+      {{ end }}
+      {{- with .Values.agent.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+     {{- end }}
+     {{- with .Values.agent.priorityClassName }}
+      priorityClassName: {{ . }}
+     {{- end }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
+      volumes:
+        - hostPath:
+            path: /proc
+          name: proc
+        - name: component-config
+          configMap:
+            name: {{ template "otterize.mapper.componentConfigmap" . }}
+        - name: ebpfman-socket
+          emptyDir: { }
+        - name: ebpf-programs
+          emptyDir: { }
+        - name: cri
+          hostPath:
+            path: "/run/containerd"
+
+      initContainers:
+        - name: copy-ebpf-programs
+          image: "{{ .Values.agent.image.repository }}/{{ .Values.agent.image.image }}:{{ .Values.agent.image.tag }}"
+          volumeMounts:
+            - mountPath: /otterize/ebpf
+              name: ebpf-programs
+          command: [ "sh", "-c", "cp -r /otterize/ebpf-objects/* /otterize/ebpf" ]
+
+      containers:
+        - name: node-agent
+          image: "{{ .Values.agent.image.repository }}/{{ .Values.agent.image.image }}:{{ .Values.agent.image.tag }}"
+          {{ if .Values.agent.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
+          {{ end }}
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /run/bpfman-sock/
+              name: ebpfman-socket
+            - mountPath: /otterize/ebpf
+              name: ebpf-programs
+            - mountPath: /var/run/containerd
+              name: cri
+
+
+        {{ if .Values.sniffer.enable }}
+        - name: network-sniffer
+          image: "{{ .Values.sniffer.repository }}/{{ .Values.sniffer.image }}:{{ default $.Chart.AppVersion .Values.sniffer.tag }}"
+          {{ if .Values.sniffer.pullPolicy }}
+          imagePullPolicy: {{ .Values.sniffer.pullPolicy }}
+          {{ end }}
+          resources: {{- toYaml .Values.sniffer.resources | nindent 12 }}
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OTTERIZE_MAPPER_API_URL
+              value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
+            - name: OTTERIZE_DEBUG
+              value: {{ .Values.debug | quote }}
+          {{ if .Values.global.serviceNameOverrideAnnotationName }}
+            - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+              value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+          {{ end }}
+          {{- if eq false .Values.global.telemetry.enabled }}
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "false"
+          {{- else }}
+            - name: OTTERIZE_TELEMETRY_ENABLED
+              value: "true"
+          {{- end }}
+          {{- if eq false .Values.global.telemetry.usage.enabled }}
+            - name: OTTERIZE_TELEMETRY_USAGE_ENABLED
+              value: "false"
+          {{- else }}
+            - name: OTTERIZE_TELEMETRY_USAGE_ENABLED
+              value: "true"
+          {{- end }}
+          {{- if eq false .Values.global.telemetry.errors.enabled }}
+            - name: OTTERIZE_TELEMETRY_ERRORS_ENABLED
+              value: "false"
+          {{- else }}
+            - name: OTTERIZE_TELEMETRY_ERRORS_ENABLED
+              value: "true"
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.stage }}
+            - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
+              value: {{ .Values.global.telemetry.errors.stage | quote }}
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.endpointAddress }}
+            - name: OTTERIZE_TELEMETRY_ERRORS_ADDRESS
+              value: {{ .Values.global.telemetry.errors.endpointAddress | quote }}
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.networkMapperApiKey }}
+            - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
+              value: {{ .Values.global.telemetry.errors.networkMapperApiKey | quote }}
+          {{- end }}
+          {{- if .Values.global.otterizeCloud.credentials.clientId }}
+            - name: OTTERIZE_CLIENT_ID
+              value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9090
+            initialDelaySeconds: 30
+            periodSeconds: 20
+        {{- if .Values.sniffer.containerSecurityContext }}
+          securityContext:
+          {{- toYaml .Values.sniffer.containerSecurityContext | nindent 12 }}
+        {{- end }}
+          volumeMounts:
+            - mountPath: /hostproc
+              name: proc
+              readOnly: true
+            - mountPath: /etc/otterize
+              name: component-config
+              readOnly: true
+        {{ end }}
+
+        {{ if .Values.ebpf.enable }}
+        - name: ebpf-agent
+          image: "{{ .Values.ebpf.image.repository }}/{{ .Values.ebpf.image.image }}:{{ .Values.ebpf.image.tag }}"
+          {{ if .Values.ebpf.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.ebpf.image.pullPolicy }}
+          {{ end }}
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /run/bpfman-sock/
+              name: ebpfman-socket
+            - mountPath: /otterize/ebpf
+              name: ebpf-programs
+          env:
+            - name: RUST_LOG
+              value: "{{ .Values.ebpf.logLevel }}"
+        {{ end }}
+
+{{ end }}
