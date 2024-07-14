@@ -1,6 +1,6 @@
 # Otterize Helm Charts
 
-![build](https://github.com/otterize/helm-charts/actions/workflows/release.yaml/badge.svg)
+![build](https://github.com/otterize/helm-charts/actions/workflows/release.yaml/badge.svg?branch=)
 ![test](https://github.com/otterize/helm-charts/actions/workflows/e2e-test.yaml/badge.svg)
 [![community](https://img.shields.io/badge/slack-Otterize_Slack-purple.svg?logo=slack)](https://joinslack.otterize.com)
 
