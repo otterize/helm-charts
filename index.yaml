@@ -3,9 +3,9 @@ entries:
   credentials-operator:
   - apiVersion: v2
     appVersion: v2.0.7
-    created: "2024-07-10T06:14:40.931363765Z"
+    created: "2024-07-14T11:01:10.04665001Z"
     description: credentials-operator
-    digest: 40fc8faaed99e361521628e741efaa5725f18672f353a86511644e289635a24b
+    digest: 6ec5c2bea07124dd29d70b38991109382786497726219ae8cea777b9c528cbaf
     home: https://github.com/otterize/credentials-operator
     name: credentials-operator
     sources:
@@ -810,9 +810,9 @@ entries:
   intents-operator:
   - apiVersion: v2
     appVersion: v2.0.7
-    created: "2024-07-10T06:14:40.932069817Z"
+    created: "2024-07-14T11:01:10.047357853Z"
     description: Otterize intents operator
-    digest: 039aacc53884934a134cb115d0c6dff483ce85322b0416990caa8fad163e0013
+    digest: d48c07a14f3f4696b6449268cd93d097eb490e88d382e5fd843c4f61bbeb85aa
     home: https://github.com/otterize/intents-operator
     name: intents-operator
     sources:
@@ -1992,8 +1992,8 @@ entries:
   network-mapper:
   - apiVersion: v2
     appVersion: v2.0.3
-    created: "2024-07-10T06:14:40.932982777Z"
-    digest: af13985c529f31e1a1dbb8df4e6a3fc3c1bf371b8b8a98d2f04892b8c866bf7d
+    created: "2024-07-14T11:01:10.04826572Z"
+    digest: 434fd886d50352ea6358467ec8a2023bbf3594a4100c2bd1862a54d3fd1313a7
     home: https://github.com/otterize/network-mapper
     name: network-mapper
     sources:
@@ -2627,6 +2627,39 @@ entries:
     - https://otterize.github.io/helm-charts/network-mapper-0.1.0.tgz
     version: 0.1.0
   otterize-kubernetes:
+  - apiVersion: v2
+    created: "2024-07-14T11:01:10.051449369Z"
+    dependencies:
+    - alias: credentialsOperator
+      condition: global.deployment.credentialsOperator
+      name: credentials-operator
+      repository: file://./../credentials-operator
+      version: '>= 0.0.1'
+    - alias: spire
+      condition: deployment.spire,global.deployment.spire
+      name: spire
+      repository: file://./../spire
+      version: 1.0.0
+    - alias: intentsOperator
+      condition: deployment.intentsOperator,global.deployment.intentsOperator
+      name: intents-operator
+      repository: file://./../intents-operator
+      version: '>= 0.1.2'
+    - alias: networkMapper
+      condition: deployment.networkMapper,global.deployment.networkMapper
+      name: network-mapper
+      repository: file://./../network-mapper
+      version: '>= 0.1.0'
+    description: 'This chart contains the Otterize credentials-operator, SPIRE (server+agent),
+      the Otterize intents operator, and the Otterize network mapper. '
+    digest: f0c9b38373f9ee63f8e831ef036a7a2b8cf2f5e76f18a9e0382bad44fdd32103
+    home: https://github.com/otterize/helm-charts
+    kubeVersion: '>=1.19.0-0'
+    name: otterize-kubernetes
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/otterize-kubernetes-3.0.36.tgz
+    version: 3.0.36
   - apiVersion: v2
     created: "2024-07-10T06:14:40.936185776Z"
     dependencies:
@@ -7951,7 +7984,7 @@ entries:
   spire:
   - apiVersion: v2
     appVersion: 1.5.4
-    created: "2024-07-10T06:14:40.936822819Z"
+    created: "2024-07-14T11:01:10.052097981Z"
     description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
       Please note this chart requires Projected Service Account Tokens which has to
       be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
@@ -7962,7 +7995,7 @@ entries:
       command:         - kube-apiserver         - --api-audiences=api,spire-server         -
       --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
       --service-account-signing-key-file=/run/config/pki/sa.key ``` '
-    digest: a7a6ca3b696bde3922063a9d782b0a2132b59f11c0eb560a47fad9605734ba93
+    digest: d32abf6c85caef315f687129993eaba834bd84fd0e31a794eea0d58141d03dcb
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -7989,4 +8022,4 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-10T06:14:40.929998047Z"
+generated: "2024-07-14T11:01:10.045588294Z"
