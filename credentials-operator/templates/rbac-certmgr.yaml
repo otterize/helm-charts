@@ -3,7 +3,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: creds-operator-certificaterequest-creator
-  namespace: otterize-system
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["certificaterequests"]
@@ -13,7 +12,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: credentials-operator-certificaterequest
-  namespace: otterize-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -21,6 +19,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: credentials-operator-controller-manager
-    namespace: otterize-system
+    namespace: {{ .Release.Namespace }}
 ---
 {{- end }}
