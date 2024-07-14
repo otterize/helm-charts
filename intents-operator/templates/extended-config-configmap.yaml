@@ -24,16 +24,14 @@ data:
         profileARN: {{ $account.intentsOperator.profileARN | required "AWS RolesAnywhere profile ARN required: account.profileARN" }}
         trustAnchorARN: {{ $account.trustAnchorARN | required "AWS RolesAnywhere trust anchor ARN required: account.trustAnchorARN" }}
         trustDomain: {{ $account.trustDomain | required "AWS RolesAnywhere trust domain required: account.trustDomain" }}
-
-
     {{- end }}
   {{- end }}
   {{- if .Values.operator.ingressControllerConfigs }}
-   ingressControllers:
-  {{- range $ingressControllerConfig := .Values.operator.ingressControllerConfigs }}
+    ingressControllers:
+    {{- range $ingressControllerConfig := .Values.operator.ingressControllerConfigs }}
       - name: {{ $ingressControllerConfig.name | quote | required "Ingress controller name required: name" }}
         namespace: {{ $ingressControllerConfig.namespace | quote | required "Ingress controller namespace required: namespace" }}
         kind: {{ $ingressControllerConfig.kind | quote | required "Ingress controller kind required: kind" }}
-  {{- end }}
+    {{- end }}
   {{- end }}
 {{- end }}
