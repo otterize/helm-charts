@@ -2,6 +2,7 @@
 # Parameters
 
 ## Deployment parameters
+
 | Key                                     | Description                                                                                                                           | Default |
 |-----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `global.deployment.spire`               | Whether or not to deploy SPIRE.  Required for mTLS, if not using Otterize Cloud.                                                      | `true`  |
@@ -10,14 +11,15 @@
 | `global.deployment.networkMapper`       | Whether or not to deploy network-mapper.                                                                                              | `true`  |
 
 ## Global parameters
+
 These parameters are used by multiple charts, and must be kept the same for the correct functioning of the separate components.
 
 | Key                                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Default                             |
 |--------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `global.spiffe.CASubject`                  | The Subject that CA certificates should use (see below).	                                                                                                                                                                                                                                                                                                                                                                                                                                                               |                                     |
+| `global.spiffe.CASubject`                  | The Subject that CA certificates should use (see below).                                                                                                                                                                                                                                                                                                                                                                                                                                                                |                                     |
 | `global.spiffe.CASubject.country`          | SPIRE's CA certificates `Country` value.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `"US"`                              |
 | `global.spiffe.CASubject.organization`     | SPIRE's CA certificates `Organization` Value.                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `"SPIRE"`                           |
-| `global.spiffe.trustDomain`                | The trust domain that SPIRE will use.	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `"example.org"`                     |
+| `global.spiffe.trustDomain`                | The trust domain that SPIRE will use.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `"example.org"`                     |
 | `global.certificateProvider`               | What provider should be used to generate certificates for mTLS - `"spire"`, `"otterize-cloud"` or `"cert-manager"`                                                                                                                                                                                                                                                                                                                                                                                                      | `"spire"`                           |
 | `global.spire.serverServiceName`           | Name of the Kubernetes service that will be created for SPIRE-server.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                     |
 | `global.allowGetAllResources`              | If defined overrides `allowGetAllResources` in subcharts. Gives get, list and watch permission to watch on all resources. This is used to resolve service names when pods have owners that are custom resources. When disabled, a limited set of permissions is used that only allows access to built-in Kubernetes resources that deploy Pods and Pods themselves - Deployments, StatefulSets, DaemonSets, ReplicaSets and Services. Resolving may not be able to complete if the owning resource is not one of those. |                                     |
@@ -26,9 +28,10 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.podAnnotations`                    | Annotations to add to all deployed pods                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | {}                                  |
 | `global.podLabels`                         | Labels to add to all deployed pods                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | {}                                  |
 | `global.serviceNameOverrideAnnotationName` | Which annotation to use (in the [service name resolution algorithm](https://docs.otterize.com/reference/service-identities#kubernetes-service-identity-resolution)) for setting a pod's service name, if not the default. Use this if you already have annotations on your pods that provide the correct service name.                                                                                                                                                                                                  | `intents.otterize.com/service-name` |
-| `global.openshift`                         | Whether to configure and deploy SecurityContextConstraints that allow all components to run with minimal privileges on a default OpenShift installation.                                                                                                                                                                                                                                                                                                                                                                | `false`                             |    
+| `global.openshift`                         | Whether to configure and deploy SecurityContextConstraints that allow all components to run with minimal privileges on a default OpenShift installation.                                                                                                                                                                                                                                                                                                                                                                | `false`                             |
 
 ## Cloud parameters
+
 | Key                                                              | Description                                                                                                                                                                                  | Default  |
 |------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
 | `global.otterizeCloud.credentials.clientId`                      | Client ID for connecting to Otterize Cloud.                                                                                                                                                  | `(none)` |
@@ -39,6 +42,7 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.otterizeCloud.apiExtraCAPEMSecret`                       | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## AWS Integration parameters
+
 | Key                                 | Description                                                                                     | Default  |
 |-------------------------------------|-------------------------------------------------------------------------------------------------|----------|
 | `global.aws.enabled`                | Enable or disable AWS integration                                                               | `false`  |
@@ -46,6 +50,7 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.aws.useSoftDelete`          | Use soft delete strategy (tag as deleted instead of actually delete) for AWS roles and policies | `false`  |
 
 ### AWS Integration - RolesAnywhere parameters
+
 | Key                                    | Description                                                                                                                                                                                                                                                                                                                                                   | Default |
 |----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `global.aws.rolesAnywhere.enabled`     | Enable or disable AWS integration                                                                                                                                                                                                                                                                                                                             | `false` |
@@ -53,6 +58,7 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.aws.rolesAnywhere.accounts`    | List of AWS account objects, with the following fields: `id`, `trustAnchorARN`, `trustDomain`, and under `intentsOperator` or `credentialsOperator`, `roleARN`, `profileARN`. At least one account is required. If more than one is specified, the pod label `credentials-operator.otterize.com/create-aws-role`'s value must be the targeted AWS account ID. | `(nil)` |
 
 ## Azure Integration parameters
+
 | Key                                   | Description                                 | Default  |
 |---------------------------------------|---------------------------------------------|----------|
 | `global.azure.enabled`                | Enable or disable Azure integration         | `false`  |
@@ -62,6 +68,7 @@ These parameters are used by multiple charts, and must be kept the same for the 
 | `global.azure.aksClusterName`         | Name of the AKS cluster in which the operator is deployed.             | `(none)` |
 
 ## Intents operator parameters
+
 All configurable parameters of intents-operator can be configured under the alias `intentsOperator`.
 Further information about intents-operator parameters can be found [in the Intents Operator's helm chart](https://github.com/otterize/helm-charts/tree/main/intents-operator).
 
@@ -93,20 +100,23 @@ Otterize OSS components report anonymous usage information back to the Otterize 
 | `global.telemetry.errors.credentialsOperatorApiKey` | If set, overrides the default API key for anonymous telemetries on application crashes and errors in the credentials operator | `(none)` |
 | `global.telemetry.errors.intentsOperatorApiKey`     | If set, overrides the default API key for anonymous telemetries on application crashes and errors in the intents operator     | `(none)` |
 
-
 ## SPIRE parameters
+
 All configurable parameters of SPIRE can be configured under the alias `spire`.
 Further information about `SPIRE` parameters can be found [in SPIRE's helm chart](https://github.com/otterize/helm-charts/tree/main/spire).
 
 ## Network mapper parameters
+
 All configurable parameters of the network mapper can be configured under the alias `networkMapper`.
 Further information about network mapper parameters can be found [in the network mapper's chart](https://github.com/otterize/helm-charts/tree/main/network-mapper).
 
 ## Credentials operator parameters
+
 All configurable parameters of the credentials operator can be configured under the alias `credentialsOperator`.
 Further information about network mapper parameters can be found [in the network mapper's chart](https://github.com/otterize/helm-charts/tree/main/credentials-operator).
 
 ## Resource configuration
+
 | Component                  | Key                                  | Default  |
 |----------------------------|--------------------------------------|----------|
 | Intents Operator           | `intentsOperator.operator.resources` | `(none)` |
