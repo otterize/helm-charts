@@ -1,6 +1,7 @@
 # Parameters
 
 ## Global parameters
+
 | Key                                             | Description                                                                                                                                                                                                                                                                                                            | Default                             |
 |-------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
 | `global.allowGetAllResources`                   | If defined overrides `allowGetAllResources`.                                                                                                                                                                                                                                                                           |                                     |
@@ -19,9 +20,10 @@
 | `global.aws.eksClusterNameOverride`             | EKS cluster name (overrides auto-detection)                                                                                                                                                                                                                                                                            | `(none)`                            |
 | `global.azure.enabled`                          | Enable or disable Azure integration                                                                                                                                                                                                                                                                                    | `false`                             |
 | `global.gcp.enabled`                            | Enable or disable GCP integration                                                                                                                                                                                                                                                                                      | `false`                             |
-| `global.openshift`                              | Whether to configure and deploy SecurityContextConstraints that allow all components to run with minimal privileges on a default OpenShift installation.                                                                                                                                                               | `false`                             |    
+| `global.openshift`                              | Whether to configure and deploy SecurityContextConstraints that allow all components to run with minimal privileges on a default OpenShift installation.                                                                                                                                                               | `false`                             |
 
 ## Operator parameters
+
 | Key                                                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Default                                                              |
 |----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
 | `operator.repository`                              | Intents Operator image repository.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `otterize`                                                           |
@@ -45,6 +47,7 @@
 | `operator.autoGenerateTLSUsingCredentialsOperator` | If set to true, adds the necessary pod annotations in order to integrate with credentials-operator, and get tls certificate.                                                                                                                                                                                                                                                                                                                                                                                                                 | `false`                                                              |
 
 ## Cloud parameters
+
 | Key                                                              | Description                                                                                                                                                                                  | Default  |
 |------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
 | `global.otterizeCloud.credentials.clientId`                      | Client ID for connecting to Otterize Cloud.                                                                                                                                                  | `(none)` |
@@ -55,16 +58,19 @@
 | `global.otterizeCloud.apiExtraCAPEMSecret`                       | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## Common parameters
+
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `allowGetAllResources` | Gives get, list and watch permission to watch on all resources. This is used to resolve service names when pods have owners that are custom resources. When disabled, a limited set of permissions is used that only allows access to built-in Kubernetes resources that deploy Pods and Pods themselves - Deployments, StatefulSets, DaemonSets, ReplicaSets and Services. Resolving may not be able to complete if the owning resource is not one of those. | `true`  |
 
 ## AWS integration parameters
+
 | Key           | Description                                              | Default  |
 |---------------|----------------------------------------------------------|----------|
 | `aws.roleARN` | ARN of the AWS role the operator will use to access AWS. | `(none)` |
 
 ## Azure integration parameters
+
 | Key                                   | Description                                                            | Default  |
 |---------------------------------------|------------------------------------------------------------------------|----------|
 | `global.azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |

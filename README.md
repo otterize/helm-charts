@@ -18,20 +18,24 @@ To use the charts here, you'll need [Kubernetes](https://kubernetes.io/docs/home
 To use the latest version of these charts, first add the Otterize helm repository:
 
 ```console
-$ helm repo add otterize https://helm.otterize.com
+helm repo add otterize https://helm.otterize.com
 ```
+
 You should see:
+
 ```console
 "otterize" has been added to your repositories
 ````
 
 Then you can install any of them into your cluster, e.g. to install the otterize-kubernetes chart into a namespace called "otterize-system", use:
+
 ```console
-$ helm install otterize otterize/otterize-kubernetes -n otterize-system
+helm install otterize otterize/otterize-kubernetes -n otterize-system
 ```
 
-The README for each chart describes the various configuration options it supports. 
+The README for each chart describes the various configuration options it supports.
 These are also documented in the [docs site](https://docs.otterize.com/) along with more detailed installation instructions.
 
 ## Contributing
+
 1. See our [Contributor License Agreement](https://github.com/otterize/cla/).

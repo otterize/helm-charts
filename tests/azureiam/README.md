@@ -2,7 +2,7 @@
 
 ## Setup instructions
 
-This test suite requires an Azure subscription and an Azure Kubernetes Service (AKS) cluster. 
+This test suite requires an Azure subscription and an Azure Kubernetes Service (AKS) cluster.
 The following steps will guide you through setting up the required resources:
 
 ```shell
@@ -33,15 +33,15 @@ az storage account create \
 # Add the "storage blob data contributor" role assignment to the storage account
 export GITHUB_APP_SP_ID=$(az ad sp list --display-name otterizeGitHubActions --query '[0].appId' -o tsv)
 az role assignment create --role "Storage Blob Data Contributor" \
-	--scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT_NAME \
-	--assignee $GITHUB_APP_SP_ID
+ --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT_NAME \
+ --assignee $GITHUB_APP_SP_ID
 
 # [Optional] Add the "storage blob data contributor" role assignment to the storage account for the signed in user
 # This is useful for running the tests locally
 export SIGNED_IN_USER_NAME=$(az ad signed-in-user show --query 'userPrincipalName' -o tsv)
 az role assignment create --role "Storage Blob Data Contributor" \
-	--scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT_NAME \
-	--assignee $SIGNED_IN_USER_NAME
+ --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/$STORAGE_ACCOUNT_NAME \
+ --assignee $SIGNED_IN_USER_NAME
 
 
 # apply the Otterize Azure IAM terraform module to setup Azure IAM identities for the Otterize operator
