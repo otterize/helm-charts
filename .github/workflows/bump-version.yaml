@@ -8,7 +8,7 @@ jobs:
   bump-chart-versions:
     name: Bump chart versions
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[nobump]')"
+    if: "false"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
