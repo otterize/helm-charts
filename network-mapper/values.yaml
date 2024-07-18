@@ -147,11 +147,11 @@ visibilitydns:
 ebpf:
   enable: true
   image:
-    repository: quay.io/bpfman
+    repository: otterize
     image: bpfman
     tag: latest
     pullPolicy:
-  logLevel: debug
+  logLevel: info
 
 aws:
   visibility:
