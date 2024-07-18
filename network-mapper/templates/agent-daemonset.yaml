@@ -1,4 +1,4 @@
-{{ if .Values.agent.enable }}
+{{ if or .Values.sniffer.enable .Values.ebpf.enable }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -70,14 +70,6 @@ spec:
           hostPath:
             path: "/run/containerd"
 
-      initContainers:
-        - name: copy-ebpf-programs
-          image: "{{ .Values.agent.image.repository }}/{{ .Values.agent.image.image }}:{{ .Values.agent.image.tag }}"
-          volumeMounts:
-            - mountPath: /otterize/ebpf
-              name: ebpf-programs
-          command: [ "sh", "-c", "cp -r /otterize/ebpf-objects/* /otterize/ebpf" ]
-
       containers:
         - name: node-agent
           image: "{{ .Values.agent.image.repository }}/{{ .Values.agent.image.image }}:{{ .Values.agent.image.tag }}"
@@ -99,8 +91,6 @@ spec:
               readOnly: true
             - mountPath: /run/bpfman-sock/
               name: ebpfman-socket
-            - mountPath: /otterize/ebpf
-              name: ebpf-programs
             - mountPath: /var/run/containerd
               name: cri
 
@@ -205,8 +195,6 @@ spec:
               readOnly: true
             - mountPath: /run/bpfman-sock/
               name: ebpfman-socket
-            - mountPath: /otterize/ebpf
-              name: ebpf-programs
           env:
             - name: RUST_LOG
               value: "{{ .Values.ebpf.logLevel }}"
