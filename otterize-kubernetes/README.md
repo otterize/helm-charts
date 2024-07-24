@@ -59,9 +59,9 @@ These parameters are used by multiple charts, and must be kept the same for the 
 
 ## Azure Integration parameters
 
-| Key                                   | Description                                 | Default  |
-|---------------------------------------|---------------------------------------------|----------|
-| `global.azure.enabled`                | Enable or disable Azure integration         | `false`  |
+| Key                                   | Description                                                            | Default  |
+|---------------------------------------|------------------------------------------------------------------------|----------|
+| `global.azure.enabled`                | Enable or disable Azure integration                                    | `false`  |
 | `global.azure.userAssignedIdentityID` | ID of the user assigned identity used by the operator to access Azure. | `(none)` |
 | `global.azure.subscriptionID`         | ID of the Azure subscription in which the AKS cluster is deployed.     | `(none)` |
 | `global.azure.resoureceGroup`         | Name of the Azure resource group in which the AKS cluster is deployed. | `(none)` |
@@ -113,7 +113,7 @@ Further information about network mapper parameters can be found [in the network
 ## Credentials operator parameters
 
 All configurable parameters of the credentials operator can be configured under the alias `credentialsOperator`.
-Further information about network mapper parameters can be found [in the network mapper's chart](https://github.com/otterize/helm-charts/tree/main/credentials-operator).
+Further information about network mapper parameters can be found [in the credentials operator's chart](https://github.com/otterize/helm-charts/tree/main/credentials-operator).
 
 ## Resource configuration
 

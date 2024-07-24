@@ -92,3 +92,4 @@
 | Key                              | Description                                                                                                                   | Default |
 |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|---------|
 | `databaseSecretRotationInterval` | Interval in which secrets created by the credentials operator will be rotated. Valid time units are "ns", "ms", "s", "m", "h" | `8h`    |
+| `enableSecretRotation`           | Whether periodic secret rotation is enabled                                                                                   | false   |
