@@ -114,5 +114,6 @@ global:
 # For this resolving to be successful, the operator needs to be able to `get` all resources.
 allowGetAllResources: true
 
+enableSecretRotation: false
 # Valid time units are "ns", "ms", "s", "m", "h". Defaults to 8h if empty
 databaseSecretRotationInterval: ""
