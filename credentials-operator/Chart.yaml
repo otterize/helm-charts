@@ -3,7 +3,7 @@ name: credentials-operator
 description: credentials-operator
 type: application
 version: 3.0.4
-appVersion: v3.0.0
+appVersion: v3.0.1
 home: https://github.com/otterize/credentials-operator
 sources:
   - https://github.com/otterize/credentials-operator
