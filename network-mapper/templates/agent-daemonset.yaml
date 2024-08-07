@@ -1,4 +1,4 @@
-{{ if or .Values.sniffer.enable .Values.ebpf.enable }}
+{{ if or .Values.sniffer.enable .Values.bpfman.enable }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -72,9 +72,9 @@ spec:
 
       containers:
         - name: node-agent
-          image: "{{ .Values.agent.image.repository }}/{{ .Values.agent.image.image }}:{{ .Values.agent.image.tag }}"
-          {{ if .Values.agent.image.pullPolicy }}
-          imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
+          image: "{{ .Values.agent.repository }}/{{ .Values.agent.image }}:{{ .Values.agent.tag }}"
+          {{ if .Values.agent.pullPolicy }}
+          imagePullPolicy: {{ .Values.agent.pullPolicy }}
           {{ end }}
           env:
             - name: POD_NAME
@@ -181,12 +181,14 @@ spec:
               readOnly: true
         {{ end }}
 
-        {{ if .Values.ebpf.enable }}
+        {{ if .Values.bpfman.enable }}
         - name: ebpf-agent
-          image: "{{ .Values.ebpf.image.repository }}/{{ .Values.ebpf.image.image }}:{{ .Values.ebpf.image.tag }}"
-          {{ if .Values.ebpf.image.pullPolicy }}
-          imagePullPolicy: {{ .Values.ebpf.image.pullPolicy }}
+          image: "{{ .Values.bpfman.repository }}/{{ .Values.bpfman.image }}:{{ .Values.bpfman.tag }}"
+
+          {{ if .Values.bpfman.pullPolicy }}
+          imagePullPolicy: {{ .Values.bpfman.pullPolicy }}
           {{ end }}
+
           securityContext:
             privileged: true
           volumeMounts:
@@ -197,7 +199,7 @@ spec:
               name: ebpfman-socket
           env:
             - name: RUST_LOG
-              value: "{{ .Values.ebpf.logLevel }}"
+              value: "{{ .Values.bpfman.logLevel }}"
         {{ end }}
 
 {{ end }}
