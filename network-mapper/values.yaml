@@ -41,11 +41,10 @@ mapper:
 
 agent:
   enable: true
-  image:
-    repository: otterize
-    image: node-agent
-    tag: latest
-    pullPolicy:
+  repository: otterize
+  image: node-agent
+  tag: latest
+  pullPolicy:
   tolerations: []
   podSecurityContext:
     runAsNonRoot: false
@@ -144,13 +143,12 @@ visibilitydns:
   pullSecrets:
   resources: { } # see comment under mapper.resources
 
-ebpf:
+bpfman:
   enable: true
-  image:
-    repository: otterize
-    image: bpfman
-    tag: latest
-    pullPolicy:
+  repository: otterize
+  image: bpfman
+  tag: latest
+  pullPolicy:
   logLevel: info
 
 aws:
