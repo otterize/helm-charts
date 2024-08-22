@@ -143,14 +143,6 @@ visibilitydns:
   pullSecrets:
   resources: { } # see comment under mapper.resources
 
-bpfman:
-  enable: true
-  repository: otterize
-  image: bpfman
-  tag: latest
-  pullPolicy:
-  logLevel: info
-
 aws:
   visibility:
     enabled: false
