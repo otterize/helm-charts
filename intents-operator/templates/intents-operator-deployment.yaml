@@ -145,6 +145,8 @@ spec:
           {{ end }}
           - name: OTTERIZE_ENABLE_GCP_IAM_POLICY
             value: {{ .Values.global.gcp.enabled | quote }}
+          - name: OTTERIZE_INGRESS_CONTROLLERS_EXEMPT_ALB
+            value: {{ .Values.operator.ingressControllerAWSALBExempt | quote }}
           {{- if .Values.global.telemetry.errors.stage }}
           - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
             value: {{ .Values.global.telemetry.errors.stage | quote }}

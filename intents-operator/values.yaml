@@ -51,6 +51,7 @@ operator:
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
   enableEgressNetworkPolicyCreation: false
+  ingressControllerAWSALBExempt: false
   extraEnvVars:
 
   resources: { }
