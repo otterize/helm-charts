@@ -1,17 +1,19 @@
+{{- range $ns := .Values.watchedNamespaces }}
+---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   name: otterize-intents-operator-proxy-role
   labels:
-    {{- with .Values.global.commonLabels }}
+    {{- with $.Values.global.commonLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
   annotations:
-    {{- with .Values.global.commonAnnotations }}
+    {{- with $.Values.global.commonAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -25,3 +27,4 @@ rules:
   - subjectaccessreviews
   verbs:
   - create
+{{- end }}

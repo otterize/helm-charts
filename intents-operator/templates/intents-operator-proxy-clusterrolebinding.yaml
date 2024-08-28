@@ -1,22 +1,25 @@
+{{- range $ns := .Values.watchedNamespaces }}
+---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
   name: otterize-intents-operator-proxy-rolebinding
   labels:
-    {{- with .Values.global.commonLabels }}
+    {{- with $.Values.global.commonLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
   annotations:
-    {{- with .Values.global.commonAnnotations }}
+    {{- with $.Values.global.commonAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    app.kubernetes.io/version: {{ $.Chart.Version }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: Role
   name: otterize-intents-operator-proxy-role
 subjects:
 - kind: ServiceAccount
   name: intents-operator-controller-manager
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ $.Release.Namespace }}
+{{- end }}
