@@ -288,7 +288,6 @@ jobs:
 
   test-azure-integration:
     if: contains(github.event.pull_request.labels.*.name, 'run-azure-e2e-tests') || (github.event_name == 'push' && github.repository == 'otterize/helm-charts' && startsWith(github.ref, 'refs/tags/'))
-    timeout-minutes: 5
     runs-on: ubuntu-latest
     concurrency:
       group: azure-e2e-tests # do not allow concurrent runs of this job
@@ -335,6 +334,9 @@ jobs:
         with:
           go-version: 1.22.1
           cache-dependency-path: tests/go.sum
+
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
 
       - name: Set up gotestfmt
         uses: GoTestTools/gotestfmt-action@v2

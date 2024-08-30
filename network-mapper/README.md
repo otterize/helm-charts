@@ -1,6 +1,7 @@
 # Parameters
 
 ## Mapper parameters
+
 | Key                               | Description                                                                                     | Default                                                            |
 |-----------------------------------|-------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
 | `mapper.repository`               | Mapper image repository.                                                                        | `otterize`                                                         |
@@ -16,17 +17,20 @@
 | `mapper.extraEnvVars`             | List of extra env vars for the mapper, formatted as in the Kubernetes PodSpec (name and value). | `(none)`                                                           |
 
 ## Internet-facing traffic reporting
+
 | Key                                    | Description                                                                                                                 | Default |
 |----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|---------|
 | `enableInternetFacingTrafficReporting` | Whether to report internet-facing traffic to Otterize Cloud. This is a temporary flag that will soon be enabled by default. | `false` |
 
 ## OpenTelemetry exporter parameters
+
 | Key                        | Description                                                                                                                                                                                                     | Default                              |
 |----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
 | `opentelemetry.enable`     | Whether to enable the OpenTelemetry exporter, which exports Grafana Tempo-style metrics for your network map. Configure the OpenTelemetry SDK using `mapper.extraEnvVars` (e.g. `OTEL_EXPORTER_OTLP_ENDPOINT`). | `false`                              |
 | `opentelemetry.metricName` | The name of the OpenTelemetry metric name exported for the Grafana Tempo-style metric.                                                                                                                          | `traces_service_graph_request_total` |
 
 ## Sniffer parameters
+
 | Key                                | Description                          | Default                                                            |
 |------------------------------------|--------------------------------------|--------------------------------------------------------------------|
 | `sniffer.enable`                   | Enable sniffer deployment.           | `true`                                                             |
@@ -37,12 +41,13 @@
 | `sniffer.tag`                      | Sniffer image tag.                   | (pinned to latest version as of this Helm chart version's publish) |
 | `sniffer.pullPolicy`               | Sniffer pull policy.                 | `(none)`                                                           |
 | `sniffer.pullSecrets`              | Sniffer pull secrets.                | `(none)`                                                           |
-| `sniffer.resources`                | Resources override.                  | `(none)`                                                           |   
 | `sniffer.resources`                | Resources override.                  | `(none)`                                                           |
-| `sniffer.tolerations`              | Tolerations override.                | `(none)`                                                           |   
+| `sniffer.resources`                | Resources override.                  | `(none)`                                                           |
+| `sniffer.tolerations`              | Tolerations override.                | `(none)`                                                           |
 | `sniffer.priorityClassName`        | Set priorityClassName.               | `(none)`                                                           |
 
 ## Kafka watcher parameters
+
 | Key                                     | Description                                                 | Default                                                            |
 |-----------------------------------------|-------------------------------------------------------------|--------------------------------------------------------------------|
 | `kafkawatcher.enable`                   | Enable Kafka watcher deployment (beta).                     | `false`                                                            |
@@ -57,6 +62,7 @@
 | `kafkawatcher.kafkaServers`             | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                                                           |
 
 ## IAMLive parameters
+
 Deployed only when `aws.visibility.enabled` is set to `true`.
 
 | Key                                | Description                          | Default                                                            |
@@ -71,6 +77,7 @@ Deployed only when `aws.visibility.enabled` is set to `true`.
 | `iamlive.resources`                | Resources override.                  | `(none)`                                                           |
 
 ## DNS visibility parameters
+
 Deployed only when `aws.visibility.enabled` is set to `true`.
 
 | Key                                      | Description                          | Default                 |
@@ -85,6 +92,7 @@ Deployed only when `aws.visibility.enabled` is set to `true`.
 | `visibilitydns.resources`                | Resources override.                  | `(none)`                |
 
 ## Cloud parameters
+
 | Key                                                        | Description                                                                                                                                                                                  | Default  |
 |------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
 | `global.otterizeCloud.credentials.clientId`                | Client ID for connecting to Otterize Cloud.                                                                                                                                                  | `(none)` |
@@ -95,6 +103,7 @@ Deployed only when `aws.visibility.enabled` is set to `true`.
 | `global.otterizeCloud.apiExtraCAPEMSecret`                 | The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud. The secret should be placed in the same namespace as the Otterize deployment. | `(none)` |
 
 ## Global parameters
+
 | Key                                           | Description                                                                                                                                                                                                                                                                                                            | Default                             |
 |-----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
 | `global.allowGetAllResources`                 | If defined overrides `allowGetAllResources`.                                                                                                                                                                                                                                                                           |                                     |
@@ -109,10 +118,10 @@ Deployed only when `aws.visibility.enabled` is set to `true`.
 | `global.podAnnotations`                       | Annotations to add to all deployed pods                                                                                                                                                                                                                                                                                | {}                                  |
 | `global.podLabels`                            | Labels to add to all deployed pods                                                                                                                                                                                                                                                                                     | {}                                  |
 | `global.serviceNameOverrideAnnotationName`    | Which annotation to use (in the [service name resolution algorithm](https://docs.otterize.com/reference/service-identities#kubernetes-service-identity-resolution)) for setting a pod's service name, if not the default. Use this if you already have annotations on your pods that provide the correct service name. | `intents.otterize.com/service-name` |
-| `global.openshift`                            | Whether to configure and deploy SecurityContextConstraints that allow all components to run with minimal privileges on a default OpenShift installation.                                                                                                                                                               | `false`                             |    
-
+| `global.openshift`                            | Whether to configure and deploy SecurityContextConstraints that allow all components to run with minimal privileges on a default OpenShift installation.                                                                                                                                                               | `false`                             |
 
 ## Common parameters
+
 | Key                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Default                        |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
 | `debug`                | Enable debug logs                                                                                                                                                                                                                                                                                                                                                                                                                                             | `false`                        |
