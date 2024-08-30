@@ -25,6 +25,16 @@ rules:
   - apiGroups:
       - ''
     resources:
+      - 'configmaps'
+    resourceNames:
+      - otterize-cluster-uid
+    verbs:
+      - 'create'
+      - 'get'
+      - 'update'
+  - apiGroups:
+      - ''
+    resources:
       - 'secrets'
     verbs:
       - 'get'
