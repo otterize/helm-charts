@@ -1,7 +1,7 @@
 Thanks for deploying Otterize!
 
 Using the CLI (https://github.com/otterize/otterize-cli), you can now generate ClientIntents from your existing traffic in YAML format (`otterize mapper export`), your traffic in JSON or textual format, as well as an image (`otterize mapper visualize`).
-A free graphical interface is available at https://app.otterize.com.
+A free graphical interface is available at https://app.otterize.com
 Using OpenShift? Set `--set global.openshift=true` to enable the OpenShift-specific configuration that enables Otterize to run on your cluster.
 
 To learn more, visit https://docs.otterize.com and try out the tutorials.
