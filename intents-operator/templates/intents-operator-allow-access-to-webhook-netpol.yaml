@@ -10,9 +10,7 @@ spec:
   policyTypes:
     - Ingress
   ingress:
-    - from:
-        - {}
-      ports:
+    - ports:
         - protocol: TCP
           port: 443
         - protocol: TCP
