@@ -57,19 +57,22 @@ spec:
       volumes:
         - hostPath:
             path: /proc
-          name: proc
+          name: host-proc
         - name: component-config
           configMap:
             name: {{ template "otterize.mapper.componentConfigmap" . }}
-        - name: containerd
+        - name: host-socket-k3s
           hostPath:
             path: "/run/k3s/containerd/containerd.sock"
-            type: Socket
-        - name: bpffs
+        - name: host-socket-containerd
+          hostPath:
+            path: "/run/containerd/containerd.sock"
+        - name: host-bpffs
           hostPath:
             path: "/sys/fs/bpf"
 
       containers:
+        {{ if .Values.agent.enable }}
         - name: node-agent
           image: "{{ .Values.agent.repository }}/{{ .Values.agent.image }}:{{ .Values.agent.tag }}"
           {{ if .Values.agent.pullPolicy }}
@@ -84,17 +87,34 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+
+            {{ if .Values.debug }}
+            - name: OTTERIZE_DEBUG
+              value: {{ .Values.debug | quote }}
+            {{ end }}
+
+            {{ if default false .Values.experimental.ebpf }}
+            - name: OTTERIZE_EXPERIMENTAL_EBPF
+              value: {{ .Values.experimental.ebpf | quote }}
+            {{ end }}
+
           volumeMounts:
-            - mountPath: /host/proc
-              name: proc
+            - name: host-proc
+              mountPath: /host/proc
               readOnly: true
-            - mountPath: /var/run/containerd/containerd.sock
-              name: containerd
+
+            - name: host-socket-k3s
+              mountPath: /run/cri/k3s.sock
+            - name: host-socket-containerd
+              mountPath: /run/cri/containerd.sock
+
             - mountPath: /host/sys/fs/bpf
-              name: bpffs
+              name: host-bpffs
               readOnly: false
+
           securityContext:
             privileged: true
+        {{ end }}
 
 
         {{ if .Values.sniffer.enable }}
@@ -176,7 +196,7 @@ spec:
         {{- end }}
           volumeMounts:
             - mountPath: /hostproc
-              name: proc
+              name: host-proc
               readOnly: true
             - mountPath: /etc/otterize
               name: component-config

@@ -40,7 +40,7 @@ mapper:
   #   memory: 128Mi
 
 agent:
-  enable: true
+  enable: false
   repository: otterize
   image: node-agent
   tag: latest
@@ -188,3 +188,6 @@ global:
       stage:
       endpointAddress:
       networkMapperApiKey: d86195588a41fa03aa6711993bb1c765
+
+experimental:
+  ebpf:
