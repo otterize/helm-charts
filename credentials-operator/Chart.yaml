@@ -2,7 +2,7 @@ apiVersion: v2
 name: credentials-operator
 description: credentials-operator
 type: application
-version: 3.0.9
+version: 3.0.10
 appVersion: v3.0.5
 home: https://github.com/otterize/credentials-operator
 sources:
