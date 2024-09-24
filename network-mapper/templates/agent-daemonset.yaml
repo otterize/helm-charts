@@ -1,0 +1,137 @@
+{{ if .Values.nodeagent.enable }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ template "otterize.nodeagent.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "otterize.nodeagent.fullName" . }}
+  template:
+    metadata:
+      labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app: {{ template "otterize.nodeagent.fullName" . }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      annotations:
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+    spec:
+      serviceAccountName: {{ template "otterize.nodeagent.fullName" . }}
+    {{- if .Values.nodeagent.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.nodeagent.podSecurityContext | nindent 8 }}
+    {{- end }}
+      {{ if .Values.nodeagent.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.nodeagent.pullSecrets }}
+      {{ end }}
+      {{- with .Values.nodeagent.tolerations }}
+      tolerations:  {{- toYaml . | nindent 8 }}
+     {{- end }}
+     {{- with .Values.nodeagent.priorityClassName }}
+      priorityClassName:  {{ . }}
+     {{- end }}      
+      containers:
+      - name: {{ template "otterize.nodeagent.fullName" . }}
+        image: "{{ .Values.nodeagent.repository }}/{{ .Values.nodeagent.image }}:{{ default $.Chart.AppVersion .Values.nodeagent.tag }}"
+        {{ if .Values.nodeagent.pullPolicy }}
+        imagePullPolicy: {{ .Values.nodeagent.pullPolicy }}
+        {{ end }}
+        resources:
+          {{- toYaml .Values.nodeagent.resources | nindent 10 }}
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+
+          {{ if .Values.debug }}
+          - name: OTTERIZE_DEBUG
+            value: {{ .Values.debug | quote }}
+          {{ end }}
+
+          {{ if .Values.global.otterizeCloud.apiAddress }}
+          - name: OTTERIZE_API_ADDRESS
+            value: "{{ .Values.global.otterizeCloud.apiAddress }}"
+          {{ end }}
+          {{ if .Values.global.otterizeCloud.credentials.clientId }}
+          - name: OTTERIZE_CLIENT_ID
+            value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
+          {{ end }}
+          {{ if (and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey) }}
+          - name: OTTERIZE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}"
+                key: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}"
+          {{ else if .Values.global.otterizeCloud.credentials.clientSecret }}
+          - name: OTTERIZE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: mapper-otterize-cloud-client-secret
+                key: otterize-cloud-client-secret
+          {{ end }}
+
+        volumeMounts:
+          - name: host-proc
+            mountPath: /host/proc
+            readOnly: true
+
+          - name: host-socket-k3s
+            mountPath: /run/cri/k3s.sock
+          - name: host-socket-containerd
+            mountPath: /run/cri/containerd.sock
+
+          - mountPath: /host/sys/fs/bpf
+            name: host-bpffs
+            readOnly: false
+
+        securityContext:
+          privileged: true
+
+      volumes:
+        - hostPath:
+            path: /proc
+          name: host-proc
+        - name: component-config
+          configMap:
+            name: {{ template "otterize.mapper.componentConfigmap" . }}
+        - name: host-socket-k3s
+          hostPath:
+            path: "/run/k3s/containerd/containerd.sock"
+        - name: host-socket-containerd
+          hostPath:
+            path: "/run/containerd/containerd.sock"
+        - name: host-bpffs
+          hostPath:
+            path: "/sys/fs/bpf"
+{{ end }}

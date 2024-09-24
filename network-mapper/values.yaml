@@ -39,6 +39,18 @@ mapper:
   #   cpu: 100m
   #   memory: 128Mi
 
+nodeagent:
+  enable: false
+  repository: otterize
+  image: node-agent
+  tag: latest
+  pullPolicy:
+  tolerations: []
+  resources: { }
+  podSecurityContext:
+    runAsNonRoot: false
+  pullSecrets:
+  priorityClassName: ""
 
 sniffer:
   enable: true # enable/disable entire installation of the network sniffer
