@@ -97,6 +97,28 @@ spec:
               value: {{ .Values.debug | quote }}
             {{ end }}
 
+            {{ if .Values.global.otterizeCloud.apiAddress }}
+            - name: OTTERIZE_API_ADDRESS
+              value: "{{ .Values.global.otterizeCloud.apiAddress }}"
+            {{ end }}
+            {{ if .Values.global.otterizeCloud.credentials.clientId }}
+            - name: OTTERIZE_CLIENT_ID
+              value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
+            {{ end }}
+            {{ if (and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey) }}
+            - name: OTTERIZE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}"
+                  key: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretKey }}"
+            {{ else if .Values.global.otterizeCloud.credentials.clientSecret }}
+            - name: OTTERIZE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mapper-otterize-cloud-client-secret
+                  key: otterize-cloud-client-secret
+            {{ end }}
+
             {{ if default false .Values.experimental.ebpf }}
             - name: OTTERIZE_EXPERIMENTAL_EBPF
               value: {{ .Values.experimental.ebpf | quote }}
