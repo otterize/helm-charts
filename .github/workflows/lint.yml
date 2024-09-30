@@ -24,7 +24,7 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.22.1
+          go-version: 1.23.1
           cache-dependency-path: tests/go.sum
 
       - name: go vet
