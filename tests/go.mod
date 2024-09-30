@@ -2,8 +2,6 @@ module helm_tests
 
 go 1.23.1
 
-toolchain go1.23.1
-
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.6.0
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/msi/armmsi v1.2.0
