@@ -1,8 +1,6 @@
 module helm_tests
 
-go 1.22.1
-
-toolchain go1.22.3
+go 1.23.1
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.6.0
