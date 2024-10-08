@@ -200,7 +200,11 @@ spec:
             value: "false"
           {{- end }}
           {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
-          - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICIES
+          - name: OTTERIZE_ENABLE_EGRESS_NETWORK_POLICIES
+            value: "true"
+          {{- end }}
+          {{- if eq true .Values.operator.separateNetpolsForIngressAndEgress }}
+          - name: OTTERIZE_SEPARATE_NETPOLS_FOR_INGRESS_AND_EGRESS
             value: "true"
           {{- end }}
           {{- if .Values.global.aws.rolesAnywhere.enabled }}
