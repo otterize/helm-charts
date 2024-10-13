@@ -110,6 +110,10 @@ spec:
           - name: OTTERIZE_CLIENT_ID
             value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
           {{- end }}
+          {{- if eq true .Values.sniffer.useExtendedProcfsResolution }}
+          - name: OTTERIZE_USE_EXTENDED_PROCFS_RESOLUTION
+            value: "true"
+          {{- end }}
         livenessProbe:
           httpGet:
             path: /healthz
