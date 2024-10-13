@@ -1,0 +1,63 @@
+{{ if .Values.nodeagent.enable }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "otterize.piidetector.fullName" . }}
+  labels:
+    {{- with .Values.global.commonLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "otterize.piidetector.fullName" . }}
+  template:
+    metadata:
+      labels:
+        {{- with .Values.global.commonLabels }}
+          {{- toYaml . | nindent 4 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+        app: {{ template "otterize.piidetector.fullName" . }}
+      annotations:
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 4 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+    spec:
+      serviceAccountName: {{ template "otterize.piidetector.fullName" . }}
+      containers:
+        - name: piidetector
+          image: "{{ .Values.piidetector.repository }}/{{ .Values.piidetector.image }}:{{ default $.Chart.AppVersion .Values.piidetector.tag }}"
+          {{ if .Values.piidetector.pullPolicy }}
+          imagePullPolicy: {{ .Values.piidetector.pullPolicy }}
+          {{ end }}
+          ports:
+            - containerPort: 5000
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          resources:
+            {{- toYaml .Values.piidetector.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 5000
+            initialDelaySeconds: 1
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+{{ end }}

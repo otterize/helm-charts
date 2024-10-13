@@ -52,6 +52,14 @@ nodeagent:
   pullSecrets:
   priorityClassName: ""
 
+piidetector:
+  repository: otterize
+  image: node-agent
+  tag: latest
+  pullPolicy:
+  tolerations: [ ]
+  resources: { }
+
 sniffer:
   enable: true # enable/disable entire installation of the network sniffer
   repository: otterize
