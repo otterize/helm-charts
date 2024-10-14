@@ -105,6 +105,10 @@ jobs:
           helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace $OPERATOR_FLAGS $TELEMETRY_FLAG
 
   test-postgresql-integration:
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -196,6 +200,10 @@ jobs:
         if: always() && github.event.pull_request.user.login != 'dependabot[bot]'
 
   test-mysql-integration:
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
