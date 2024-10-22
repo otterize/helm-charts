@@ -1,4 +1,4 @@
-FROM golang:1.22.1-alpine
+FROM golang:1.23.1-alpine
 WORKDIR /app
 ADD tests/go.mod .
 ADD tests/go.sum .

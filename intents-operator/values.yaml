@@ -50,7 +50,13 @@ operator:
   allowExternalTraffic: ifBlockedByOtterize
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
+
+  # If set to true, the operator will create network policies for egress traffic.
   enableEgressNetworkPolicyCreation: false
+
+  # If set to true, the operator will create separate network policies for ingress and egress traffic.
+  # (Only available with enableEgressNetworkPolicyCreation set to true)
+  separateNetpolsForIngressAndEgress: false
   ingressControllerAWSALBExempt: false
   extraEnvVars:
 

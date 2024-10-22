@@ -105,6 +105,10 @@ jobs:
           helm install otterize ./otterize-kubernetes -n otterize-system --wait --create-namespace $OPERATOR_FLAGS $TELEMETRY_FLAG
 
   test-postgresql-integration:
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -123,7 +127,7 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.22.1
+          go-version: 1.23.1
           cache-dependency-path: tests/go.sum
 
       - name: Install go-junit-report
@@ -196,6 +200,10 @@ jobs:
         if: always() && github.event.pull_request.user.login != 'dependabot[bot]'
 
   test-mysql-integration:
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -214,7 +222,7 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.22.1
+          go-version: 1.23.1
           cache-dependency-path: tests/go.sum
 
       - name: Install go-junit-report
@@ -332,7 +340,7 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.22.1
+          go-version: 1.23.1
           cache-dependency-path: tests/go.sum
 
       - name: Install go-junit-report
