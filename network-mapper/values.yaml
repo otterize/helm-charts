@@ -92,6 +92,7 @@ sniffer:
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+  useExtendedProcfsResolution: false
 
 kafkawatcher:
   enable: false # enable/disable entire installation of the kafka-watcher
