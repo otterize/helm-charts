@@ -1,3 +1,9 @@
+{{- define "otterize.nodeagent.fullName" -}}
+otterize-node-agent
+{{- end -}}
+{{- define "otterize.piidetector.fullName" -}}
+otterize-pii-detector
+{{- end -}}
 {{- define "otterize.sniffer.fullName" -}}
 otterize-network-sniffer
 {{- end -}}
