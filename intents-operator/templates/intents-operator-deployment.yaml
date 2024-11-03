@@ -232,7 +232,7 @@ spec:
           name: spiffe
           readOnly: true
 {{- end }}
-{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkload }}
         - name: extended-config
           mountPath: /etc/otterize
           readOnly: true
@@ -305,7 +305,7 @@ spec:
             aws.spiffe.csi.cert-manager.io/enable: "true"
             spiffe.csi.cert-manager.io/fs-group: "65532"
 {{- end }}
-{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkload }}
       - name: extended-config
         configMap:
           name: intents-operator-config
