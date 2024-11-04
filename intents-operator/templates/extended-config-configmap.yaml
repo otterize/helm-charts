@@ -1,4 +1,4 @@
-{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkload }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkloads }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -34,9 +34,9 @@ data:
         kind: {{ $ingressControllerConfig.kind | quote | required "Ingress controller kind required: kind" }}
     {{- end }}
   {{- end }}
-  {{- if .Values.operator.externallyManagedPolicyWorkload }}
-    externallyManagedPolicyWorkload:
-    {{- range $workload := .Values.operator.externallyManagedPolicyWorkload }}
+  {{- if .Values.operator.externallyManagedPolicyWorkloads }}
+    externallyManagedPolicyWorkloads:
+    {{- range $workload := .Values.operator.externallyManagedPolicyWorkloads }}
       - name: {{ $workload.name | quote | required "Workload name required: name" }}
         namespace: {{ $workload.namespace | quote | required "Workload namespace required: namespace" }}
         kind: {{ $workload.kind | quote | required "Workload kind required: kind" }}
