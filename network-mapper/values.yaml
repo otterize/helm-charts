@@ -42,7 +42,7 @@ mapper:
 nodeagent:
   enable: false
   repository: otterize
-  image: node-agent
+  image: agent
   tag: latest
   pullPolicy:
   tolerations: []
@@ -54,7 +54,7 @@ nodeagent:
 
 piidetector:
   repository: otterize
-  image: node-agent
+  image: piidetector
   tag: latest
   pullPolicy:
   tolerations: [ ]
