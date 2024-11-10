@@ -37,6 +37,12 @@ operator:
 #      namespace: ingress-nginx
 #      kind: Deployment
 
+  # `externallyManagedPolicyWorkloads` allows configuring workloads assumed to have externally managed network policies, allowing traffic to/from them.
+  # Otterize Cloud will not suggest new ClientIntents for these workloads.
+  externallyManagedPolicyWorkloads:
+  #    - name: datadog
+  #      namespace: infrastructure
+  #      kind: Deployment
 
   # `allowExternalTraffic` controls whether the intents-operator will automatically create network policies for services
   # that are accessible to external traffic.
@@ -50,7 +56,13 @@ operator:
   allowExternalTraffic: ifBlockedByOtterize
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
+
+  # If set to true, the operator will create network policies for egress traffic.
   enableEgressNetworkPolicyCreation: false
+
+  # If set to true, the operator will create separate network policies for ingress and egress traffic.
+  # (Only available with enableEgressNetworkPolicyCreation set to true)
+  separateNetpolsForIngressAndEgress: false
   ingressControllerAWSALBExempt: false
   extraEnvVars:
 

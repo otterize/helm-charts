@@ -200,7 +200,11 @@ spec:
             value: "false"
           {{- end }}
           {{- if eq true .Values.operator.enableEgressNetworkPolicyCreation }}
-          - name: OTTERIZE_EXP_ENABLE_EGRESS_NETWORK_POLICIES
+          - name: OTTERIZE_ENABLE_EGRESS_NETWORK_POLICIES
+            value: "true"
+          {{- end }}
+          {{- if eq true .Values.operator.separateNetpolsForIngressAndEgress }}
+          - name: OTTERIZE_SEPARATE_NETPOLS_FOR_INGRESS_AND_EGRESS
             value: "true"
           {{- end }}
           {{- if .Values.global.aws.rolesAnywhere.enabled }}
@@ -228,7 +232,7 @@ spec:
           name: spiffe
           readOnly: true
 {{- end }}
-{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkloads }}
         - name: extended-config
           mountPath: /etc/otterize
           readOnly: true
@@ -301,7 +305,7 @@ spec:
             aws.spiffe.csi.cert-manager.io/enable: "true"
             spiffe.csi.cert-manager.io/fs-group: "65532"
 {{- end }}
-{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkloads }}
       - name: extended-config
         configMap:
           name: intents-operator-config

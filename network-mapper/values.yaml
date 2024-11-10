@@ -39,6 +39,26 @@ mapper:
   #   cpu: 100m
   #   memory: 128Mi
 
+nodeagent:
+  enable: false
+  repository: otterize
+  image: agent
+  tag: latest
+  pullPolicy:
+  tolerations: []
+  resources: { }
+  podSecurityContext:
+    runAsNonRoot: false
+  pullSecrets:
+  priorityClassName: ""
+
+piidetector:
+  repository: otterize
+  image: piidetector
+  tag: latest
+  pullPolicy:
+  tolerations: [ ]
+  resources: { }
 
 sniffer:
   enable: true # enable/disable entire installation of the network sniffer
@@ -72,6 +92,7 @@ sniffer:
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+  useExtendedProcfsResolution: false
 
 kafkawatcher:
   enable: false # enable/disable entire installation of the kafka-watcher
