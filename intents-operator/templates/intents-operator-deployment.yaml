@@ -207,6 +207,10 @@ spec:
           - name: OTTERIZE_SEPARATE_NETPOLS_FOR_INGRESS_AND_EGRESS
             value: "true"
           {{- end }}
+          {{- if eq true .Values.operator.enableGroupIPsByCIDR }}
+          - name: OTTERIZE_ENABLE_GROUP_INTERNET_IPS_BY_CIDR
+            value: "true"
+          {{- end }}
           {{- if .Values.global.aws.rolesAnywhere.enabled }}
           - name: OTTERIZE_ENABLE_AWS_IAM_ROLESANYWHERE
             value: "true"

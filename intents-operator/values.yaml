@@ -63,6 +63,10 @@ operator:
   # If set to true, the operator will create separate network policies for ingress and egress traffic.
   # (Only available with enableEgressNetworkPolicyCreation set to true)
   separateNetpolsForIngressAndEgress: false
+
+  # If set to true, the operator will try to consolidate IPs into /24 networks when creating egress network policies to the internet.
+  enableGroupIPsByCIDR: false
+
   ingressControllerAWSALBExempt: false
   extraEnvVars:
 
