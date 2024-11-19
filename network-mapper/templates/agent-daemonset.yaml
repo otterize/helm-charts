@@ -104,6 +104,9 @@ spec:
           - name: OTTERIZE_PII_DETECTOR_API_URL
             value: http://{{ template "otterize.piidetector.fullName" . }}:5000/
 
+          - name: OTTERIZE_HOST_PROC_DIR
+            value: /host/proc
+
         volumeMounts:
           - name: host-proc
             mountPath: /host/proc
@@ -120,6 +123,9 @@ spec:
 
         securityContext:
           privileged: true
+
+      hostNetwork: true # use the host network for tracing network traffic
+      dnsPolicy: ClusterFirstWithHostNet # resolve kubernetes service names
 
       volumes:
         - hostPath:
