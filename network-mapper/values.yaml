@@ -5,7 +5,6 @@ opentelemetry:
 enableInternetFacingTrafficReporting: true
 dnsClientIntentsUpdateEnabled: true
 enableIstioCollection: true
-
 mapper:
   repository: otterize
   image: network-mapper
@@ -24,7 +23,7 @@ mapper:
       drop:
         - "ALL"
   pullSecrets:
-  resources: { }
+  resources: {}
   extraEnvVars:
   excludeNamespaces:
     - 'istio-system'
@@ -38,28 +37,25 @@ mapper:
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
 nodeagent:
   enable: false
   repository: otterize
   image: agent
-  tag: latest
+  tag: v0.0.1
   pullPolicy:
   tolerations: []
-  resources: { }
+  resources: {}
   podSecurityContext:
     runAsNonRoot: false
   pullSecrets:
   priorityClassName: ""
-
 piidetector:
   repository: otterize
   image: piidetector
-  tag: latest
+  tag: v0.0.1
   pullPolicy:
-  tolerations: [ ]
-  resources: { }
-
+  tolerations: []
+  resources: {}
 sniffer:
   enable: true # enable/disable entire installation of the network sniffer
   repository: otterize
@@ -80,8 +76,8 @@ sniffer:
   #The options to add tolerations
   # tolerations:
   # - operator: Exists
-  priorityClassName: ""  
-  resources: { }
+  priorityClassName: ""
+  resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -93,7 +89,6 @@ sniffer:
   #   cpu: 100m
   #   memory: 128Mi
   useExtendedProcfsResolution: false
-
 kafkawatcher:
   enable: false # enable/disable entire installation of the kafka-watcher
   repository: otterize
@@ -108,7 +103,7 @@ kafkawatcher:
       drop:
         - "ALL"
   pullSecrets:
-  resources: { }
+  resources: {}
   # Kafka servers to watch, specified as `pod.namespace` items.
   kafkaServers: []
   # Interval between reports of watcher results to the network-mapper
@@ -125,13 +120,10 @@ kafkawatcher:
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
 webhook:
   generateSelfSignedCert: true
-
 debug: false
 allowGetAllResources: true
-
 iamlive:
   repository: otterize
   image: network-mapper-iamlive
@@ -146,8 +138,7 @@ iamlive:
       drop:
         - "ALL"
   pullSecrets:
-  resources: { } # see comment under mapper.resources
-
+  resources: {} # see comment under mapper.resources
 visibilitydns:
   repository: coredns
   image: coredns
@@ -156,12 +147,10 @@ visibilitydns:
   podSecurityContext:
   containerSecurityContext:
   pullSecrets:
-  resources: { } # see comment under mapper.resources
-
+  resources: {} # see comment under mapper.resources
 aws:
   visibility:
     enabled: false
-
 # Fields from All-in-one chart
 global:
   # Extra annotations for deployed pods
@@ -172,12 +161,9 @@ global:
   commonLabels: {}
   # Annotations to add to all deployed objects
   commonAnnotations: {}
-
   # Specify an annotation name that by setting it, one can override otterize's service name resolution.
   serviceNameOverrideAnnotationName: intents.otterize.com/service-name
-
   openshift: false
-
   # If defined overrides `allowGetAllResources`
   allowGetAllResources:
   otterizeCloud:
@@ -190,7 +176,6 @@ global:
       clientSecretKeyRef:
         secretName:
         secretKey:
-
     # (optional) The name of a secret containing a single `CA.pem` file for an extra root CA used to connect to Otterize Cloud.
     # The secret should be placed in the same namespace as the Otterize deployment
     apiExtraCAPEMSecret:
