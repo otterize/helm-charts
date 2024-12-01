@@ -35,7 +35,7 @@ spec:
       serviceAccountName: {{ template "otterize.piidetector.fullName" . }}
       containers:
         - name: piidetector
-          image: "{{ .Values.piidetector.repository }}/{{ .Values.piidetector.image }}:{{ default $.Chart.AppVersion .Values.piidetector.tag }}"
+          image: "{{ .Values.piidetector.repository }}/{{ .Values.piidetector.image }}:{{ .Values.piidetector.tag }}"
           {{ if .Values.piidetector.pullPolicy }}
           imagePullPolicy: {{ .Values.piidetector.pullPolicy }}
           {{ end }}
