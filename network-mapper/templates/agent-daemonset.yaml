@@ -54,7 +54,7 @@ spec:
      {{- end }}      
       containers:
       - name: {{ template "otterize.nodeagent.fullName" . }}
-        image: "{{ .Values.nodeagent.repository }}/{{ .Values.nodeagent.image }}:{{ default $.Chart.AppVersion .Values.nodeagent.tag }}"
+        image: "{{ .Values.nodeagent.repository }}/{{ .Values.nodeagent.image }}:{{ .Values.nodeagent.tag }}"
         {{ if .Values.nodeagent.pullPolicy }}
         imagePullPolicy: {{ .Values.nodeagent.pullPolicy }}
         {{ end }}
