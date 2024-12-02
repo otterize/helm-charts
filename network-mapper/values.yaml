@@ -188,3 +188,8 @@ global:
       stage:
       endpointAddress:
       networkMapperApiKey: d86195588a41fa03aa6711993bb1c765
+
+  azure:
+    enabled: false
+    subscriptionID:
+    resourceGroup:
