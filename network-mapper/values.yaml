@@ -27,21 +27,21 @@ mapper:
   extraEnvVars:
   excludeNamespaces:
     - 'istio-system'
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 nodeagent:
   enable: false
   repository: otterize
   image: agent
-  tag: v0.0.1
+  tag: v0.0.2
   pullPolicy:
   tolerations: []
   resources: {}
@@ -52,7 +52,7 @@ nodeagent:
 piidetector:
   repository: otterize
   image: piidetector
-  tag: v0.0.1
+  tag: v0.0.2
   pullPolicy:
   tolerations: []
   resources: {}
@@ -188,7 +188,6 @@ global:
       stage:
       endpointAddress:
       networkMapperApiKey: d86195588a41fa03aa6711993bb1c765
-
   azure:
     enabled: false
     subscriptionID:
