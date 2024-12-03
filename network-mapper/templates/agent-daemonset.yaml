@@ -104,8 +104,20 @@ spec:
           - name: OTTERIZE_PII_DETECTOR_API_URL
             value: http://{{ template "otterize.piidetector.fullName" . }}:5000/
 
+          - name: OTTERIZE_MAPPER_API_URL
+            value: http://{{ template "otterize.mapper.fullName" . }}:9090
+
           - name: OTTERIZE_HOST_PROC_DIR
             value: /host/proc
+
+          {{ if .Values.global.azure.enabled }}
+          - name: OTTERIZE_AZURE_VISIBILITY_ENABLED
+            value: "true"
+          - name: OTTERIZE_AZURE_SUBSCRIPTION_ID
+            value: {{ required "value global.azure.subscriptionID is missing" .Values.global.azure.subscriptionID | quote }}
+          - name: OTTERIZE_AZURE_RESOURCE_GROUP
+            value: {{ required "value global.azure.resourceGroup is missing" .Values.global.azure.resourceGroup | quote }}
+          {{ end }}
 
         volumeMounts:
           - name: host-proc
