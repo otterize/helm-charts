@@ -52,9 +52,13 @@ spec:
       securityContext:
         {{- toYaml .Values.operator.podSecurityContext | nindent 8 }}
     {{- end }}
+      hostNetwork: {{ .Values.operator.hostNetwork }}
       containers:
       - command:
         - /manager
+        args:
+        - --metrics-bind-address
+        - ":{{ .Values.operator.metricsPort }}"
         image: "{{ .Values.operator.repository }}/{{ .Values.operator.image }}:{{ default $.Chart.AppVersion .Values.operator.tag }}"
         {{ if .Values.operator.pullPolicy }}
         imagePullPolicy: {{ .Values.operator.pullPolicy }}
@@ -70,7 +74,7 @@ spec:
           - containerPort: 9443
             name: webhook-server
             protocol: TCP
-          - containerPort: 2112
+          - containerPort: {{ .Values.operator.metricsPort }}
             name: metrics
             protocol: TCP
         readinessProbe:
