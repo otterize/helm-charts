@@ -41,7 +41,7 @@ nodeagent:
   enable: false
   repository: otterize
   image: agent
-  tag: v0.0.6
+  tag: v0.0.7
   pullPolicy:
   tolerations: []
   resources: {}
@@ -52,7 +52,7 @@ nodeagent:
 piidetector:
   repository: otterize
   image: piidetector
-  tag: v0.0.6
+  tag: v0.0.7
   pullPolicy:
   tolerations: []
   resources: {}
