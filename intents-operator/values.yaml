@@ -15,7 +15,8 @@ operator:
     capabilities:
       drop:
         - "ALL"
-
+  hostNetwork: false
+  metricsPort: 2112
   autoGenerateTLSUsingCredentialsOperator: false
 
   mode: defaultActive # or defaultShadow
