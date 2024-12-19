@@ -12,7 +12,6 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     app.kubernetes.io/version: {{ .Chart.Version }}
-    checksum/config: {{ include (print $.Template.BasePath "/extended-config-configmap.yaml") . | sha256sum }}
   name: intents-operator-controller-manager
   namespace: {{ .Release.Namespace }}
 spec:
@@ -25,6 +24,7 @@ spec:
       annotations:
         kubectl.kubernetes.io/default-container: manager
         intents.otterize.com/service-name: intents-operator
+        checksum/config: {{ include (print $.Template.BasePath "/extended-config-configmap.yaml") . | sha256sum }}
         {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
         credentials-operator.otterize.com/tls-secret-name: intents-operator-spire-tls-controller-manager
         {{- end }}
