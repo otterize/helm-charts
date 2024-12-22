@@ -15,6 +15,7 @@ operator:
     capabilities:
       drop:
         - "ALL"
+  pullSecrets:
   hostNetwork: false
   metricsPort: 2112
   autoGenerateTLSUsingCredentialsOperator: false
