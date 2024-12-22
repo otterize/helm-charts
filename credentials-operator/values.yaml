@@ -15,6 +15,7 @@ operator:
     capabilities:
       drop:
         - "ALL"
+  pullSecrets:
   extraEnvVars:
 
 resources: { }

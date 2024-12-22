@@ -42,6 +42,7 @@
 | `operator.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)`                                            |
 | `operator.podSecurityContext`       | Security context for the pod.        | `(consult values.yaml)`                                            |
 | `operator.pullPolicy`               | Operator pull policy.                | `(none)`                                                           |
+| `operator.pullSecrets`              | Operator pull secrets.               | `(none)`                                                           |
 
 ## Cloud parameters
 
