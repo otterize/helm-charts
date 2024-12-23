@@ -54,6 +54,7 @@ piidetector:
   image: piidetector
   tag: v0.0.8
   pullPolicy:
+  pullSecrets:
   tolerations: []
   resources: {}
 sniffer:

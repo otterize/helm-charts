@@ -33,6 +33,10 @@ spec:
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       serviceAccountName: {{ template "otterize.piidetector.fullName" . }}
+      {{ if .Values.piidetector.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.piidetector.pullSecrets }}
+      {{ end }}
       containers:
         - name: piidetector
           image: "{{ .Values.piidetector.repository }}/{{ .Values.piidetector.image }}:{{ .Values.piidetector.tag }}"
