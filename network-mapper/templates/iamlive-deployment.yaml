@@ -41,6 +41,13 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.iamlive.pullPolicy }}
       {{ end }}
+      {{- with .Values.iamlive.tolerations }}
+      tolerations:  {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.iamlive.affinity }}
+      affinity:
+            {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: iamlive
           image: "{{ .Values.iamlive.repository }}/{{ .Values.iamlive.image }}:{{ default $.Chart.AppVersion .Values.iamlive.tag }}"

@@ -45,6 +45,13 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.mapper.pullSecrets }}
       {{ end }}
+      {{- with .Values.mapper.tolerations }}
+      tolerations:  {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mapper.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ template "otterize.mapper.fullName" . }}
           image: "{{ .Values.mapper.repository }}/{{ .Values.mapper.image }}:{{ default $.Chart.AppVersion .Values.mapper.tag }}"

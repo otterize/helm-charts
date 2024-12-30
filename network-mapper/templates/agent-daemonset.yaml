@@ -49,6 +49,10 @@ spec:
       {{- with .Values.nodeagent.tolerations }}
       tolerations:  {{- toYaml . | nindent 8 }}
      {{- end }}
+      {{- with .Values.nodeagent.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
      {{- with .Values.nodeagent.priorityClassName }}
       priorityClassName:  {{ . }}
      {{- end }}      

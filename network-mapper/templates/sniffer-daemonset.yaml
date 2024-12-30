@@ -49,6 +49,10 @@ spec:
       {{- with .Values.sniffer.tolerations }}
       tolerations:  {{- toYaml . | nindent 8 }}
      {{- end }}
+      {{- with .Values.sniffer.affinity }}
+      affinity:
+          {{- toYaml . | nindent 8 }}
+      {{- end }}
      {{- with .Values.sniffer.priorityClassName }}
       priorityClassName:  {{ . }}
      {{- end }}      

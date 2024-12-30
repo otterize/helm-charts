@@ -24,6 +24,8 @@ mapper:
         - "ALL"
   pullSecrets:
   resources: {}
+  affinity: {}
+  tolerations: []
   extraEnvVars:
   excludeNamespaces:
     - 'istio-system'
@@ -43,6 +45,7 @@ nodeagent:
   image: agent
   tag: v0.0.9
   pullPolicy:
+  affinity: {}
   tolerations: []
   resources: {}
   podSecurityContext:
@@ -54,6 +57,7 @@ piidetector:
   image: piidetector
   tag: v0.0.9
   pullPolicy:
+  affinity: {}
   tolerations: []
   resources: {}
 sniffer:
@@ -72,6 +76,7 @@ sniffer:
         - SYS_PTRACE
         - NET_RAW
   pullSecrets:
+  affinity: {}
   tolerations: []
   #The options to add tolerations
   # tolerations:
@@ -103,6 +108,8 @@ kafkawatcher:
       drop:
         - "ALL"
   pullSecrets:
+  affinity: {}
+  tolerations: []
   resources: {}
   # Kafka servers to watch, specified as `pod.namespace` items.
   kafkaServers: []
@@ -138,6 +145,8 @@ iamlive:
       drop:
         - "ALL"
   pullSecrets:
+  affinity: {}
+  tolerations: []
   resources: {} # see comment under mapper.resources
 visibilitydns:
   repository: coredns
