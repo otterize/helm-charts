@@ -12,6 +12,8 @@
 | `mapper.pullPolicy`               | Mapper pull policy.                                                                             | `(none)`                                                           |
 | `mapper.pullSecrets`              | Mapper pull secrets.                                                                            | `(none)`                                                           |
 | `mapper.resources`                | Resources override.                                                                             | `(none)`                                                           |
+| `mapper.affinity`                 | Pod affinity.                                                                                   | `{}`                                                               |
+| `mapper.tolerations`              | Pod tolerations.                                                                                | `[]`                                                               |
 | `mapper.uploadIntervalSeconds`    | Interval for uploading data to cloud                                                            | `60`                                                               |
 | `mapper.excludeNamespaces`        | Namespaces excluded from reporting                                                              | `[istio-system]`                                                   |
 | `mapper.extraEnvVars`             | List of extra env vars for the mapper, formatted as in the Kubernetes PodSpec (name and value). | `(none)`                                                           |
@@ -42,8 +44,8 @@
 | `sniffer.pullPolicy`               | Sniffer pull policy.                 | `(none)`                                                           |
 | `sniffer.pullSecrets`              | Sniffer pull secrets.                | `(none)`                                                           |
 | `sniffer.resources`                | Resources override.                  | `(none)`                                                           |
-| `sniffer.resources`                | Resources override.                  | `(none)`                                                           |
-| `sniffer.tolerations`              | Tolerations override.                | `(none)`                                                           |
+| `sniffer.affinity`                 | Sniffer's pod affinity.              | `{}`                                                               |
+| `sniffer.tolerations`              | Sniffer's pod tolerations.           | `[]`                                                               |
 | `sniffer.priorityClassName`        | Set priorityClassName.               | `(none)`                                                           |
 
 ## Kafka watcher parameters
@@ -59,22 +61,26 @@
 | `kafkawatcher.pullPolicy`               | Kafka watcher pull policy.                                  | `(none)`                                                           |
 | `kafkawatcher.pullSecrets`              | Kafka watcher pull secrets.                                 | `(none)`                                                           |
 | `kafkawatcher.resources`                | Resources override.                                         | `(none)`                                                           |
+| `kafkawatcher.affinity`                 | Pod affinity.                                          | `{}`                                                               |
+| `kafkawatcher.tolerations`              | Pod tolerations.                                       | `[]`                                                               |
 | `kafkawatcher.kafkaServers`             | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                                                           |
 
 ## IAMLive parameters
 
 Deployed only when `aws.visibility.enabled` is set to `true`.
 
-| Key                                | Description                          | Default                                                            |
-|------------------------------------|--------------------------------------|--------------------------------------------------------------------|
-| `iamlive.repository`               | IAMLive image repository.            | `otterize`                                                         |
-| `iamlive.image`                    | IAMLive image.                       | `network-mapper-iamlive`                                           |
-| `iamlive.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)`                                            |
-| `iamlive.podSecurityContext`       | Security context for the pod.        | `(consult values.yaml)`                                            |
+| Key                                | Description                          | Default                                                           |
+|------------------------------------|--------------------------------------|-------------------------------------------------------------------|
+| `iamlive.repository`               | IAMLive image repository.            | `otterize`                                                        |
+| `iamlive.image`                    | IAMLive image.                       | `network-mapper-iamlive`                                          |
+| `iamlive.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)`                                           |
+| `iamlive.podSecurityContext`       | Security context for the pod.        | `(consult values.yaml)`                                           |
 | `iamlive.tag`                      | IAMLive image tag.                   | (pinned to latest version as of this Helm chart version's publish) |
-| `iamlive.pullPolicy`               | IAMLive pull policy.                 | `(none)`                                                           |
-| `iamlive.pullSecrets`              | IAMLive pull secrets.                | `(none)`                                                           |
-| `iamlive.resources`                | Resources override.                  | `(none)`                                                           |
+| `iamlive.pullPolicy`               | IAMLive pull policy.                 | `(none)`                                                          |
+| `iamlive.pullSecrets`              | IAMLive pull secrets.                | `(none)`                                                          |
+| `iamlive.resources`                | Resources override.                  | `(none)`                                                          |
+| `iamlive.affinity`                 | Pod affinity.                        | `{}`                                                              |
+| `iamlive.tolerations`              | Pod tolerations.                     | `[]`                                                              |
 
 ## DNS visibility parameters
 

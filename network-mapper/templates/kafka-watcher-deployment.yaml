@@ -44,6 +44,13 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.kafkawatcher.pullSecrets }}
       {{ end }}
+      {{- with .Values.kafkawatcher.tolerations }}
+      tolerations:  {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.kafkawatcher.affinity }}
+      affinity:
+          {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ template "otterize.kafkawatcher.fullName" . }}
           image: "{{ .Values.kafkawatcher.repository }}/{{ .Values.kafkawatcher.image }}:{{ default $.Chart.AppVersion .Values.kafkawatcher.tag }}"

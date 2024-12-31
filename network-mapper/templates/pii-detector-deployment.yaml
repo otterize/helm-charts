@@ -33,6 +33,13 @@ spec:
         app.kubernetes.io/version: {{ .Chart.Version }}
     spec:
       serviceAccountName: {{ template "otterize.piidetector.fullName" . }}
+      {{- with .Values.piidetector.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.piidetector.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: piidetector
           image: "{{ .Values.piidetector.repository }}/{{ .Values.piidetector.image }}:{{ .Values.piidetector.tag }}"
