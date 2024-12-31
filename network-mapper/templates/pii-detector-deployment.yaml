@@ -38,7 +38,8 @@ spec:
       {{- end }}
       {{- with .Values.piidetector.affinity }}
       affinity:
-      {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: piidetector
           image: "{{ .Values.piidetector.repository }}/{{ .Values.piidetector.image }}:{{ .Values.piidetector.tag }}"
