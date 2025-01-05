@@ -318,6 +318,19 @@ rules:
     - patch
     - update
     - watch
+- apiGroups:
+    - policy.linkerd.io
+  resources:
+    - httproutes
+  verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
 {{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
 - apiGroups:
     - '*'
