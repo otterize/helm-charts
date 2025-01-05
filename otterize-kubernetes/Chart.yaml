@@ -3,7 +3,7 @@ name: otterize-kubernetes
 description: |
   This chart contains the Otterize credentials-operator, SPIRE (server+agent), the Otterize intents operator, and the Otterize network mapper.
 type: application
-version: 4.0.102
+version: 4.0.103
 home: https://github.com/otterize/helm-charts
 kubeVersion: ">=1.19.0-0"
 dependencies:
