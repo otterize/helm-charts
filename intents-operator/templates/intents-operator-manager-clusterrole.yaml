@@ -266,6 +266,58 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+    - policy.linkerd.io
+  resources:
+    - authorizationpolicies
+  verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - policy.linkerd.io
+  resources:
+    - meshtlsauthentications
+  verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - policy.linkerd.io
+  resources:
+    - networkauthentications
+  verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - policy.linkerd.io
+  resources:
+    - servers
+  verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
 {{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
 - apiGroups:
     - '*'
