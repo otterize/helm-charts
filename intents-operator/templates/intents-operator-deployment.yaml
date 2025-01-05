@@ -178,6 +178,11 @@ spec:
           - name: OTTERIZE_ENABLE_ISTIO_POLICY_CREATION
             value: "true"
           {{- end }}
+          {{- if eq true .Values.operator.enableLinkerdPolicyCreation }}
+          - name: OTTERIZE_ENABLE_LINKERD_POLICY
+            value: "true"
+          {{- end }}
+
           - name: OTTERIZE_ENFORCEMENT_DEFAULT_STATE
             value: {{ template "otterize.operator.mode" . }}
           {{- if eq false .Values.operator.enableNetworkPolicyCreation }}
