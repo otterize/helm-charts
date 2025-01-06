@@ -134,6 +134,20 @@ spec:
                 name: intents-operator-otterize-cloud-client-secret
                 key: otterize-cloud-client-secret
           {{ end }}
+          {{ if (and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName .Values.global.otterizeCloud.credentials.clientSecretKeyRef.clientIdKey) }}
+          - name: OTTERIZE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}"
+                key: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.clientIdKey }}"
+          {{ else if .Values.global.otterizeCloud.credentials.clientId }}
+          - name: OTTERIZE_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: intents-operator-otterize-cloud-client-secret
+                key: otterize-cloud-client-id
+          {{ end }}
+
           {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
           - name: OTTERIZE_API_EXTRA_CA_PEM
             value: {{ template "otterize.operator.apiExtraCAPEM" }}
