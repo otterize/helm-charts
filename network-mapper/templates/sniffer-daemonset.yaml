@@ -73,12 +73,12 @@ spec:
             value: http://{{ template "otterize.mapper.fullName" . }}:9090/query
           - name: OTTERIZE_DEBUG
             value: {{ .Values.debug | quote }}
-          {{ if .Values.global.workloadNameOverrideAnnotationName }}
-          - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
-            value: {{ .Values.global.workloadNameOverrideAnnotationName | quote }}
-          {{ else if .Values.global.serviceNameOverrideAnnotationName }}
+          {{ if .Values.global.serviceNameOverrideAnnotationName }}
           - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
             value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+          {{ else if .Values.global.workloadNameOverrideAnnotationName }}
+          - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
+            value: {{ .Values.global.workloadNameOverrideAnnotationName | quote }}
           {{ end }}
           {{- if eq false .Values.global.telemetry.enabled }}
           - name: OTTERIZE_TELEMETRY_ENABLED

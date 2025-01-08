@@ -144,12 +144,12 @@ spec:
           - name: OTTERIZE_API_EXTRA_CA_PEM
             value: {{ template "otterize.operator.apiExtraCAPEM" }}
           {{ end }}
-          {{ if .Values.global.workloadNameOverrideAnnotationName }}
-          - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
-            value: {{ .Values.global.workloadNameOverrideAnnotationName | quote }}
-          {{ else if .Values.global.serviceNameOverrideAnnotationName }}
+          {{ if .Values.global.serviceNameOverrideAnnotationName }}
           - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
             value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+          {{ else if .Values.global.workloadNameOverrideAnnotationName }}
+          - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
+            value: {{ .Values.global.workloadNameOverrideAnnotationName | quote }}
           {{ end }}
           - name: OTTERIZE_ENABLE_AWS_IAM_POLICY
             value: {{ .Values.global.aws.enabled | quote }}
