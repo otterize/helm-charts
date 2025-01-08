@@ -28,8 +28,10 @@ global:
   # Annotations to add to all deployed objects
   commonAnnotations: {}
 
-  # Specify an annotation name that by setting it, one can override otterize's service name resolution.
-  serviceNameOverrideAnnotationName: intents.otterize.com/service-name
+  # Specify an annotation name that by setting it, one can override otterize's workload name resolution.
+  workloadNameOverrideAnnotationName: intents.otterize.com/workload-name
+  # DEPRECATED: use `workloadNameOverrideAnnotationName` instead
+  serviceNameOverrideAnnotationName:
 
   # Provider for credentials-operator to use (spire/otterize-cloud/cert-manager), if empty - spire is used by default
   certificateProvider:
