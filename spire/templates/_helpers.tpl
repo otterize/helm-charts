@@ -76,9 +76,6 @@ Common agent labels
 {{- define "spire.agent.labels" -}}
 helm.sh/chart: {{ include "spire.chart" . }}
 {{ include "spire.agent.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
