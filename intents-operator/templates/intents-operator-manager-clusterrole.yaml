@@ -254,7 +254,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - security.istio.io
+  - policy.linkerd.io
   resources:
   - authorizationpolicies
   verbs:
@@ -267,70 +267,70 @@ rules:
   - update
   - watch
 - apiGroups:
-    - policy.linkerd.io
+  - policy.linkerd.io
   resources:
-    - authorizationpolicies
+  - httproutes
   verbs:
-    - create
-    - delete
-    - deletecollection
-    - get
-    - list
-    - patch
-    - update
-    - watch
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
-    - policy.linkerd.io
+  - policy.linkerd.io
   resources:
-    - meshtlsauthentications
+  - meshtlsauthentications
   verbs:
-    - create
-    - delete
-    - deletecollection
-    - get
-    - list
-    - patch
-    - update
-    - watch
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
-    - policy.linkerd.io
+  - policy.linkerd.io
   resources:
-    - networkauthentications
+  - networkauthentications
   verbs:
-    - create
-    - delete
-    - deletecollection
-    - get
-    - list
-    - patch
-    - update
-    - watch
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
-    - policy.linkerd.io
+  - policy.linkerd.io
   resources:
-    - servers
+  - servers
   verbs:
-    - create
-    - delete
-    - deletecollection
-    - get
-    - list
-    - patch
-    - update
-    - watch
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
-    - policy.linkerd.io
+  - security.istio.io
   resources:
-    - httproutes
+  - authorizationpolicies
   verbs:
-    - create
-    - delete
-    - deletecollection
-    - get
-    - list
-    - patch
-    - update
-    - watch
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
 {{ if or (and (eq .Values.global.allowGetAllResources nil) .Values.allowGetAllResources) .Values.global.allowGetAllResources}}
 - apiGroups:
     - '*'
