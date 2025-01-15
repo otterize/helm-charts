@@ -25,7 +25,7 @@ keywords:
 maintainers:
   - name: Bitnami
     url: https://github.com/bitnami/charts
-name: kafka
+name: bitnami-kafka
 sources:
   - https://github.com/bitnami/containers/tree/main/bitnami/kafka
   - https://kafka.apache.org/
