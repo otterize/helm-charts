@@ -121,13 +121,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /healthz
-            port: 9090
+            port: {{ .Values.sniffer.healthProbesPort }}
           initialDelaySeconds: 30
           periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /healthz
-            port: 9090
+            port: {{ .Values.sniffer.healthProbesPort }}
           initialDelaySeconds: 30
           periodSeconds: 20
         {{- if .Values.sniffer.containerSecurityContext }}
