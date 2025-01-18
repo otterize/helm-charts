@@ -106,6 +106,10 @@ spec:
           - name: OTTERIZE_TELEMETRY_ERRORS_ADDRESS
             value: {{ .Values.global.telemetry.errors.endpointAddress | quote }}
           {{- end }}
+          {{- if .Values.sniffer.healthProbesPort }}
+          - name: OTTERIZE_HEALTH_PROBES_PORT
+            value: {{ .Values.sniffer.healthProbesPort | quote }}
+          {{- end }}
           {{- if .Values.global.telemetry.errors.networkMapperApiKey }}
           - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
             value: {{ .Values.global.telemetry.errors.networkMapperApiKey | quote }}
