@@ -94,8 +94,11 @@ spec:
               value: "false"
             {{ end }}
             {{ if .Values.global.serviceNameOverrideAnnotationName }}
-            - name: OTTERIZE_SERVICE_NAME_OVERRIDE_ANNOTATION
+            - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
               value: {{ .Values.global.serviceNameOverrideAnnotationName | quote }}
+            {{ else if .Values.global.workloadNameOverrideAnnotationName }}
+            - name: OTTERIZE_WORKLOAD_NAME_OVERRIDE_ANNOTATION
+              value: {{ .Values.global.workloadNameOverrideAnnotationName | quote }}
             {{ end }}
           {{ if (and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName .Values.global.otterizeCloud.credentials.clientSecretKeyRef.clientIdKey) }}
             - name: OTTERIZE_CLIENT_ID
