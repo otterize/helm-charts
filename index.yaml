@@ -6,7 +6,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 3.4.0
-    created: "2025-01-19T18:30:04.711600717Z"
+    created: "2025-01-19T18:34:28.902362608Z"
     dependencies:
     - condition: zookeeper.enabled
       name: zookeeper
@@ -20,7 +20,7 @@ entries:
     description: Apache Kafka is a distributed streaming platform designed to build
       real-time pipelines and can be used as a message broker or as a replacement
       for a log aggregation solution for big data applications.
-    digest: 5387fa91463eb8618a1f10bfa85670cbb4338909a5dbb529053da6ef0b969a4c
+    digest: eac1210c53c69a2ab86b12d74d416aecc91b90e08d1452ceddecf62a76b19873
     home: https://github.com/bitnami/charts/tree/main/bitnami/kafka
     icon: https://bitnami.com/assets/stacks/kafka/img/kafka-stack-220x234.png
     keywords:
@@ -40,6 +40,19 @@ entries:
     - https://otterize.github.io/helm-charts/bitnami-kafka-21.4.4.tgz
     version: 21.4.4
   credentials-operator:
+  - apiVersion: v2
+    appVersion: v3.0.14
+    created: "2025-01-19T18:34:28.903315774Z"
+    description: credentials-operator
+    digest: ea811b19bf415b02e5f0d5a9f2419f9f91d1d08740016558ede42631a92e7880
+    home: https://github.com/otterize/credentials-operator
+    name: credentials-operator
+    sources:
+    - https://github.com/otterize/credentials-operator
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/credentials-operator-3.0.22.tgz
+    version: 3.0.22
   - apiVersion: v2
     appVersion: v3.0.13
     created: "2025-01-19T18:30:04.713063526Z"
@@ -1161,9 +1174,9 @@ entries:
   intents-operator:
   - apiVersion: v2
     appVersion: v2.0.38
-    created: "2025-01-19T18:30:04.713815017Z"
+    created: "2025-01-19T18:34:28.904332268Z"
     description: Otterize intents operator
-    digest: 1849e0db03c64a02eb56d8f8b08a09dca1e7be74c04372f8a1e6c49d47e293e6
+    digest: 7a8faab3f730f07e3e49df0251d4762d3bcedf3573e2f68d446ec4ef28bf5724
     home: https://github.com/otterize/intents-operator
     name: intents-operator
     sources:
@@ -3045,8 +3058,8 @@ entries:
   network-mapper:
   - apiVersion: v2
     appVersion: v2.0.19
-    created: "2025-01-19T18:30:04.71478245Z"
-    digest: bca7e680095357225ce7d35e410cce3ef37b14e51d861a1958cf3a3e6c953d07
+    created: "2025-01-19T18:34:28.906450482Z"
+    digest: beea8d950fff254a22ebe346b7a2bdc627952010b845b0e4ca6c957d6eedafd3
     home: https://github.com/otterize/network-mapper
     name: network-mapper
     sources:
@@ -4208,6 +4221,39 @@ entries:
     - https://otterize.github.io/helm-charts/network-mapper-0.1.0.tgz
     version: 0.1.0
   otterize-kubernetes:
+  - apiVersion: v2
+    created: "2025-01-19T18:34:28.909961063Z"
+    dependencies:
+    - alias: credentialsOperator
+      condition: global.deployment.credentialsOperator
+      name: credentials-operator
+      repository: file://./../credentials-operator
+      version: '>= 0.0.1'
+    - alias: spire
+      condition: deployment.spire,global.deployment.spire
+      name: spire
+      repository: file://./../spire
+      version: 1.0.0
+    - alias: intentsOperator
+      condition: deployment.intentsOperator,global.deployment.intentsOperator
+      name: intents-operator
+      repository: file://./../intents-operator
+      version: '>= 0.1.2'
+    - alias: networkMapper
+      condition: deployment.networkMapper,global.deployment.networkMapper
+      name: network-mapper
+      repository: file://./../network-mapper
+      version: '>= 0.1.0'
+    description: 'This chart contains the Otterize credentials-operator, SPIRE (server+agent),
+      the Otterize intents operator, and the Otterize network mapper. '
+    digest: 98ea0deb4ca87eb180b7cc5589bfca031291517844c768ca35f3288f652e68bd
+    home: https://github.com/otterize/helm-charts
+    kubeVersion: '>=1.19.0-0'
+    name: otterize-kubernetes
+    type: application
+    urls:
+    - https://otterize.github.io/helm-charts/otterize-kubernetes-4.0.114.tgz
+    version: 4.0.114
   - apiVersion: v2
     created: "2025-01-19T18:30:04.718030034Z"
     dependencies:
@@ -13096,7 +13142,7 @@ entries:
   spire:
   - apiVersion: v2
     appVersion: 1.5.4
-    created: "2025-01-19T18:30:04.718684404Z"
+    created: "2025-01-19T18:34:28.910594884Z"
     description: 'A Helm chart for deploying spire-server and spire-agent.  > :warning:
       Please note this chart requires Projected Service Account Tokens which has to
       be enabled on your k8s api server.  > :warning: Minimum Spire version is `v1.0.2`.  To
@@ -13107,7 +13153,7 @@ entries:
       command:         - kube-apiserver         - --api-audiences=api,spire-server         -
       --service-account-issuer=api,spire-agent         - --service-account-key-file=/run/config/pki/sa.pub         -
       --service-account-signing-key-file=/run/config/pki/sa.key ``` '
-    digest: b5b0af5c1492f1ba8e94fd3c197d19b0bb35834d53b2b15b8908ec2c28f845f2
+    digest: 67f2f637f2bbc6731390882ecf90b4566d660e7b4082c0a9a6e5b0736cec8759
     home: https://github.com/otterize/helm-charts
     keywords:
     - spiffe
@@ -13134,4 +13180,4 @@ entries:
     urls:
     - https://otterize.github.io/helm-charts/spire-integration-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-19T18:30:04.703972169Z"
+generated: "2025-01-19T18:34:28.894623293Z"
