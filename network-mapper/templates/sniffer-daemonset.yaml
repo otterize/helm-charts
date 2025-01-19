@@ -106,6 +106,10 @@ spec:
           - name: OTTERIZE_TELEMETRY_ERRORS_ADDRESS
             value: {{ .Values.global.telemetry.errors.endpointAddress | quote }}
           {{- end }}
+          {{- if .Values.sniffer.healthProbesPort }}
+          - name: OTTERIZE_HEALTH_PROBES_PORT
+            value: {{ .Values.sniffer.healthProbesPort | quote }}
+          {{- end }}
           {{- if .Values.global.telemetry.errors.networkMapperApiKey }}
           - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
             value: {{ .Values.global.telemetry.errors.networkMapperApiKey | quote }}
@@ -121,13 +125,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /healthz
-            port: 9090
+            port: {{ .Values.sniffer.healthProbesPort }}
           initialDelaySeconds: 30
           periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /healthz
-            port: 9090
+            port: {{ .Values.sniffer.healthProbesPort }}
           initialDelaySeconds: 30
           periodSeconds: 20
         {{- if .Values.sniffer.containerSecurityContext }}
