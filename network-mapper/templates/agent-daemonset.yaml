@@ -127,6 +127,11 @@ spec:
             value: "true"
           {{ end }}
 
+          {{ if .Values.nodeagent.telemetry.enable }}
+          - name: OTTERIZE_USAGE_TELEMETRY_ENABLED
+            value: "true"
+          {{ end }}
+
           {{ if .Values.nodeagent.telemetry.prometheus.enable }}
           - name: OTTERIZE_PROMETHEUS_ENABLED
             value: "true"
