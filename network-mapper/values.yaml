@@ -40,12 +40,11 @@ mapper:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
-
 nodeagent:
   enable: false
   repository: otterize
   image: agent
-  tag: v0.0.11
+  tag: v0.0.12
   pullPolicy:
   affinity: {}
   tolerations: []
@@ -60,11 +59,10 @@ nodeagent:
     prometheus:
       enable: false
       port: 9090
-
 piidetector:
   repository: otterize
   image: piidetector
-  tag: v0.0.11
+  tag: v0.0.12
   pullPolicy:
   affinity: {}
   tolerations: []
