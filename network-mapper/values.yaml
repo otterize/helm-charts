@@ -40,6 +40,7 @@ mapper:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+
 nodeagent:
   enable: false
   repository: otterize
@@ -53,6 +54,13 @@ nodeagent:
     runAsNonRoot: false
   pullSecrets:
   priorityClassName: ""
+  telemetry:
+    enable: false
+    usageTelemetry: true
+    prometheus:
+      enable: false
+      port: 9090
+
 piidetector:
   repository: otterize
   image: piidetector
