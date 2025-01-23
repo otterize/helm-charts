@@ -122,6 +122,23 @@ spec:
           - name: OTTERIZE_HOST_PROC_DIR
             value: /host/proc
 
+          {{ if .Values.nodeagent.telemetry.enable }}
+          - name: OTTERIZE_TELEMETRY_ENABLED
+            value: "true"
+          {{ end }}
+
+          {{ if .Values.nodeagent.telemetry.usageTelemetry }}
+          - name: OTTERIZE_USAGE_TELEMETRY_ENABLED
+            value: "true"
+          {{ end }}
+
+          {{ if .Values.nodeagent.telemetry.prometheus.enable }}
+          - name: OTTERIZE_PROMETHEUS_ENABLED
+            value: "true"
+          - name: OTTERIZE_PROMETHEUS_PORT
+            value: {{ .Values.nodeagent.telemetry.prometheus.port | quote }}
+          {{ end }}
+
         volumeMounts:
           - name: host-proc
             mountPath: /host/proc
@@ -138,6 +155,13 @@ spec:
 
         securityContext:
           privileged: true
+
+        {{ if .Values.nodeagent.telemetry.prometheus.enable }}
+        ports:
+          - containerPort: {{ .Values.nodeagent.telemetry.prometheus.port }}
+            name: http
+            protocol: TCP
+        {{ end }}
 
       hostNetwork: true # use the host network for tracing network traffic
       dnsPolicy: ClusterFirstWithHostNet # resolve kubernetes service names
