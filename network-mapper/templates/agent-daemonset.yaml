@@ -127,7 +127,7 @@ spec:
             value: "true"
           {{ end }}
 
-          {{ if .Values.nodeagent.telemetry.enable }}
+          {{ if .Values.nodeagent.telemetry.usageTelemetry }}
           - name: OTTERIZE_USAGE_TELEMETRY_ENABLED
             value: "true"
           {{ end }}
