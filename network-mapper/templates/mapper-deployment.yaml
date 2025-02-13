@@ -52,6 +52,9 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{ if .Values.mapper.priorityClassName }}
+      priorityClassName: {{ .Values.mapper.priorityClassName }}
+      {{ end }}
       containers:
         - name: {{ template "otterize.mapper.fullName" . }}
           image: "{{ .Values.mapper.repository }}/{{ .Values.mapper.image }}:{{ default $.Chart.AppVersion .Values.mapper.tag }}"
