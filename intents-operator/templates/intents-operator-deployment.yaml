@@ -69,6 +69,9 @@ spec:
       affinity:
           {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{ if .Values.operator.priorityClassName }}
+      priorityClassName: {{ .Values.operator.priorityClassName }}
+      {{ end }}
       containers:
       - command:
         - /manager

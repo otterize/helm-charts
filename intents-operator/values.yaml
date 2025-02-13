@@ -1,6 +1,7 @@
 operator:
   repository: otterize
   image: intents-operator
+  priorityClassName: "pcn"
   pullPolicy:
   podSecurityContext:
     fsGroup: 65532

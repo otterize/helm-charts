@@ -9,6 +9,7 @@ mapper:
   repository: otterize
   image: network-mapper
   pullPolicy:
+  priorityClassName: "pcn"
   podSecurityContext:
     fsGroup: 65532
     runAsGroup: 65532
