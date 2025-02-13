@@ -1,7 +1,7 @@
 operator:
   repository: otterize
   image: credentials-operator
-  priorityClassName: "pcn"
+  priorityClassName:
   pullPolicy:
   podSecurityContext:
     fsGroup: 65532
