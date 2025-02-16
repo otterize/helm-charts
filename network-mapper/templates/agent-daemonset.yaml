@@ -149,9 +149,13 @@ spec:
           - name: host-socket-containerd
             mountPath: /run/cri/containerd.sock
 
-          - mountPath: /host/sys/fs/bpf
-            name: host-bpffs
+          - name: host-bpffs
+            mountPath: /host/sys/fs/bpf
             readOnly: false
+
+          - name: host-cgroup
+            mountPath: /host/sys/fs/cgroup
+            readOnly: true
 
         securityContext:
           privileged: true
@@ -167,9 +171,9 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet # resolve kubernetes service names
 
       volumes:
-        - hostPath:
+        - name: host-proc
+          hostPath:
             path: /proc
-          name: host-proc
         - name: component-config
           configMap:
             name: {{ template "otterize.mapper.componentConfigmap" . }}
@@ -182,4 +186,8 @@ spec:
         - name: host-bpffs
           hostPath:
             path: "/sys/fs/bpf"
+        - name: host-cgroup
+          hostPath:
+            path: "/sys/fs/cgroup"
+
 {{ end }}
