@@ -157,6 +157,8 @@ jobs:
         run: |-
           docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
           minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+          docker pull ${{ inputs.gcr-registry }}/intents-operator-webhook-server:${{ inputs.intents-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
 
       - name: Load credentials-operator docker image from GCR
         if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
@@ -252,6 +254,8 @@ jobs:
         run: |-
           docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
           minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+          docker pull ${{ inputs.gcr-registry }}/intents-operator-webhook-server:${{ inputs.intents-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator-webhook-server:${{ inputs.intents-operator-tag }}
 
       - name: Load credentials-operator docker image from GCR
         if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
