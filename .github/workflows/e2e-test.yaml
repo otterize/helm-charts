@@ -173,6 +173,7 @@ jobs:
             export INTENTS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}
             export INTENTS_OPERATOR_TAG=${{ inputs.intents-operator-tag }}
             export INTENTS_OPERATOR_IMAGE=intents-operator
+            export INTENTS_OPERATOR_WEBHOOK_SERVER_IMAGE=intents-operator-webhook-server
           fi
           if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
             export CREDENTIALS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}
@@ -270,6 +271,7 @@ jobs:
             export INTENTS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}
             export INTENTS_OPERATOR_TAG=${{ inputs.intents-operator-tag }}
             export INTENTS_OPERATOR_IMAGE=intents-operator
+            export INTENTS_OPERATOR_WEBHOOK_SERVER_IMAGE=intents-operator-webhook-server
           fi
           if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
             export CREDENTIALS_OPERATOR_REPOSITORY=${{ inputs.gcr-registry }}

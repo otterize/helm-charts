@@ -110,6 +110,7 @@ func (s *BaseSuite) GetDefaultHelmChartValues() map[string]any {
 
 	intentsOperatorRepository := os.Getenv("INTENTS_OPERATOR_REPOSITORY")
 	intentsOperatorImage := os.Getenv("INTENTS_OPERATOR_IMAGE")
+	intentsOperatorWebhookServerImage := os.Getenv("INTENTS_OPERATOR_WEBHOOK_SERVER_IMAGE")
 	intentsOperatorTag := os.Getenv("INTENTS_OPERATOR_TAG")
 
 	if intentsOperatorTag != "" {
@@ -119,6 +120,12 @@ func (s *BaseSuite) GetDefaultHelmChartValues() map[string]any {
 		defaultValues["intentsOperator"].(map[string]any)["operator"] = map[string]any{
 			"tag":        intentsOperatorTag,
 			"image":      intentsOperatorImage,
+			"repository": intentsOperatorRepository,
+			"pullPolicy": "Never",
+		}
+		defaultValues["intentsOperator"].(map[string]any)["webhookServer"] = map[string]any{
+			"tag":        intentsOperatorTag,
+			"image":      intentsOperatorWebhookServerImage,
 			"repository": intentsOperatorRepository,
 			"pullPolicy": "Never",
 		}
