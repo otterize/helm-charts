@@ -77,6 +77,8 @@ jobs:
         run: |-
           docker pull ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
           minikube image load ${{ inputs.gcr-registry }}/intents-operator:${{ inputs.intents-operator-tag }}
+          docker pull ${{ inputs.gcr-registry }}/intents-operator-webhook-server:${{ inputs.intents-operator-tag }}
+          minikube image load ${{ inputs.gcr-registry }}/intents-operator-webhook-server:${{ inputs.intents-operator-tag }}
 
       - name: Load credentials-operator docker image from GCR
         if: "${{ inputs.gcr-registry != '' && inputs.credentials-operator-tag != ''}}"
@@ -90,7 +92,7 @@ jobs:
           # schema validation using kubectl dry run
           OPERATOR_FLAGS=""
           if [ -n "${{ inputs.intents-operator-tag }}" ]; then
-            OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string intentsOperator.operator.repository=${{ inputs.gcr-registry }} --set-string intentsOperator.operator.image=intents-operator --set-string intentsOperator.operator.tag=${{ inputs.intents-operator-tag }} --set-string intentsOperator.operator.pullPolicy=Never"
+            OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string intentsOperator.operator.repository=${{ inputs.gcr-registry }} --set-string intentsOperator.operator.image=intents-operator --set-string intentsOperator.operator.tag=${{ inputs.intents-operator-tag }} --set-string intentsOperator.webhookServer.image=intents-operator --set-string intentsOperator.webhookServer.tag=${{ inputs.intents-operator-tag }} --set-string intentsOperator.webhookServer.pullPolicy=Never"
           fi
           if [ -n "${{ inputs.credentials-operator-tag }}" ]; then
               OPERATOR_FLAGS="$OPERATOR_FLAGS --set-string credentialsOperator.operator.repository=${{ inputs.gcr-registry }} --set-string credentialsOperator.operator.image=credentials-operator --set-string credentialsOperator.operator.tag=${{ inputs.credentials-operator-tag }} --set-string credentialsOperator.operator.pullPolicy=Never"
