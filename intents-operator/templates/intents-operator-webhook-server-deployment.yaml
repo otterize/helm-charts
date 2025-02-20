@@ -125,7 +125,17 @@ spec:
           - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
             value: {{ .Values.global.telemetry.errors.intentsOperatorApiKey | quote }}
           {{- end }}
-
+          # Client ID is required for telemetry, but not used for connectivity
+          {{ if (and .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName .Values.global.otterizeCloud.credentials.clientSecretKeyRef.clientIdKey) }}
+          - name: OTTERIZE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.secretName }}"
+                key: "{{ .Values.global.otterizeCloud.credentials.clientSecretKeyRef.clientIdKey }}"
+          {{ else if .Values.global.otterizeCloud.credentials.clientId }}
+          - name: OTTERIZE_CLIENT_ID
+            value: "{{ .Values.global.otterizeCloud.credentials.clientId }}"
+          {{ end }}
           {{- if eq false .Values.global.telemetry.enabled }}
           - name: OTTERIZE_TELEMETRY_ENABLED
             value: "false"
