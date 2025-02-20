@@ -1,0 +1,176 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- with .Values.global.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+    app: intents-operator-webhook-server
+  annotations:
+    {{- with .Values.global.commonAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+  name: intents-operator-webhook-server
+  namespace: {{ .Release.Namespace }}
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intents-operator-webhook-server
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+        intents.otterize.com/workload-name: intents-operator-webhook-server
+        {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/version: {{ .Chart.Version }}
+      labels:
+        {{- with .Values.global.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.global.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app: intents-operator-webhook-server
+        app.kubernetes.io/version: {{ .Chart.Version }}
+        {{ if .Values.global.azure.enabled }}
+        azure.workload.identity/use: "true"
+        {{ end }}
+    spec:
+    {{- if .Values.webhookServer.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.webhookServer.podSecurityContext | nindent 8 }}
+    {{- end }}
+    {{ if .Values.webhookServer.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.webhookServer.pullSecrets }}
+    {{ end }}
+      hostNetwork: {{ .Values.webhookServer.hostNetwork }}
+      {{- with .Values.webhookServer.tolerations }}
+      tolerations:  {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhookServer.affinity }}
+      affinity:
+          {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{ if .Values.webhookServer.priorityClassName }}
+      priorityClassName: {{ .Values.webhookServer.priorityClassName }}
+      {{ end }}
+      containers:
+      - command:
+        - /manager
+        args:
+        - --metrics-bind-address
+        - ":{{ .Values.webhookServer.metricsPort }}"
+        image: "{{ .Values.webhookServer.repository }}/{{ .Values.webhookServer.image }}:{{ default $.Chart.AppVersion .Values.webhookServer.tag }}"
+        {{ if .Values.webhookServer.pullPolicy }}
+        imagePullPolicy: {{ .Values.webhookServer.pullPolicy }}
+        {{ end }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8181
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+          - containerPort: 9443
+            name: webhook-server
+            protocol: TCP
+          - containerPort: {{ .Values.webhookServer.metricsPort }}
+            name: metrics
+            protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8181
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          {{- toYaml .Values.webhookServer.resources | nindent 10 }}
+        {{- if .Values.webhookServer.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.webhookServer.containerSecurityContext | nindent 10 }}
+        {{- end }}
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          {{- if .Values.global.telemetry.errors.stage }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_STAGE
+            value: {{ .Values.global.telemetry.errors.stage | quote }}
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.endpointAddress }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_ADDRESS
+            value: {{ .Values.global.telemetry.errors.endpointAddress | quote }}
+          {{- end }}
+          {{- if .Values.global.telemetry.errors.intentsOperatorApiKey }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_API_KEY
+            value: {{ .Values.global.telemetry.errors.intentsOperatorApiKey | quote }}
+          {{- end }}
+
+          {{- if eq false .Values.global.telemetry.enabled }}
+          - name: OTTERIZE_TELEMETRY_ENABLED
+            value: "false"
+          {{- end }}
+          {{- if eq false .Values.global.telemetry.usage.enabled }}
+          - name: OTTERIZE_TELEMETRY_USAGE_ENABLED
+            value: "false"
+          {{- end }}
+          {{- if eq false .Values.global.telemetry.errors.enabled }}
+          - name: OTTERIZE_TELEMETRY_ERRORS_ENABLED
+            value: "false"
+          {{- end }}
+          {{- if .Values.webhookServer.extraEnvVars -}}
+          {{- toYaml .Values.webhookServer.extraEnvVars | nindent 10 -}}
+          {{- end }}
+          {{- if eq true .Values.debug }}
+          - name: OTTERIZE_DEBUG
+            value: "true"
+          {{- end }}
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=0
+        image: {{ .Values.global.kubebuilder_rbac_proxy.image }}:{{ .Values.global.kubebuilder_rbac_proxy.tag }}
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 5m
+            memory: 64Mi
+        {{- if .Values.webhookServer.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.webhookServer.containerSecurityContext | nindent 10 }}
+        {{- end }}
+      serviceAccountName: intents-operator-controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
