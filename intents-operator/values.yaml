@@ -1,7 +1,6 @@
 operator:
   repository: otterize
   image: intents-operator
-  tag: new4
   priorityClassName:
   pullPolicy:
   podSecurityContext:
@@ -93,7 +92,6 @@ operator:
 webhookServer:
   repository: otterize
   image: intents-operator-webhook-server
-  tag: new2
   priorityClassName:
   pullPolicy:
   podSecurityContext:
