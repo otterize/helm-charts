@@ -8,6 +8,7 @@ enableIstioCollection: true
 mapper:
   repository: otterize
   image: network-mapper
+  tag:
   pullPolicy:
   priorityClassName:
   podSecurityContext:
