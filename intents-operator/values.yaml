@@ -89,6 +89,28 @@ operator:
   #   cpu: 100m
   #   memory: 128Mi
 
+webhookServer:
+  repository: otterize
+  image: intents-operator-webhook-server
+  priorityClassName:
+  pullPolicy:
+  podSecurityContext:
+    fsGroup: 65532
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65532
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    runAsGroup: 65532
+    runAsUser: 65532
+    runAsNonRoot: true
+    capabilities:
+      drop:
+        - "ALL"
+  pullSecrets:
+  hostNetwork: false
+  metricsPort: 2112
+
 aws:
   roleARN:
 
