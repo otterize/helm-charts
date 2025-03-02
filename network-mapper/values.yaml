@@ -61,6 +61,7 @@ nodeagent:
     prometheus:
       enable: false
       port: 9090
+  extraEnvVars:
 piidetector:
   repository: otterize
   image: piidetector
