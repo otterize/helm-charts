@@ -139,6 +139,10 @@ spec:
             value: {{ .Values.nodeagent.telemetry.prometheus.port | quote }}
           {{ end }}
 
+          {{- if .Values.nodeagent.extraEnvVars -}}
+          {{- toYaml .Values.nodeagent.extraEnvVars | nindent 10 -}}
+          {{- end }}
+
         volumeMounts:
           - name: host-proc
             mountPath: /host/proc
