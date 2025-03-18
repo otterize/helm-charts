@@ -31,11 +31,11 @@ operator:
   # In either case, you can also use the other flags that control network policy creation, etc, to disable enforcement for a specific
   enableNetworkPolicyCreation: true
   enableKafkaACLCreation: true
-  # **Deprecated, use allowExternalTraffic instead**
-  autoCreateNetworkPoliciesForExternalTraffic: # deprecated, use allowExternalTraffic instead
-  # **Deprecated, use allowExternalTraffic instead**
-  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: # deprecated, use allowExternalTraffic instead
-  ingressControllerConfigs: # ingressControllerConfigs determines whether network policies created by allowExternalTraffic will be limited to just these pods, or all pods in the namespace
+  # **Deprecated, use allowExternalAndMetricsCollectionTraffic instead**
+  autoCreateNetworkPoliciesForExternalTraffic: # deprecated, use allowExternalAndMetricsCollectionTraffic instead
+  # **Deprecated, use allowExternalAndMetricsCollectionTraffic instead**
+  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: # deprecated, use allowExternalAndMetricsCollectionTraffic instead
+  ingressControllerConfigs: # ingressControllerConfigs determines whether network policies created by allowExternalAndMetricsCollectionTraffic will be limited to just these pods, or all pods in the namespace
 #    - name: ingress-nginx-controller
 #      namespace: ingress-nginx
 #      kind: Deployment
@@ -47,8 +47,11 @@ operator:
   #      namespace: infrastructure
   #      kind: Deployment
 
-  # `allowExternalTraffic` controls whether the intents-operator will automatically create network policies for services
-  # that are accessible to external traffic.
+  # **Deprecated, use allowExternalAndMetricsCollectionTraffic instead**
+  allowExternalTraffic: ifBlockedByOtterize
+
+  # `allowExternalAndMetricsCollectionTraffic` controls whether the intents-operator will automatically create network
+  # policies for services that are accessible to external traffic and services that support metrics collection.
   # Possible values are:
   # - `ifBlockedByOtterize` (default) - only create network policies for services that are protected by otterize
   # - `off`                           - never create network policies for external traffic. If server is protected by
@@ -56,7 +59,7 @@ operator:
   #                                     manually created network policy to allow external traffic
   # - `always`                        - create network policies for every service that is accessible from outside the
   #                                     cluster, regardless of whether it is protected by otterize or not
-  allowExternalTraffic: ifBlockedByOtterize
+  allowExternalAndMetricsCollectionTraffic: ifBlockedByOtterize
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
   enableLinkerdPolicyCreation: true

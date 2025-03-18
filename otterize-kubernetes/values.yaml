@@ -80,7 +80,7 @@ intentsOperator:
     autoGenerateTLSUsingCredentialsOperator: true
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
-    allowExternalTraffic: ifBlockedByOtterize
+    allowExternalAndMetricsCollectionTraffic: ifBlockedByOtterize
     enableIstioPolicyCreation: true
   watchedNamespaces: null # by default, watch all
 

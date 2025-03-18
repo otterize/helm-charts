@@ -35,17 +35,19 @@
     {{- end -}}
 {{- end -}}
 
-{{- define "otterize.operator.allowExternalTraffic" -}}
+{{- define "otterize.operator.allowExternalAndMetricsCollectionTraffic" -}}
     {{- if or (not (kindIs "invalid" .Values.operator.autoCreateNetworkPoliciesForExternalTraffic) ) (not (kindIs "invalid" .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement) ) -}}
-        {{- fail "`autoCreateNetworkPoliciesForExternalTraffic` is deprecated, please use `allowExternalTraffic` instead. \nValid values for `allowExternalTraffic`: \n\t`off` \t\t\t(equivalent to `autoCreateNetworkPoliciesForExternalTraffic`=false) \n\t`ifBlockedByOtterize` \t(equivalent to `autoCreateNetworkPoliciesForExternalTraffic`=true) \n\t`always` \t\t(equivalent to `autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement`=true)" -}}
+        {{- fail "`autoCreateNetworkPoliciesForExternalTraffic` is deprecated, please use `allowExternalAndMetricsCollectionTraffic` instead. \nValid values for `allowExternalAndMetricsCollectionTraffic`: \n\t`off` \t\t\t(equivalent to `autoCreateNetworkPoliciesForExternalTraffic`=false) \n\t`ifBlockedByOtterize` \t(equivalent to `autoCreateNetworkPoliciesForExternalTraffic`=true) \n\t`always` \t\t(equivalent to `autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement`=true)" -}}
+    {{- else if (not (kindIs "invalid" .Values.operator.allowExternalTraffic)) -}}
+        {{- fail "`allowExternalTraffic` is deprecated, please use `allowExternalAndMetricsCollectionTraffic` instead. \nValid values for `allowExternalAndMetricsCollectionTraffic`: \n\t`off` \t\t\t(equivalent to `allowExternalTraffic`=`off`) \n\t`ifBlockedByOtterize` \t(equivalent to `allowExternalTraffic`=`ifBlockedByOtterize`) \n\t`always` \t\t(equivalent to `allowExternalTraffic`=`ifBlockedByOtterize`)" -}}
     {{- end -}}
-    {{- if (eq "off" .Values.operator.allowExternalTraffic) -}}
+    {{- if (eq "off" .Values.operator.allowExternalAndMetricsCollectionTraffic) -}}
 "off"
-    {{- else if (eq "always" .Values.operator.allowExternalTraffic) -}}
+    {{- else if (eq "always" .Values.operator.allowExternalAndMetricsCollectionTraffic) -}}
 "always"
-    {{- else if (eq "ifBlockedByOtterize" .Values.operator.allowExternalTraffic) -}}
+    {{- else if (eq "ifBlockedByOtterize" .Values.operator.allowExternalAndMetricsCollectionTraffic) -}}
 "if-blocked-by-otterize"
     {{- else -}}
-        {{- fail (printf "Valid values for `allowExternalTraffic`: `off`, `ifBlockedByOtterize` and `always`, but you specified `%s`" .Values.operator.allowExternalTraffic) -}}
+        {{- fail (printf "Valid values for `allowExternalAndMetricsCollectionTraffic`: `off`, `ifBlockedByOtterize` and `always`, but you specified `%s`" .Values.operator.allowExternalAndMetricsCollectionTraffic) -}}
     {{- end -}}
 {{- end -}}
