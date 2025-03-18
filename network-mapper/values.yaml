@@ -8,6 +8,7 @@ enableIstioCollection: true
 mapper:
   repository: otterize
   image: network-mapper
+  tag:
   pullPolicy:
   priorityClassName:
   podSecurityContext:
@@ -45,7 +46,7 @@ nodeagent:
   enable: false
   repository: otterize
   image: agent
-  tag: v0.0.16
+  tag: 0.0.21
   pullPolicy:
   affinity: {}
   tolerations: []
@@ -60,10 +61,11 @@ nodeagent:
     prometheus:
       enable: false
       port: 9090
+  extraEnvVars:
 piidetector:
   repository: otterize
   image: piidetector
-  tag: v0.0.16
+  tag: 0.0.21
   pullPolicy:
   affinity: {}
   tolerations: []
