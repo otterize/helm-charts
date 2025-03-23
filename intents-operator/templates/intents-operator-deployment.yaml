@@ -212,8 +212,13 @@ spec:
           - name: OTTERIZE_ENABLE_KAFKA_ACL_CREATION
             value: "false"
           {{- end }}
-          - name: OTTERIZE_ALLOW_EXTERNAL_TRAFFIC
+          {{- if .Values.operator.allowExternalTraffic }}
+          - name: OTTERIZE_AUTOMATE_THIRD_PARTY_NETWORK_POLICIES
             value: {{ template "otterize.operator.allowExternalTraffic" . }}
+          {{- else }}
+          - name: OTTERIZE_AUTOMATE_THIRD_PARTY_NETWORK_POLICIES
+            value: {{ template "otterize.operator.automateThirdPartyNetworkPolicies" . }}
+          {{- end }}
           {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
           - name: OTTERIZE_KAFKA_SERVER_TLS_CERT
             value: {{ include "otterize.operator.cert" . | quote}}

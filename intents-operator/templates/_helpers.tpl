@@ -35,10 +35,23 @@
     {{- end -}}
 {{- end -}}
 
+{{- define "otterize.operator.automateThirdPartyNetworkPolicies" -}}
+    {{- if (eq "off" .Values.operator.automateThirdPartyNetworkPolicies) -}}
+"off"
+    {{- else if (eq "always" .Values.operator.automateThirdPartyNetworkPolicies) -}}
+"always"
+    {{- else if (eq "ifBlockedByOtterize" .Values.operator.automateThirdPartyNetworkPolicies) -}}
+"if-blocked-by-otterize"
+    {{- else -}}
+        {{- fail (printf "Valid values for `automateThirdPartyNetworkPolicies`: `off`, `ifBlockedByOtterize` and `always`, but you specified `%s`" .Values.operator.allowExternalTraffic) -}}
+    {{- end -}}
+{{- end -}}
+
 {{- define "otterize.operator.allowExternalTraffic" -}}
     {{- if or (not (kindIs "invalid" .Values.operator.autoCreateNetworkPoliciesForExternalTraffic) ) (not (kindIs "invalid" .Values.operator.autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement) ) -}}
         {{- fail "`autoCreateNetworkPoliciesForExternalTraffic` is deprecated, please use `allowExternalTraffic` instead. \nValid values for `allowExternalTraffic`: \n\t`off` \t\t\t(equivalent to `autoCreateNetworkPoliciesForExternalTraffic`=false) \n\t`ifBlockedByOtterize` \t(equivalent to `autoCreateNetworkPoliciesForExternalTraffic`=true) \n\t`always` \t\t(equivalent to `autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement`=true)" -}}
     {{- end -}}
+
     {{- if (eq "off" .Values.operator.allowExternalTraffic) -}}
 "off"
     {{- else if (eq "always" .Values.operator.allowExternalTraffic) -}}
