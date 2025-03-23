@@ -40,6 +40,12 @@ operator:
 #      namespace: ingress-nginx
 #      kind: Deployment
 
+  metricsScrapingServiceConfigs: # restrict network policies created by automateThirdPartyNetworkPolicies for metrics scraping (like Prometheus) to be accessed
+  # only from the scraping server.
+  #    - name: prometheus-server
+  #      namespace: prometheus
+  #      kind: Deployment
+
   # `externallyManagedPolicyWorkloads` allows configuring workloads assumed to have externally managed network policies, allowing traffic to/from them.
   # Otterize Cloud will not suggest new ClientIntents for these workloads.
   externallyManagedPolicyWorkloads:
@@ -60,6 +66,7 @@ operator:
   #                                     may need a manually created network policy to allow the traffic
   # - `always`                        - create network policies for every relevant service, regardless of whether it is protected
   #                                     by otterize or not
+  # To enable metrics scraping by metrics, `metricsScrapingServiceConfigs` must be set as well
   automateThirdPartyNetworkPolicies: ifBlockedByOtterize
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
