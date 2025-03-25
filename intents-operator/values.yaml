@@ -40,8 +40,7 @@ operator:
 #      namespace: ingress-nginx
 #      kind: Deployment
 
-  metricsScrapingServiceConfigs: # restrict network policies created by automateThirdPartyNetworkPolicies for metrics scraping (like Prometheus) to be accessed
-  # only from the scraping server.
+  prometheusServerConfigs: # Restricts the automatically created network policies for Prometheus metrics scraping to only originate from Prometheus server
   #    - name: prometheus-server
   #      namespace: prometheus
   #      kind: Deployment
@@ -66,7 +65,7 @@ operator:
   #                                     may need a manually created network policy to allow the traffic
   # - `always`                        - create network policies for every relevant service, regardless of whether it is protected
   #                                     by otterize or not
-  # To enable metrics scraping by metrics, `metricsScrapingServiceConfigs` must be set as well
+  # To enable Prometheus metrics scraping traffic, `prometheusServerConfigs` must be set as well
   automateThirdPartyNetworkPolicies: ifBlockedByOtterize
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true

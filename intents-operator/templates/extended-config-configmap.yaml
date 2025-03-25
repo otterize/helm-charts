@@ -1,4 +1,4 @@
-{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkloads .Values.operator.metricsScrapingServiceConfigs }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkloads .Values.operator.prometheusServerConfigs }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -42,12 +42,12 @@ data:
         kind: {{ $workload.kind | quote | required "Workload kind required: kind" }}
     {{- end }}
   {{- end }}
-  {{- if .Values.operator.metricsScrapingServiceConfigs }}
-    metricsScrapingService:
-    {{- range $config := .Values.operator.metricsScrapingServiceConfigs }}
-      - name: {{ $config.name | quote | required "metricsScrapingService name required: name" }}
-        namespace: {{ $config.namespace | quote | required "metricsScrapingService namespace required: namespace" }}
-        kind: {{ $config.kind | quote | required "metricsScrapingService kind required: kind" }}
+  {{- if .Values.operator.prometheusServerConfigs }}
+    prometheusServerConfigs:
+    {{- range $config := .Values.operator.prometheusServerConfigs }}
+      - name: {{ $config.name | quote | required "prometheusServerConfigs name required: name" }}
+        namespace: {{ $config.namespace | quote | required "prometheusServerConfigs namespace required: namespace" }}
+        kind: {{ $config.kind | quote | required "prometheusServerConfigs kind required: kind" }}
     {{- end }}
   {{- end }}
 {{- end }}
