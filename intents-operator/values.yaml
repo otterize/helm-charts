@@ -31,14 +31,19 @@ operator:
   # In either case, you can also use the other flags that control network policy creation, etc, to disable enforcement for a specific
   enableNetworkPolicyCreation: true
   enableKafkaACLCreation: true
-  # **Deprecated, use allowExternalTraffic instead**
-  autoCreateNetworkPoliciesForExternalTraffic: # deprecated, use allowExternalTraffic instead
-  # **Deprecated, use allowExternalTraffic instead**
-  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: # deprecated, use allowExternalTraffic instead
-  ingressControllerConfigs: # ingressControllerConfigs determines whether network policies created by allowExternalTraffic will be limited to just these pods, or all pods in the namespace
+  # **Deprecated, use automateThirdPartyNetworkPolicies instead**
+  autoCreateNetworkPoliciesForExternalTraffic: # deprecated, use automateThirdPartyNetworkPolicies instead
+  # **Deprecated, use automateThirdPartyNetworkPolicies instead**
+  autoCreateNetworkPoliciesForExternalTrafficDisableIntentsRequirement: # deprecated, use automateThirdPartyNetworkPolicies instead
+  ingressControllerConfigs: # ingressControllerConfigs determines whether network policies created by automateThirdPartyNetworkPolicies will be limited to just these pods, or all pods in the namespace
 #    - name: ingress-nginx-controller
 #      namespace: ingress-nginx
 #      kind: Deployment
+
+  prometheusServerConfigs: # Restricts the automatically created network policies for Prometheus metrics scraping to only originate from Prometheus server
+  #    - name: prometheus-server
+  #      namespace: prometheus
+  #      kind: Deployment
 
   # `externallyManagedPolicyWorkloads` allows configuring workloads assumed to have externally managed network policies, allowing traffic to/from them.
   # Otterize Cloud will not suggest new ClientIntents for these workloads.
@@ -47,16 +52,21 @@ operator:
   #      namespace: infrastructure
   #      kind: Deployment
 
-  # `allowExternalTraffic` controls whether the intents-operator will automatically create network policies for services
-  # that are accessible to external traffic.
+  # **Deprecated, use automateThirdPartyNetworkPolicies instead**
+  allowExternalTraffic:
+
+  # `automateThirdPartyNetworkPolicies` Automatically creates network policies to allow required traffic from load
+  # balancers, reverse proxies, and Prometheus by tracking Service and Ingress resources, as well as Prometheus scrape annotations.
+  #
   # Possible values are:
   # - `ifBlockedByOtterize` (default) - only create network policies for services that are protected by otterize
-  # - `off`                           - never create network policies for external traffic. If server is protected by
-  #                                     otterize and meant to be accessible from outside the cluster, it may need a
-  #                                     manually created network policy to allow external traffic
-  # - `always`                        - create network policies for every service that is accessible from outside the
-  #                                     cluster, regardless of whether it is protected by otterize or not
-  allowExternalTraffic: ifBlockedByOtterize
+  # - `off`                           - never create network policies. If server is protected by
+  #                                     otterize and meant to be accessible from outside the cluster \ by Prometheus, it
+  #                                     may need a manually created network policy to allow the traffic
+  # - `always`                        - create network policies for every relevant service, regardless of whether it is protected
+  #                                     by otterize or not
+  # To enable Prometheus metrics scraping traffic, `prometheusServerConfigs` must be set as well
+  automateThirdPartyNetworkPolicies: ifBlockedByOtterize
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
   enableLinkerdPolicyCreation: true
