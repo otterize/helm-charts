@@ -4,4 +4,9 @@ Using the CLI (https://github.com/otterize/otterize-cli), you can now generate C
 A free graphical interface is available at https://app.otterize.com
 Using OpenShift? Set `--set global.openshift=true` to enable the OpenShift-specific configuration that enables Otterize to run on your cluster.
 
+{{- if eq false (empty .Values.intentsOperator.operator.allowExternalTraffic)}}
+
+Warning: intentsOperator.operator.allowExternalTraffic is deprecated and will not be support in the future. Please use `intentsOperator.operator.automateThirdPartyNetworkPolicies` instead.
+{{- end}}
+
 To learn more, visit https://docs.otterize.com and try out the tutorials.

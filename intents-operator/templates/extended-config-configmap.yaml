@@ -1,4 +1,4 @@
-{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkloads }}
+{{- if or .Values.global.aws.rolesAnywhere.enabled .Values.operator.ingressControllerConfigs .Values.operator.externallyManagedPolicyWorkloads .Values.operator.prometheusServerConfigs }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -40,6 +40,14 @@ data:
       - name: {{ $workload.name | quote | required "Workload name required: name" }}
         namespace: {{ $workload.namespace | quote | required "Workload namespace required: namespace" }}
         kind: {{ $workload.kind | quote | required "Workload kind required: kind" }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.operator.prometheusServerConfigs }}
+    prometheusServerConfigs:
+    {{- range $config := .Values.operator.prometheusServerConfigs }}
+      - name: {{ $config.name | quote | required "prometheusServerConfigs name required: name" }}
+        namespace: {{ $config.namespace | quote | required "prometheusServerConfigs namespace required: namespace" }}
+        kind: {{ $config.kind | quote | required "prometheusServerConfigs kind required: kind" }}
     {{- end }}
   {{- end }}
 {{- end }}
