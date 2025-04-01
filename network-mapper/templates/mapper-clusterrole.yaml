@@ -29,6 +29,15 @@ rules:
     - get
     - list
   - apiGroups:
+      - networking.k8s.io
+    resources:
+    # used for network policies reporting
+      - networkpolicies
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - ''
     resources:
       - 'endpoints'
