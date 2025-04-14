@@ -162,7 +162,6 @@ iamlive:
         - "ALL"
   pullSecrets:
   affinity: {}
-  nodeSelector: {}
   tolerations: []
   resources: {} # see comment under mapper.resources
 visibilitydns:
