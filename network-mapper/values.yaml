@@ -27,6 +27,7 @@ mapper:
   pullSecrets:
   resources: {}
   affinity: {}
+  nodeSelector: {}
   tolerations: []
   extraEnvVars:
   excludeNamespaces:
@@ -49,6 +50,7 @@ nodeagent:
   tag: v0.0.24
   pullPolicy:
   affinity: {}
+  nodeSelector: {}
   tolerations: []
   resources: {}
   podSecurityContext:
@@ -68,6 +70,7 @@ piidetector:
   tag: v0.0.24
   pullPolicy:
   affinity: {}
+  nodeSelector: {}
   tolerations: []
   resources: {}
 sniffer:
@@ -87,6 +90,7 @@ sniffer:
         - NET_RAW
   pullSecrets:
   affinity: {}
+  nodeSelector: {}
   tolerations: []
   #The options to add tolerations
   # tolerations:
@@ -120,6 +124,7 @@ kafkawatcher:
         - "ALL"
   pullSecrets:
   affinity: {}
+  nodeSelector: {}
   tolerations: []
   resources: {}
   # Kafka servers to watch, specified as `pod.namespace` items.
@@ -157,6 +162,7 @@ iamlive:
         - "ALL"
   pullSecrets:
   affinity: {}
+  nodeSelector: {}
   tolerations: []
   resources: {} # see comment under mapper.resources
 visibilitydns:

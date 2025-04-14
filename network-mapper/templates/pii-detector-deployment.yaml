@@ -67,4 +67,6 @@ spec:
               port: 5000
             initialDelaySeconds: 30
             periodSeconds: 10
+      nodeSelector:
+        {{- toYaml .Values.piidetector.nodeSelector | nindent 8 }}
 {{ end }}
