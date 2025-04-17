@@ -147,23 +147,6 @@ webhook:
   generateSelfSignedCert: true
 debug: false
 allowGetAllResources: true
-iamlive:
-  repository: otterize
-  image: network-mapper-iamlive
-  tag:
-  pullPolicy:
-  podSecurityContext:
-    runAsNonRoot: true
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    runAsNonRoot: true
-    capabilities:
-      drop:
-        - "ALL"
-  pullSecrets:
-  affinity: {}
-  tolerations: []
-  resources: {} # see comment under mapper.resources
 visibilitydns:
   repository: coredns
   image: coredns
