@@ -219,6 +219,8 @@ spec:
             {{- toYaml .Values.mapper.containerSecurityContext | nindent 12 }}
           {{- end }}
       serviceAccountName: {{ template "otterize.mapper.fullName" . }}
+      nodeSelector:
+        {{- toYaml .Values.mapper.nodeSelector | nindent 8 }}
       volumes:
         {{ if .Values.global.otterizeCloud.apiExtraCAPEMSecret }}
         - name: api-extra-ca-pem

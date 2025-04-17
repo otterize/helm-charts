@@ -143,6 +143,8 @@ spec:
               name: component-config
               readOnly: true
       serviceAccountName: {{ template "otterize.kafkawatcher.fullName" . }}
+      nodeSelector:
+        {{- toYaml .Values.kafkawatcher.nodeSelector | nindent 8 }}
       volumes:
         - name: component-config
           configMap:

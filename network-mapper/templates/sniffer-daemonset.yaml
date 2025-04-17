@@ -149,6 +149,8 @@ spec:
             name: component-config
             readOnly: true
       hostNetwork: true
+      nodeSelector:
+        {{- toYaml .Values.sniffer.nodeSelector | nindent 8 }}
       dnsPolicy: ClusterFirstWithHostNet
       volumes:
         - hostPath:
