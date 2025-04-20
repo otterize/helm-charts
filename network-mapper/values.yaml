@@ -43,6 +43,7 @@ mapper:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+  resolveTCPDestByIpOnlyForControlPlane: true
 nodeagent:
   enable: false
   repository: otterize
