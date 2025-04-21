@@ -13,6 +13,7 @@
 | `mapper.pullSecrets`              | Mapper pull secrets.                                                                            | `(none)`                                                           |
 | `mapper.resources`                | Resources override.                                                                             | `(none)`                                                           |
 | `mapper.affinity`                 | Pod affinity.                                                                                   | `{}`                                                               |
+| `mapper.nodeSelector`             | Node selector for the mapper.                                                                   | `{}`                                                               |
 | `mapper.tolerations`              | Pod tolerations.                                                                                | `[]`                                                               |
 | `mapper.uploadIntervalSeconds`    | Interval for uploading data to cloud                                                            | `60`                                                               |
 | `mapper.excludeNamespaces`        | Namespaces excluded from reporting                                                              | `[istio-system]`                                                   |
@@ -45,6 +46,7 @@
 | `sniffer.pullSecrets`              | Sniffer pull secrets.                | `(none)`                                                           |
 | `sniffer.resources`                | Resources override.                  | `(none)`                                                           |
 | `sniffer.affinity`                 | Sniffer's pod affinity.              | `{}`                                                               |
+| `sniffer.nodeSelector`             | Sniffer's pod node selector.         | `{}`                                                               |
 | `sniffer.tolerations`              | Sniffer's pod tolerations.           | `[]`                                                               |
 | `sniffer.priorityClassName`        | Set priorityClassName.               | `(none)`                                                           |
 
@@ -61,8 +63,9 @@
 | `kafkawatcher.pullPolicy`               | Kafka watcher pull policy.                                  | `(none)`                                                           |
 | `kafkawatcher.pullSecrets`              | Kafka watcher pull secrets.                                 | `(none)`                                                           |
 | `kafkawatcher.resources`                | Resources override.                                         | `(none)`                                                           |
-| `kafkawatcher.affinity`                 | Pod affinity.                                          | `{}`                                                               |
-| `kafkawatcher.tolerations`              | Pod tolerations.                                       | `[]`                                                               |
+| `kafkawatcher.affinity`                 | Pod affinity.                                               | `{}`                                                               |
+| `kafkawatcher.nodeSelector`             | Node selector for the Kafka watcher.                        | `{}`                                                               |
+| `kafkawatcher.tolerations`              | Pod tolerations.                                            | `[]`                                                               |
 | `kafkawatcher.kafkaServers`             | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                                                           |
 
 ## DNS visibility parameters
