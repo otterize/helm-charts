@@ -2,8 +2,8 @@ apiVersion: v2
 name: intents-operator
 description: Otterize intents operator
 type: application
-version: 4.0.15
-appVersion: v3.0.10
+version: 4.0.16
+appVersion: v3.0.11
 home: https://github.com/otterize/intents-operator
 sources:
   - https://github.com/otterize/intents-operator
