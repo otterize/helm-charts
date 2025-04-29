@@ -68,23 +68,6 @@
 | `kafkawatcher.tolerations`              | Pod tolerations.                                            | `[]`                                                               |
 | `kafkawatcher.kafkaServers`             | Kafka servers to watch, specified as `pod.namespace` items. | `(none)`                                                           |
 
-## IAMLive parameters
-
-Deployed only when `aws.visibility.enabled` is set to `true`.
-
-| Key                                | Description                          | Default                                                           |
-|------------------------------------|--------------------------------------|-------------------------------------------------------------------|
-| `iamlive.repository`               | IAMLive image repository.            | `otterize`                                                        |
-| `iamlive.image`                    | IAMLive image.                       | `network-mapper-iamlive`                                          |
-| `iamlive.containerSecurityContext` | Security context for the containers. | `(consult values.yaml)`                                           |
-| `iamlive.podSecurityContext`       | Security context for the pod.        | `(consult values.yaml)`                                           |
-| `iamlive.tag`                      | IAMLive image tag.                   | (pinned to latest version as of this Helm chart version's publish) |
-| `iamlive.pullPolicy`               | IAMLive pull policy.                 | `(none)`                                                          |
-| `iamlive.pullSecrets`              | IAMLive pull secrets.                | `(none)`                                                          |
-| `iamlive.resources`                | Resources override.                  | `(none)`                                                          |
-| `iamlive.affinity`                 | Pod affinity.                        | `{}`                                                              |
-| `iamlive.tolerations`              | Pod tolerations.                     | `[]`                                                              |
-
 ## DNS visibility parameters
 
 Deployed only when `aws.visibility.enabled` is set to `true`.
