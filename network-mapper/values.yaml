@@ -47,7 +47,7 @@ nodeagent:
   enable: false
   repository: otterize
   image: agent
-  tag: v0.0.25
+  tag: v0.0.26
   pullPolicy:
   affinity: {}
   nodeSelector: {}
@@ -67,7 +67,7 @@ nodeagent:
 piidetector:
   repository: otterize
   image: piidetector
-  tag: v0.0.25
+  tag: v0.0.26
   pullPolicy:
   affinity: {}
   nodeSelector: {}
