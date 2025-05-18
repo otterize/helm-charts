@@ -1,7 +1,7 @@
 apiVersion: v2
 name: network-mapper
 type: application
-version: 3.0.36
+version: 3.0.37
 appVersion: v3.0.15
 home: https://github.com/otterize/network-mapper
 sources:
