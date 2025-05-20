@@ -361,7 +361,7 @@ func (s *BaseSuite) ReadPodLogsUntilSubstring(ctx context.Context, pod *corev1.P
 	logger := logrus.WithField("pod", pod.Name).WithField("namespace", pod.Namespace)
 	logger.Debugf("Reading pod logs searching for substring '%s'", substring)
 
-	defer logStream.Close()
+	defer logStream.Close() //nolint:errcheck
 
 	reader := bufio.NewScanner(logStream)
 	var line string
