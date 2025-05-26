@@ -2,10 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-webhook-server-deployment
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "intentsOperator.shared_annotations" . | nindent 4 }}
   name: intents-operator-webhook-server
   namespace: {{ .Release.Namespace }}
 spec:
@@ -21,13 +21,13 @@ spec:
   template:
     metadata:
       annotations:
-        {{ include "shared_annotations" . | nindent 8 }}
-        {{ include "shared_pod_annotations" . | nindent 8 }}
+        {{ include "intentsOperator.shared_annotations" . | nindent 8 }}
+        {{ include "intentsOperator.shared_pod_annotations" . | nindent 8 }}
         kubectl.kubernetes.io/default-container: manager
         intents.otterize.com/workload-name: intents-operator-webhook-server
       labels:
-        {{ include "shared_labels" . | nindent 8 }}
-        {{ include "shared_pod_labels" . | nindent 8 }}
+        {{ include "intentsOperator.shared_labels" . | nindent 8 }}
+        {{ include "intentsOperator.shared_pod_labels" . | nindent 8 }}
         app.kubernetes.io/component: intents-operator-webhook-server
     spec:
     {{- if .Values.webhookServer.podSecurityContext }}

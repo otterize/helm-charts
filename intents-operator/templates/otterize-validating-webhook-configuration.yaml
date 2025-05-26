@@ -5,20 +5,20 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-webhook-configmap
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "intentsOperator.shared_annotations" . | nindent 4 }}
   name: otterize-webhook-configmap
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-validating-webhook-configuration
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "intentsOperator.shared_annotations" . | nindent 4 }}
   name: otterize-validating-webhook-configuration
 webhooks:
 - admissionReviewVersions:

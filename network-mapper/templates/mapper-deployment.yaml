@@ -3,10 +3,10 @@ kind: Deployment
 metadata:
   name: {{ template "otterize.mapper.fullName" . }}
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-mapper-deployment
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "networkMapper.shared_annotations" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
@@ -15,13 +15,13 @@ spec:
   template:
     metadata:
       labels:
-        {{ include "shared_labels" . | nindent 8 }}
-        {{ include "shared_pod_labels" . | nindent 8 }}
+        {{ include "networkMapper.shared_labels" . | nindent 8 }}
+        {{ include "networkMapper.shared_pod_labels" . | nindent 8 }}
         app.kubernetes.io/component: network-mapper
         app: {{ template "otterize.mapper.fullName" . }}
       annotations:
-        {{ include "shared_annotations" . | nindent 8 }}
-        {{ include "shared_pod_annotations" . | nindent 8 }}
+        {{ include "networkMapper.shared_annotations" . | nindent 8 }}
+        {{ include "networkMapper.shared_pod_annotations" . | nindent 8 }}
     spec:
       {{- if .Values.mapper.podSecurityContext }}
       securityContext:

@@ -3,10 +3,10 @@ kind: ClusterRole
 metadata:
   name: otterize-intents-operator-metrics-reader
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-metrics-reader
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "intentsOperator.shared_annotations" . | nindent 4 }}
 rules:
 - nonResourceURLs:
   - /metrics

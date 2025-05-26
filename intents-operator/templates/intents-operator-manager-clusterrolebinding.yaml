@@ -3,10 +3,10 @@ kind: ClusterRoleBinding
 metadata:
   name: otterize-intents-operator-manager-rolebinding
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-manager-rolebinding
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "intentsOperator.shared_annotations" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

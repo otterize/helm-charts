@@ -4,10 +4,10 @@ kind: Role
 metadata:
   name: {{ template "otterize.kafkawatcher.fullName" . }}
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: kafkawatcher-role
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "networkMapper.shared_annotations" . | nindent 4 }}
 rules:
   - apiGroups:
       - ''
@@ -63,10 +63,10 @@ kind: RoleBinding
 metadata:
   name: {{ template "otterize.kafkawatcher.fullName" . }}-scc-rolebinding
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: kafkawatcher-scc-rolebinding
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "networkMapper.shared_annotations" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

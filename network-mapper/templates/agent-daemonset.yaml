@@ -4,10 +4,10 @@ kind: DaemonSet
 metadata:
   name: {{ template "otterize.nodeagent.fullName" . }}
   labels:
-    {{ include "shared_labels" . | nindent 4 }}
+    {{ include "networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: nodeagent-daemonset
   annotations:
-    {{ include "shared_annotations" . | nindent 4 }}
+    {{ include "networkMapper.shared_annotations" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
@@ -15,13 +15,13 @@ spec:
   template:
     metadata:
       labels:
-        {{ include "shared_labels" . | nindent 8 }}
-        {{ include "shared_pod_labels" . | nindent 8 }}
+        {{ include "networkMapper.shared_labels" . | nindent 8 }}
+        {{ include "networkMapper.shared_pod_labels" . | nindent 8 }}
         app: {{ template "otterize.nodeagent.fullName" . }}
         app.kubernetes.io/component: nodeagent
       annotations:
-        {{ include "shared_annotations" . | nindent 8 }}
-        {{ include "shared_pod_annotations" . | nindent 8 }}
+        {{ include "networkMapper.shared_annotations" . | nindent 8 }}
+        {{ include "networkMapper.shared_pod_annotations" . | nindent 8 }}
     spec:
       serviceAccountName: {{ template "otterize.nodeagent.fullName" . }}
     {{- if .Values.nodeagent.podSecurityContext }}
