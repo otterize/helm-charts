@@ -4,10 +4,10 @@ metadata:
   name: intents-operator-webhook-service
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-webhook-service
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 spec:
   ports:
     - port: 443
@@ -22,10 +22,10 @@ metadata:
   name: allow-access-to-intents-operator-webhook
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-webhook-network-policy
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:

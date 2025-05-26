@@ -3,10 +3,10 @@ kind: RoleBinding
 metadata:
   name: {{ template "otterize.sniffer.fullName" . }}
   labels:
-    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-sniffer-rolebinding
   annotations:
-    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -21,10 +21,10 @@ kind: Role
 metadata:
   name: {{ template "otterize.sniffer.fullName" . }}
   labels:
-    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-sniffer-role
   annotations:
-    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 rules:
   - apiGroups:
       - ''
@@ -61,10 +61,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: otterize-network-sniffer-scc-role
   labels:
-    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-sniffer-scc-role
   annotations:
-    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
@@ -77,10 +77,10 @@ kind: RoleBinding
 metadata:
   name: otterize-network-sniffer-scc-rolebinding
   labels:
-    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-sniffer-scc-rolebinding
   annotations:
-    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

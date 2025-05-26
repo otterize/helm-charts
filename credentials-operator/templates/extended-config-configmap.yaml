@@ -5,10 +5,10 @@ metadata:
   name: credentials-operator-config
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "otterize.credentialsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.credentialsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: credentials-operator-config
   annotations:
-    {{ include "otterize.credentialsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.credentialsOperator.shared_annotations" . | nindent 4 }}
 data:
   config.yaml: |-
     aws:

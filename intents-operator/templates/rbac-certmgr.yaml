@@ -4,10 +4,10 @@ kind: Role
 metadata:
   name: intents-operator-certificaterequest-creator
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-certificaterequest-creator
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["certificaterequests"]
@@ -18,10 +18,10 @@ kind: RoleBinding
 metadata:
   name: intents-operator-certificaterequest
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-certificaterequest-rolebinding
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

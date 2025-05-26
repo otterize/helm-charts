@@ -4,10 +4,10 @@ metadata:
   name: otterize-intents-operator-leader-election-role
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-leader-election-role
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 rules:
 - apiGroups:
   - ""

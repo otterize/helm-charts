@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-controller-manager-metrics-service
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
   name: intents-operator-controller-manager-metrics-service
   namespace: {{ .Release.Namespace }}
 spec:
@@ -23,10 +23,10 @@ metadata:
   name: allow-access-to-intents-operator-metrics-server
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-metrics-server-network-policy
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:

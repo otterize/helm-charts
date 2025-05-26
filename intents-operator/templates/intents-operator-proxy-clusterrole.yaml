@@ -3,10 +3,10 @@ kind: ClusterRole
 metadata:
   name: otterize-intents-operator-proxy-role
   labels:
-    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-proxy-role
   annotations:
-    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 rules:
 - apiGroups:
   - authentication.k8s.io

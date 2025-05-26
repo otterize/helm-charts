@@ -3,10 +3,10 @@ apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
   labels:
-    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: otterize-network-sniffer-scc
   annotations:
-    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
     kubernetes.io/description: 'otterize-network-sniffer-scc allows the Otterize network sniffers to capture traffic on their host nodes,
     as well as read /proc in order to match traffic with pods. For this, allowHostDirVolumePlugin, allowHostNetwork, allowHostPID, and the capabilities SYS_PTRACE and NET_RAW are required.'
     release.openshift.io/create-only: "true"

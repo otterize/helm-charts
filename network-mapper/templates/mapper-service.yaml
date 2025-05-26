@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: {{ template "otterize.mapper.fullName" . }}
   labels:
-    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-mapper-service
   annotations:
-    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 spec:
   selector:
     app: {{ template "otterize.mapper.fullName" . }}
