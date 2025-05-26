@@ -3,10 +3,10 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    {{ include "networkMapper.shared_labels" . | nindent 4 }}
+    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-mapper-webhook-service
   annotations:
-    {{ include "networkMapper.shared_annotations" . | nindent 4 }}
+    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
   name: otterize-network-mapper-webhook-service
   namespace: {{ .Release.Namespace }}
 spec:
@@ -23,10 +23,10 @@ kind: NetworkPolicy
 metadata:
   name: {{ .Release.Name}}-allow-webhook-access-from-all-namespaces
   labels:
-    {{ include "networkMapper.shared_labels" . | nindent 4 }}
+    {{ include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-mapper-webhook-network-policy
   annotations:
-    {{ include "networkMapper.shared_annotations" . | nindent 4 }}
+    {{ include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 spec:
   ingress:
     - ports:

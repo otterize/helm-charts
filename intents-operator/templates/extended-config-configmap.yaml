@@ -5,10 +5,10 @@ metadata:
   name: intents-operator-config
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "intentsOperator.shared_labels" . | nindent 4}}
+    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4}}
     app.kubernetes.io/component: intents-operator-config
   annotations:
-    {{ include "intentsOperator.shared_annotations" . | nindent 4 }}
+    {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 data:
   config.yaml: |-
   {{- if .Values.global.aws.rolesAnywhere.enabled }}

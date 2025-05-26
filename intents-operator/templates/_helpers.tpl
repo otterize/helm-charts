@@ -64,7 +64,7 @@
 {{- end -}}
 
 
-{{- define "intentsOperator.shared_labels" }}
+{{- define "otterize.intentsOperator.shared_labels" }}
 app.kubernetes.io/name: intents-operator
 app.kubernetes.io/part-of: otterize
 app.kubernetes.io/version: {{ .Chart.Version }}
@@ -74,7 +74,7 @@ app: intents-operator
 {{- end }}
 {{- end }}
 
-{{- define "intentsOperator.shared_pod_labels" }}
+{{- define "otterize.intentsOperator.shared_pod_labels" }}
 {{- with .Values.global.podLabels }}
 {{ toYaml . }}
 {{- end }}
@@ -84,14 +84,14 @@ azure.workload.identity/use: "true"
 {{- end }}
 
 
-{{- define "intentsOperator.shared_annotations" }}
+{{- define "otterize.intentsOperator.shared_annotations" }}
 app.kubernetes.io/version: {{ .Chart.Version }}
 {{- with .Values.global.commonAnnotations }}
 {{ toYaml . }}
 {{- end }}
 {{- end }}
 
-{{- define "intentsOperator.shared_pod_annotations" }}
+{{- define "otterize.intentsOperator.shared_pod_annotations" }}
 {{- with .Values.global.podAnnotations }}
 {{ toYaml . }}
 {{- end }}

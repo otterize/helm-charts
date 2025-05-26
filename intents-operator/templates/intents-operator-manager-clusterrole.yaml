@@ -4,10 +4,10 @@ kind: ClusterRole
 metadata:
   name: otterize-intents-operator-manager-role
   labels:
-    {{ include "intentsOperator.shared_labels" . | nindent 4 }}
+    {{ include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-manager-role
   annotations:
-      {{ include "intentsOperator.shared_annotations" . | nindent 4 }}
+      {{ include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
 rules:
 - apiGroups:
   - ""
