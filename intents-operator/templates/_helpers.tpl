@@ -68,7 +68,6 @@
 app.kubernetes.io/name: intents-operator
 app.kubernetes.io/part-of: otterize
 app.kubernetes.io/version: {{ .Chart.Version }}
-app: intents-operator
 {{- with .Values.global.commonLabels }}
 {{ toYaml . }}
 {{- end }}

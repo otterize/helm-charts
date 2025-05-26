@@ -10,7 +10,6 @@
 app.kubernetes.io/name: credentials-operator
 app.kubernetes.io/part-of: otterize
 app.kubernetes.io/version: {{ .Chart.Version }}
-app: credentials-operator
 {{- with .Values.global.commonLabels }}
 {{ toYaml . }}
 {{- end }}

@@ -33,6 +33,7 @@ spec:
         {{ include "otterize.intentsOperator.shared_labels" . | nindent 8 }}
         {{ include "otterize.intentsOperator.shared_pod_labels" . | nindent 8 }}
         app.kubernetes.io/component: intents-operator-controller-manager
+        app: intents-operator
     spec:
     {{- if .Values.operator.podSecurityContext }}
       securityContext:
