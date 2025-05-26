@@ -3,15 +3,10 @@ kind: ClusterRoleBinding
 metadata:
   name: otterize-intents-operator-proxy-rolebinding
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: intents-operator-proxy-rolebinding
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

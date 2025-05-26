@@ -36,3 +36,31 @@ otterize-network-mapper-component-config-map
 {{- define "otterize.operator.apiExtraCAPEM" -}}
 {{ template "otterize.operator.apiExtraCAPath" }}/CA.pem
 {{- end -}}
+
+{{- define "shared_labels" }}
+app.kubernetes.io/name: network-mapper
+app.kubernetes.io/part-of: otterize
+app.kubernetes.io/version: {{ .Chart.Version }}
+{{- with .Values.global.commonLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{- define "shared_pod_labels" }}
+{{- with .Values.global.podLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{- define "shared_annotations" }}
+app.kubernetes.io/version: {{ .Chart.Version }}
+{{- with .Values.global.commonAnnotations }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{- define "shared_pod_annotations" }}
+{{- with .Values.global.podAnnotations }}
+{{ toYaml . }}
+{{- end }}
+{{- end}}}

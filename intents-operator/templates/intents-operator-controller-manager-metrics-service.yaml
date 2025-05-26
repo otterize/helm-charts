@@ -2,16 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
-    app: intents-operator
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: intents-operator-controller-manager-metrics-service
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
   name: intents-operator-controller-manager-metrics-service
   namespace: {{ .Release.Namespace }}
 spec:
@@ -29,15 +23,10 @@ metadata:
   name: allow-access-to-intents-operator-metrics-server
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: intents-operator-metrics-server-network-policy
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:

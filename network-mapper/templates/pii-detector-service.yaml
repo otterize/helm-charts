@@ -3,15 +3,10 @@ kind: Service
 metadata:
   name: {{ template "otterize.piidetector.fullName" . }}
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: pii-detector-service
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
 spec:
   selector:
     app: {{ template "otterize.piidetector.fullName" . }}

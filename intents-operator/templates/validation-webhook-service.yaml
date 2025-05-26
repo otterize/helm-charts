@@ -4,15 +4,10 @@ metadata:
   name: intents-operator-webhook-service
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: intents-operator-webhook-service
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
 spec:
   ports:
     - port: 443
@@ -27,15 +22,10 @@ metadata:
   name: allow-access-to-intents-operator-webhook
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: intents-operator-webhook-network-policy
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:

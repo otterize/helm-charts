@@ -4,15 +4,10 @@ kind: ClusterRole
 metadata:
   name: {{ template "otterize.nodeagent.fullName" . }}
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: nodeagent-clusterrole
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
 rules:
   - apiGroups:
       - '*'

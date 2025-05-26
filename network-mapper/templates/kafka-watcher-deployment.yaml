@@ -4,15 +4,10 @@ kind: Deployment
 metadata:
   name: {{ template "otterize.kafkawatcher.fullName" . }}
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: kafkawatcher-deployment
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{ include "shared_annotations" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
@@ -21,22 +16,13 @@ spec:
   template:
     metadata:
       labels:
-        {{- with .Values.global.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.global.commonLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{ include "shared_labels" . | nindent 8 }}
+        {{ include "shared_pod_labels" . | nindent 8 }}
         app: {{ template "otterize.kafkawatcher.fullName" . }}
-        app.kubernetes.io/version: {{ .Chart.Version }}
+        app.kubernetes.io/component: kafkawatcher
       annotations:
-        {{- with .Values.global.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.global.commonAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        app.kubernetes.io/version: {{ .Chart.Version }}
+        {{ include "shared_annotations" . | nindent 8 }}
+        {{ include "shared_pod_annotations" . | nindent 8 }}
     spec:
       securityContext:
         {{- toYaml .Values.kafkawatcher.containerSecurityContext | nindent 10 }}
