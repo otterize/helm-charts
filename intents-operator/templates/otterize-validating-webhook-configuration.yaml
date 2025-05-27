@@ -6,7 +6,8 @@ kind: ConfigMap
 metadata:
   labels:
     {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
-    app.kubernetes.io/component: intents-operator-webhook-configmap
+    # This should technically be named "intents-operator-webhook-configmapn", but the current component name is used to identify the webhook in ValidatingWebhookConfigsReconciler.
+    app.kubernetes.io/component: intents-operator
   annotations:
     {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
   name: otterize-webhook-configmap
@@ -16,7 +17,8 @@ kind: ValidatingWebhookConfiguration
 metadata:
   labels:
     {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
-    app.kubernetes.io/component: intents-operator-validating-webhook-configuration
+    # This should technically be named "intents-operator-validating-webhook-configuration", but the current component name is used to identify the webhook in ValidatingWebhookConfigsReconciler.
+    app.kubernetes.io/component: intents-operator
   annotations:
     {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
   name: otterize-validating-webhook-configuration
