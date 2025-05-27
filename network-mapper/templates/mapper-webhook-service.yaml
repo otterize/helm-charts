@@ -25,6 +25,7 @@ metadata:
   labels:
     {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: network-mapper-webhook-network-policy
+    app: otterize-network-mapper
   annotations:
     {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 spec:

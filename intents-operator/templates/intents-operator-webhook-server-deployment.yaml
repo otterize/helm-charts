@@ -4,6 +4,7 @@ metadata:
   labels:
     {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-webhook-server-deployment
+    app: intents-operator-webhook-server
   annotations:
     {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
   name: intents-operator-webhook-server
