@@ -4,13 +4,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ template "otterize.mapper.componentConfigmap" . }}
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: network-mapper-component-configmap
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 data: {}

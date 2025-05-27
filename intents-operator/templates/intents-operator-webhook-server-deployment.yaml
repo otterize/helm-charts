@@ -2,16 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    {{- with .Values.global.commonLabels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
-    app: intents-operator-webhook-server
+    {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: intents-operator-webhook-server-deployment
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
   name: intents-operator-webhook-server
   namespace: {{ .Release.Namespace }}
 spec:
@@ -27,27 +21,15 @@ spec:
   template:
     metadata:
       annotations:
+        {{- include "otterize.intentsOperator.shared_annotations" . | nindent 8 }}
+        {{- include "otterize.intentsOperator.shared_pod_annotations" . | nindent 8 }}
         kubectl.kubernetes.io/default-container: manager
         intents.otterize.com/workload-name: intents-operator-webhook-server
-        {{- with .Values.global.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.global.commonAnnotations }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        app.kubernetes.io/version: {{ .Chart.Version }}
       labels:
-        {{- with .Values.global.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.global.commonLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "otterize.intentsOperator.shared_labels" . | nindent 8 }}
+        {{- include "otterize.intentsOperator.shared_pod_labels" . | nindent 8 }}
+        app.kubernetes.io/component: intents-operator-webhook-server
         app: intents-operator-webhook-server
-        app.kubernetes.io/version: {{ .Chart.Version }}
-        {{ if .Values.global.azure.enabled }}
-        azure.workload.identity/use: "true"
-        {{ end }}
     spec:
     {{- if .Values.webhookServer.podSecurityContext }}
       securityContext:

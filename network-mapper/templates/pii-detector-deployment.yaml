@@ -4,15 +4,10 @@ kind: Deployment
 metadata:
   name: {{ template "otterize.piidetector.fullName" . }}
   labels:
-    {{- with .Values.global.commonLabels }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{- include "otterize.networkMapper.shared_labels" . | nindent 4 }}
+    app.kubernetes.io/component: pii-detector-deployment
   annotations:
-    {{- with .Values.global.commonAnnotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    app.kubernetes.io/version: {{ .Chart.Version }}
+    {{- include "otterize.networkMapper.shared_annotations" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
@@ -21,16 +16,13 @@ spec:
   template:
     metadata:
       labels:
-        {{- with .Values.global.commonLabels }}
-          {{- toYaml . | nindent 4 }}
-        {{- end }}
-        app.kubernetes.io/version: {{ .Chart.Version }}
+        {{- include "otterize.networkMapper.shared_labels" . | nindent 8 }}
+        {{- include "otterize.networkMapper.shared_pod_labels" . | nindent 8 }}
+        app.kubernetes.io/component: pii-detector
         app: {{ template "otterize.piidetector.fullName" . }}
       annotations:
-        {{- with .Values.global.commonAnnotations }}
-        {{- toYaml . | nindent 4 }}
-        {{- end }}
-        app.kubernetes.io/version: {{ .Chart.Version }}
+        {{- include "otterize.networkMapper.shared_annotations" . | nindent 8 }}
+        {{- include "otterize.networkMapper.shared_pod_annotations" . | nindent 8 }}
     spec:
       serviceAccountName: {{ template "otterize.piidetector.fullName" . }}
       {{- with .Values.piidetector.tolerations }}
