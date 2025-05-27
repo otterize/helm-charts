@@ -4,6 +4,7 @@ metadata:
   labels:
     {{- include "otterize.intentsOperator.shared_labels" . | nindent 4 }}
     app.kubernetes.io/component: intents-operator-controller-manager-metrics-service
+    app: intents-operator
   annotations:
     {{- include "otterize.intentsOperator.shared_annotations" . | nindent 4 }}
   name: intents-operator-controller-manager-metrics-service
