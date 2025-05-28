@@ -3,7 +3,7 @@ name: intents-operator
 description: Otterize intents operator
 type: application
 version: 4.0.21
-appVersion: v3.0.13
+appVersion: v3.0.14
 home: https://github.com/otterize/intents-operator
 sources:
   - https://github.com/otterize/intents-operator
