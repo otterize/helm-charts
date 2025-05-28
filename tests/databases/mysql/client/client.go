@@ -53,7 +53,7 @@ func checkDatabaseAccess(ctx context.Context) error {
 	}
 
 	logrus.Info("Successfully connected to database")
-	defer db.Close()
+	defer db.Close() //nolint:errcheck
 
 	// Test INSERT permissions
 	insertStatement := `INSERT INTO example (entry_time) VALUES (?);`
