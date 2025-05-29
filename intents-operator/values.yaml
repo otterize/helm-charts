@@ -56,7 +56,7 @@ operator:
   allowExternalTraffic:
 
   # `automateThirdPartyNetworkPolicies` Automatically creates network policies to allow required traffic from load
-  # balancers, reverse proxies, and Prometheus by tracking Service and Ingress resources, as well as Prometheus scrape annotations.
+  # balancers, reverse proxies, Prometheus and webhooks by tracking Service and Ingress resources, as well as Prometheus scrape annotations.
   #
   # Possible values are:
   # - `ifBlockedByOtterize` (default) - only create network policies for services that are protected by otterize
