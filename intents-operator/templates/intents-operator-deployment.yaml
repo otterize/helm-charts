@@ -261,6 +261,10 @@ spec:
           - name: OTTERIZE_DEBUG
             value: "true"
           {{- end }}
+          {{- if .Values.global.controlPlaneIPv4CIDRPrefixLength }}
+          - name: OTTERIZE_CONTROL_PLANE_IPV4_CIDR_PREFIX_LENGTH
+            value: {{ .Values.global.controlPlaneIPv4CIDRPrefixLength | quote }}
+          {{- end }}
         volumeMounts:
 {{- if .Values.global.aws.rolesAnywhere.enabled }}
         - mountPath: /aws-config
