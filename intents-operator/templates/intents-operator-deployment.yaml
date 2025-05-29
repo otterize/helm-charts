@@ -202,6 +202,10 @@ spec:
           - name: OTTERIZE_AUTOMATE_THIRD_PARTY_NETWORK_POLICIES
             value: {{ template "otterize.operator.automateThirdPartyNetworkPolicies" . }}
           {{- end }}
+          {{- if .Values.operator.webhookTrafficLimitToControlPlane }}
+          - name: OTTERIZE_WEBHOOK_TRAFFIC_ALLOW_ALL
+            value: "false"
+          {{- end }}
           {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
           - name: OTTERIZE_KAFKA_SERVER_TLS_CERT
             value: {{ include "otterize.operator.cert" . | quote}}

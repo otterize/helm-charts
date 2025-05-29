@@ -67,6 +67,8 @@ operator:
   #                                     by otterize or not
   # To enable Prometheus metrics scraping traffic, `prometheusServerConfigs` must be set as well
   automateThirdPartyNetworkPolicies: ifBlockedByOtterize
+  # Indicates whether we need to limit the ingress traffic for webhook services only to the control-plane or to allow all
+  webhookTrafficLimitToControlPlane: false
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
   enableLinkerdPolicyCreation: true
