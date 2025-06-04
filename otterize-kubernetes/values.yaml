@@ -36,6 +36,10 @@ global:
   # Provider for credentials-operator to use (spire/otterize-cloud/cert-manager), if empty - spire is used by default
   certificateProvider:
 
+  # The CIDR prefix length of the control plane's IPv4 address, used to match workloads to the control plane.
+  # For GKE users, it's recommended to set this to 28, as suggested in the networking best practices: https://cloud.google.com/kubernetes-engine/docs/best-practices/networking
+  controlPlaneIPv4CIDRPrefixLength:
+
   openshift: false
 
   kubebuilder_rbac_proxy:
