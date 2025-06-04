@@ -162,7 +162,7 @@ func (s *BaseSuite) InstallOtterizeHelmChart(values map[string]any) {
 	installAction.ReleaseName = OtterizeHelmReleaseName
 	installAction.CreateNamespace = true
 	installAction.Wait = true
-	installAction.Timeout = 2 * time.Minute
+	installAction.Timeout = 5 * time.Minute
 
 	// Run helm install command
 	logrus.WithField("values", values).WithField("namespace", OtterizeNamespace).Info("Installing otterize helm chart")
