@@ -85,6 +85,7 @@ intentsOperator:
     enableNetworkPolicyCreation: true
     enableKafkaACLCreation: true
     automateThirdPartyNetworkPolicies: ifBlockedByOtterize
+    automateAllowWebhookTraffic: ifBlockedByOtterize
     enableIstioPolicyCreation: true
   watchedNamespaces: null # by default, watch all
 
