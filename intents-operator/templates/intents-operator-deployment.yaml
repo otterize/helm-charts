@@ -202,6 +202,10 @@ spec:
           - name: OTTERIZE_AUTOMATE_THIRD_PARTY_NETWORK_POLICIES
             value: {{ template "otterize.operator.automateThirdPartyNetworkPolicies" . }}
           {{- end }}
+          {{- if .Values.operator.automateAllowWebhookTraffic }}
+          - name: OTTERIZE_AUTOMATE_ALLOW_WEBHOOK_TRAFFIC
+            value: {{ template "otterize.operator.automateAllowWebhookTraffic" . }}
+          {{- end }}
           {{- if .Values.operator.webhookTrafficLimitToControlPlane }}
           - name: OTTERIZE_WEBHOOK_TRAFFIC_ALLOW_ALL
             value: "false"
