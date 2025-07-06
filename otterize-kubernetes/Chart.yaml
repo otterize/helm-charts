@@ -13,6 +13,12 @@ dependencies:
     alias: credentialsOperator
     version: ">= 0.0.1"
     repository: file://./../credentials-operator
+  - name: spire
+    alias: spire
+    version: "1.0.0"
+    # condition must have NO spaces or the values are considered invalid and will make this always be true! DO NOT add spaces around the comma!
+    condition: deployment.spire,global.deployment.spire
+    repository: file://./../spire
   - name: intents-operator
     alias: intentsOperator
     version: ">= 0.1.2"
