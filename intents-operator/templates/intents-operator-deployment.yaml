@@ -202,6 +202,14 @@ spec:
           - name: OTTERIZE_AUTOMATE_THIRD_PARTY_NETWORK_POLICIES
             value: {{ template "otterize.operator.automateThirdPartyNetworkPolicies" . }}
           {{- end }}
+          {{- if .Values.operator.automateAllowWebhookTraffic }}
+          - name: OTTERIZE_AUTOMATE_ALLOW_WEBHOOK_TRAFFIC
+            value: {{ template "otterize.operator.automateAllowWebhookTraffic" . }}
+          {{- end }}
+          {{- if .Values.operator.webhookTrafficLimitToControlPlane }}
+          - name: OTTERIZE_WEBHOOK_TRAFFIC_ALLOW_ALL
+            value: "false"
+          {{- end }}
           {{ if and (.Values.operator.autoGenerateTLSUsingCredentialsOperator) (.Values.global.certificateProvider) }}
           - name: OTTERIZE_KAFKA_SERVER_TLS_CERT
             value: {{ include "otterize.operator.cert" . | quote}}
@@ -256,6 +264,10 @@ spec:
           {{- if eq true .Values.debug }}
           - name: OTTERIZE_DEBUG
             value: "true"
+          {{- end }}
+          {{- if .Values.global.controlPlaneIPv4CIDRPrefixLength }}
+          - name: OTTERIZE_CONTROL_PLANE_IPV4_CIDR_PREFIX_LENGTH
+            value: {{ .Values.global.controlPlaneIPv4CIDRPrefixLength | quote }}
           {{- end }}
         volumeMounts:
 {{- if .Values.global.aws.rolesAnywhere.enabled }}

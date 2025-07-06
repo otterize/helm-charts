@@ -56,7 +56,7 @@ operator:
   allowExternalTraffic:
 
   # `automateThirdPartyNetworkPolicies` Automatically creates network policies to allow required traffic from load
-  # balancers, reverse proxies, and Prometheus by tracking Service and Ingress resources, as well as Prometheus scrape annotations.
+  # balancers, reverse proxies and Prometheus by tracking Service and Ingress resources, as well as Prometheus scrape annotations.
   #
   # Possible values are:
   # - `ifBlockedByOtterize` (default) - only create network policies for services that are protected by otterize
@@ -67,6 +67,20 @@ operator:
   #                                     by otterize or not
   # To enable Prometheus metrics scraping traffic, `prometheusServerConfigs` must be set as well
   automateThirdPartyNetworkPolicies: ifBlockedByOtterize
+  # `autoAllowWebhookTraffic` Automatically creates network policies to allow required traffic for a webhook workload.
+  #
+  # Possible values are:
+  # - `ifBlockedByOtterize` (default) - only create network policies for services that are protected by otterize
+  # - `off`                           - never create network policies. If server is protected by
+  #                                     otterize and meant to be accessible for a webhook, it may need a manually
+  #                                     created network policy to allow the traffic
+  # - `always`                        - create network policies to all webhooks' workloads. Note that if the same workload
+  #                                     is used for more than just webhook (e.g. serve as rest-api server, expose metrics etc.)
+  #                                     it may need a manually created network policy to allow the other types of traffic
+  #
+  automateAllowWebhookTraffic: ifBlockedByOtterize
+  # Indicates whether we need to limit the ingress traffic for webhook services only to the control-plane or to allow all
+  webhookTrafficLimitToControlPlane: false
   enableIstioPolicyCreation: true
   enableDatabasePolicyCreation: true
   enableLinkerdPolicyCreation: true
@@ -172,6 +186,10 @@ global:
   experimentalUseDockerImageAsServiceNameForJobs: false
 
   openshift: false
+
+  # The CIDR prefix length of the IPv4 address of the control plane. Used when we want to match workloads to the control plane.
+  # If you are using GKE, you might want to consider setting it to 28, as mentions here: https://cloud.google.com/kubernetes-engine/docs/best-practices/networking
+  controlPlaneIPv4CIDRPrefixLength:
 
   kubebuilder_rbac_proxy:
     image: otterize/kubebuilder-kube-rbac-proxy

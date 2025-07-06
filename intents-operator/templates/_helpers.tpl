@@ -43,7 +43,7 @@
     {{- else if (eq "ifBlockedByOtterize" .Values.operator.automateThirdPartyNetworkPolicies) -}}
 "if-blocked-by-otterize"
     {{- else -}}
-        {{- fail (printf "Valid values for `automateThirdPartyNetworkPolicies`: `off`, `ifBlockedByOtterize` and `always`, but you specified `%s`" .Values.operator.allowExternalTraffic) -}}
+        {{- fail (printf "Valid values for `automateThirdPartyNetworkPolicies`: `off`, `ifBlockedByOtterize` and `always`, but you specified `%s`" .Values.operator.automateThirdPartyNetworkPolicies) -}}
     {{- end -}}
 {{- end -}}
 
@@ -60,6 +60,18 @@
 "if-blocked-by-otterize"
     {{- else -}}
         {{- fail (printf "Valid values for `allowExternalTraffic`: `off`, `ifBlockedByOtterize` and `always`, but you specified `%s`" .Values.operator.allowExternalTraffic) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- define "otterize.operator.automateAllowWebhookTraffic" -}}
+    {{- if (eq "off" .Values.operator.automateAllowWebhookTraffic) -}}
+"off"
+    {{- else if (eq "always" .Values.operator.automateAllowWebhookTraffic) -}}
+"always"
+    {{- else if (eq "ifBlockedByOtterize" .Values.operator.automateAllowWebhookTraffic) -}}
+"if-blocked-by-otterize"
+    {{- else -}}
+        {{- fail (printf "Valid values for `automateAllowWebhookTraffic`: `off`, `ifBlockedByOtterize` and `always`, but you specified `%s`" .Values.operator.automateAllowWebhookTraffic) -}}
     {{- end -}}
 {{- end -}}
 
